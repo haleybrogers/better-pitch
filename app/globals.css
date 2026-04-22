@@ -1,0 +1,81 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --color-background: #ffffff;
+  --color-foreground: #18181b;
+}
+
+body {
+  background: #ffffff;
+  color: #18181b;
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  letter-spacing: -0.011em;
+}
+
+button,
+a {
+  transition: all 0.15s ease;
+}
+
+::-webkit-scrollbar {
+  width: 5px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #e4e4e7;
+  border-radius: 3px;
+}
+
+/* ── Ecosystem timeline ──────────────────────────────────────── */
+
+@keyframes ecosystem-wobble {
+  0%, 100% { transform: rotate(-6deg) scale(1); }
+  25% { transform: rotate(6deg) scale(1.05); }
+  50% { transform: rotate(-3deg) scale(0.98); }
+  75% { transform: rotate(4deg) scale(1.03); }
+}
+.ecosystem-wobble {
+  animation: ecosystem-wobble 3.2s ease-in-out infinite;
+  display: inline-block;
+  filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.12));
+}
+
+@keyframes ecosystem-sweep {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(400%); }
+}
+.ecosystem-sweep {
+  animation: ecosystem-sweep 3.5s ease-in-out infinite;
+}
+
+@keyframes ecosystem-blink {
+  0%, 100% { opacity: 0.3; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.3); }
+}
+.ecosystem-blink {
+  animation: ecosystem-blink 1.2s ease-in-out infinite;
+}
+
+@keyframes ecosystem-bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(6px); }
+}
+.ecosystem-bounce {
+  animation: ecosystem-bounce 1.5s ease-in-out infinite;
+  display: inline-block;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ecosystem-wobble,
+  .ecosystem-sweep,
+  .ecosystem-blink,
+  .ecosystem-bounce {
+    animation: none;
+  }
+}
