@@ -58,9 +58,9 @@ const chapters: Chapter[] = [
     body: "A year of pitching taught us one thing: stop showing up as four teams with four decks. Start showing up as one story. This is how that lesson landed.",
     pullQuote:
       "We're being really intentional about working as one ecosystem, rather than separate silos. — Coke",
-    accent: "#fb7185",
-    accent2: "#fbbf24",
-    bg: "#fff7ed",
+    accent: "#014737",
+    accent2: "#09090b",
+    bg: "#ffffff",
     Icon: Sparkles,
     gif: {
       caption: "the thesis",
@@ -76,9 +76,9 @@ const chapters: Chapter[] = [
     body: "Version one of us over-explained. We pitched ourselves, hoping they'd get it. Version two chased a bulletproof deliverable instead of a clear one — we tried to cover everything instead of landing the one thing. Version three walked in confident and showed instead of told. Clients ask for a media plan. We hand them the whole system.",
     pullQuote:
       "Clients come in saying 'media only,' but we know Creative is what drives our engine. Instead of waiting for them to change their minds, we go in with the confidence that we can change it for them. — Coke",
-    accent: "#f472b6",
-    accent2: "#c084fc",
-    bg: "#fdf2f8",
+    accent: "#014737",
+    accent2: "#09090b",
+    bg: "#fafaf9",
     Icon: Layers,
     gif: {
       caption: "explain → seek → show",
@@ -98,9 +98,9 @@ const chapters: Chapter[] = [
     title: "Three rules\nwe don't\nbreak.",
     body: "One — One story, many voices. Channels don't each pitch their silo. Everyone tells the same story from their angle. Two — Three-track creative. Ongoing maintenance, pre-built rate reactions, big strategic swings — sized to business urgency, not calendar cycles. Three — Stability is strategy. The first 30 days of any takeover are maintenance only. Safe hands before smart moves.",
     pullQuote: "Fix the foundation first. Scale follows.",
-    accent: "#a78bfa",
-    accent2: "#f472b6",
-    bg: "#faf5ff",
+    accent: "#014737",
+    accent2: "#09090b",
+    bg: "#ffffff",
     Icon: Lightbulb,
     gif: {
       caption: "the rules",
@@ -120,9 +120,9 @@ const chapters: Chapter[] = [
     title: "First:\nthey hired us\nto look.",
     body: "A remote audit got the conversation started. The client asked for a deeper look — that turned into a full pitch. One person built the deck through tonsillitis. One wrote a paid social plan over a weekend. Another shipped three landing-page variations before Monday. Everyone rallied. A champion on the client side told the room: these people have real creative chops.",
     pullQuote: "If we don't win this, f-them! — one of us, at 2am",
-    accent: "#38bdf8",
-    accent2: "#6366f1",
-    bg: "#eff6ff",
+    accent: "#014737",
+    accent2: "#09090b",
+    bg: "#fafaf9",
     Icon: Radio,
     stat: { value: "3", label: "landing pages in one weekend" },
     gif: {
@@ -145,9 +145,9 @@ const chapters: Chapter[] = [
     body: "The client circled back asking for a deeper competitive read. We reframed their biggest paid channel as a quality problem, not a budget one. We rebuilt paid social as a performance channel. Then their second brand asked for a cold submission — no meeting, no voiceover, just a deck. Every idea had to land on the page. They came back with zero notes.",
     pullQuote:
       "In powerpoint no less, which we all know our preferred outlet [sic]. — Coke on the second submission",
-    accent: "#34d399",
-    accent2: "#22d3ee",
-    bg: "#ecfdf5",
+    accent: "#014737",
+    accent2: "#09090b",
+    bg: "#ffffff",
     Icon: Cog,
     stat: { value: "0", label: "notes from the client" },
     gif: {
@@ -170,9 +170,9 @@ const chapters: Chapter[] = [
     body: "A bigger agency swooped in with a massive discount. We countered with a different kind of deal — tied to growth, not price. One of our partners quietly left a book at the client's office for the exec who was hardest to reach. He found it working late, no note attached, read the whole thing. And when the in-person kickoff had no agenda, we turned it into a live strategy conversation. The client walked out asking us to lead.",
     pullQuote:
       "Jessica kissed her laptop when she saw Haley's dashboard. — Nima, in the room",
-    accent: "#fb923c",
-    accent2: "#f43f5e",
-    bg: "#fff7ed",
+    accent: "#014737",
+    accent2: "#09090b",
+    bg: "#fafaf9",
     Icon: Network,
     stat: {
       value: "$1.5M",
@@ -197,9 +197,9 @@ const chapters: Chapter[] = [
     title: "The thing is:\nthey never\nactually read\nthe deck.",
     body: "Our main decision-maker never opened the doc. She hates the tool it was built in. The other one took one look, bounced off the collapsed toggles, and only came back to it weeks later — late at night, alone. But when she asked him which agency did the best work on any given topic, his answer was the same every time. That's when we learned: the format has to fit the audience. At-a-glance AND with depth. Always both.",
     pullQuote: "Your response cooked every other agency. — the eventual decision-maker, very late one night",
-    accent: "#f59e0b",
-    accent2: "#10b981",
-    bg: "#fefce8",
+    accent: "#014737",
+    accent2: "#09090b",
+    bg: "#ffffff",
     Icon: GraduationCap,
     gif: {
       caption: "the twist",
@@ -216,9 +216,9 @@ const chapters: Chapter[] = [
     body: "Integrate the audit from day one. One story to the client, not four. Three-track creative by default. Stability framed as strategy. Format fits audience — always both a glance and a deep dive. Show, don't tell. Listen past what they said. And sometimes: leave a book, no note.",
     pullQuote:
       "We haven't perfected our craft yet, and that's largely because we never will. We test, we learn, we iterate. That's what makes us us. — Coke",
-    accent: "#ec4899",
-    accent2: "#8b5cf6",
-    bg: "#fdf4ff",
+    accent: "#014737",
+    accent2: "#09090b",
+    bg: "#014737",
     Icon: Rocket,
     gif: {
       caption: "mic drop",
@@ -452,6 +452,7 @@ function ChapterPanel({
 }) {
   const isCover = index === 0;
   const isOutro = chapter.id === "onwards";
+  const darkPanel = isOutro; // deep-green closer → invert text
 
   // Element-level openness (builds open, then closes)
   const oKicker = openness(local, -0.95, -0.35, 0.4, 0.95);
@@ -459,13 +460,20 @@ function ChapterPanel({
   const oBody = openness(local, -0.7, -0.1, 0.3, 0.85);
   const oExtras = openness(local, -0.55, 0.05, 0.25, 0.8);
 
-  // Parallax offsets relative to local (in px)
-  const parallaxTitle = local * -60;
-  const parallaxBody = local * -40;
-  const parallaxGif = local * 100;
-  const parallaxDeliv = local * -100;
+  // Parallax offsets relative to local (in px) — more amplitude
+  const parallaxTitle = local * -90;
+  const parallaxBody = local * -60;
+  const parallaxGif = local * 140;
+  const parallaxDeliv = local * -140;
+  const parallaxQuote = local * -45;
+  const parallaxStat = local * 70;
+  const parallaxNumeral = local * -240;
 
   const { Icon } = chapter;
+  const inkTitle = darkPanel ? "text-white" : "text-zinc-900";
+  const inkBody = darkPanel ? "text-white/80" : "text-zinc-600";
+  const inkQuote = darkPanel ? "text-white" : "text-zinc-800";
+  const numeralColor = darkPanel ? "rgba(255,255,255,0.06)" : "rgba(9,9,11,0.045)";
 
   return (
     <section
@@ -508,7 +516,7 @@ function ChapterPanel({
 
           {/* Title */}
           <h2
-            className={`font-semibold leading-[0.95] tracking-tight text-zinc-900 whitespace-pre-line ${
+            className={`font-semibold leading-[0.95] tracking-tight whitespace-pre-line ${inkTitle} ${
               isCover ? "text-[clamp(3rem,9vw,8rem)]" : "text-[clamp(2.25rem,6vw,5.5rem)]"
             }`}
             style={{
@@ -535,7 +543,7 @@ function ChapterPanel({
 
           {/* Body */}
           <p
-            className={`text-zinc-700 text-lg md:text-xl leading-relaxed max-w-xl ${isCover || isOutro ? "mx-auto" : ""}`}
+            className={`${inkBody} text-lg md:text-xl leading-relaxed max-w-xl ${isCover || isOutro ? "mx-auto" : ""}`}
             style={{
               opacity: oBody,
               transform: `translate3d(${parallaxBody}px, ${(1 - oBody) * 30}px, 0)`,
@@ -547,7 +555,7 @@ function ChapterPanel({
           {/* Pull quote */}
           {chapter.pullQuote && (
             <blockquote
-              className="mt-6 pl-4 border-l-4 italic text-zinc-800 text-lg max-w-xl"
+              className={`mt-6 pl-4 border-l-4 italic ${inkQuote} text-lg max-w-xl`}
               style={{
                 borderColor: chapter.accent,
                 opacity: oExtras,
@@ -817,7 +825,7 @@ function ProgressRail({ progress, activeIndex }: { progress: number; activeIndex
           className="absolute inset-y-0 left-0 rounded-full transition-[width] duration-100 ease-out"
           style={{
             width: `${progress * 100}%`,
-            background: "linear-gradient(90deg, #f472b6, #a78bfa, #38bdf8, #34d399, #fb923c)",
+            background: "linear-gradient(90deg, #09090b 0%, #014737 100%)",
           }}
         />
       </div>
