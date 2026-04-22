@@ -32,6 +32,7 @@ type GifSpec = {
   caption: string;
   tilt: number; // degrees
   emoji: string;
+  src?: string; // optional real GIF url — falls back to emoji
 };
 
 type Chapter = {
@@ -54,134 +55,177 @@ const chapters: Chapter[] = [
     id: "cover",
     kicker: "A Pearmill team love letter",
     title: "From Silos\nto Ecosystem",
-    body: "What Better.com taught us about pitching as one story instead of four silos. Not a case study — a team love letter with learnings baked in.",
+    body: "A year of pitching taught us one thing: stop showing up as four teams with four decks. Start showing up as one story. This is how that lesson landed.",
     pullQuote:
-      "Audits, pre-Better, were kind of disconnected and post-Better, we're being really intentional about working as one ecosystem, rather than separate silos. — Coke, 4/21",
+      "We're being really intentional about working as one ecosystem, rather than separate silos. — Coke",
     accent: "#fb7185",
     accent2: "#fbbf24",
     bg: "#fff7ed",
     Icon: Sparkles,
-    gif: { caption: "the thesis", tilt: -4, emoji: "✨" },
+    gif: {
+      caption: "the thesis",
+      tilt: -4,
+      emoji: "✨",
+      src: "https://media.giphy.com/media/UEJk41CaFgewU/giphy.gif",
+    },
   },
   {
     id: "evolution",
-    kicker: "Part 1 · The Evolution",
-    title: "Nokia\nRFP\nBetsy",
-    body: "Nokia: we pitched ourselves — too hard. First Better RFP: we chased a bulletproof deliverable instead of a clear one. By Betsy, everyone was over performing — so we gave them what they needed, not what they asked for. Explain → seek perfection → show.",
+    kicker: "Act 1 · How we used to show up",
+    title: "We stopped\nexplaining.\nWe started\nshowing.",
+    body: "Version one of us over-explained. We pitched ourselves, hoping they'd get it. Version two chased a bulletproof deliverable instead of a clear one — we tried to cover everything instead of landing the one thing. Version three walked in confident and showed instead of told. Clients ask for a media plan. We hand them the whole system.",
     pullQuote:
-      "Clients come in saying 'media only,' but we know that Creative is what drives our engine. So instead of waiting for them to change their minds, we've started going in with the confidence that we can change it for them. — Coke, 4/21",
+      "Clients come in saying 'media only,' but we know Creative is what drives our engine. Instead of waiting for them to change their minds, we go in with the confidence that we can change it for them. — Coke",
     accent: "#f472b6",
     accent2: "#c084fc",
     bg: "#fdf2f8",
     Icon: Layers,
-    gif: { caption: "explain → seek → show", tilt: 3, emoji: "🪞" },
+    gif: {
+      caption: "explain → seek → show",
+      tilt: 3,
+      emoji: "🪞",
+      src: "https://media.giphy.com/media/pCGyLbTeliIwqVU9Md/giphy.gif",
+    },
     deliverables: [
-      { label: "Nokia deck", kind: "static" },
-      { label: "Better RFP v1", kind: "script" },
-      { label: "Betsy PPT", kind: "static" },
+      { label: "Version 1 — the explain deck", kind: "static" },
+      { label: "Version 2 — the perfection deck", kind: "static" },
+      { label: "Version 3 — the show-don't-tell deck", kind: "static" },
     ],
   },
   {
     id: "principles",
-    kicker: "Part 2 · The Principles",
-    title: "Three\ncommandments",
-    body: "One story, many voices — channels ladder to a single thesis, not four decks. Three-track creative — maintenance, rate-sensitive, strategy-tied — sized to business urgency, not calendar cycles. Stability is strategy — the first 30 days of any takeover are maintenance-only. Safe hands first. Smart later.",
-    pullQuote: "Fix the foundation to enable scale. Maintain performance.",
+    kicker: "Act 2 · The rules we pitch by now",
+    title: "Three rules\nwe don't\nbreak.",
+    body: "One — One story, many voices. Channels don't each pitch their silo. Everyone tells the same story from their angle. Two — Three-track creative. Ongoing maintenance, pre-built rate reactions, big strategic swings — sized to business urgency, not calendar cycles. Three — Stability is strategy. The first 30 days of any takeover are maintenance only. Safe hands before smart moves.",
+    pullQuote: "Fix the foundation first. Scale follows.",
     accent: "#a78bfa",
     accent2: "#f472b6",
     bg: "#faf5ff",
     Icon: Lightbulb,
-    gif: { caption: "the commandments", tilt: 4, emoji: "📜" },
+    gif: {
+      caption: "the rules",
+      tilt: 4,
+      emoji: "📜",
+      src: "https://media.giphy.com/media/6VAttkSrssMcCks7xY/giphy.gif",
+    },
     deliverables: [
-      { label: "One kickoff doc", kind: "system" },
-      { label: "Three-track creative", kind: "system" },
+      { label: "One kickoff doc, not four", kind: "system" },
+      { label: "Three-track creative framework", kind: "system" },
       { label: "30-day stability plan", kind: "system" },
     ],
   },
   {
     id: "audit-rfp",
-    kicker: "Ch. 01–02 · Oct–Nov 2025",
-    title: "The audit\nbecomes\nan RFP",
-    body: "October: remote Notion audit. We hooked them with knowledge. Jessica wanted a deeper dive — it turned into a full RFP. November: Moojan built the deck with tonsillitis. Mariate wrote Meta over a weekend. Cosmin shipped three LP variations. Masha, Egor, Coke, Valerie rallied us through.",
-    pullQuote: "If we don't win this, f-them! — Valerie",
+    kicker: "Fall 2025 · How we got in the door",
+    title: "First:\nthey hired us\nto look.",
+    body: "A remote audit got the conversation started. The client asked for a deeper look — that turned into a full pitch. One person built the deck through tonsillitis. One wrote a paid social plan over a weekend. Another shipped three landing-page variations before Monday. Everyone rallied. A champion on the client side told the room: these people have real creative chops.",
+    pullQuote: "If we don't win this, f-them! — one of us, at 2am",
     accent: "#38bdf8",
     accent2: "#6366f1",
     bg: "#eff6ff",
     Icon: Radio,
-    stat: { value: "3", label: "LP variations in one weekend" },
-    gif: { caption: "RFP incoming", tilt: -5, emoji: "📬" },
+    stat: { value: "3", label: "landing pages in one weekend" },
+    gif: {
+      caption: "door opens",
+      tilt: -5,
+      emoji: "📬",
+      src: "https://media.giphy.com/media/9ombSPmG6i3AryZ4lI/giphy.gif",
+    },
     deliverables: [
-      { label: "Round 1 deck", kind: "static" },
-      { label: "Meta plan", kind: "script" },
-      { label: "3× LP variations", kind: "static" },
-      { label: "RFP response", kind: "script" },
+      { label: "Audit deck", kind: "static" },
+      { label: "Paid social plan", kind: "script" },
+      { label: "3× landing page variations", kind: "static" },
+      { label: "Full RFP response", kind: "script" },
     ],
   },
   {
     id: "comp-betsy",
-    kicker: "Ch. 03–04 · Dec 2025 – Feb 2026",
-    title: "The second\nask is\na gift",
-    body: "Het reframed Google as a rank/quality problem, not a budget one. Mariate + Donovan + Dino rebuilt social as performance. Cos audited LPs. Then Betsy: direct submission, no face time, PowerPoint only — everything had to land on the page. They had no notes.",
+    kicker: "Winter 2025–26 · How we earned the room back",
+    title: "Then:\nthey tested us\ntwice.",
+    body: "The client circled back asking for a deeper competitive read. We reframed their biggest paid channel as a quality problem, not a budget one. We rebuilt paid social as a performance channel. Then their second brand asked for a cold submission — no meeting, no voiceover, just a deck. Every idea had to land on the page. They came back with zero notes.",
     pullQuote:
-      "In powerpoint no less, which we all know our preferred outlet [sic]. — Coke on Betsy",
+      "In powerpoint no less, which we all know our preferred outlet [sic]. — Coke on the second submission",
     accent: "#34d399",
     accent2: "#22d3ee",
     bg: "#ecfdf5",
     Icon: Cog,
-    stat: { value: "0", label: "notes from Betsy" },
-    gif: { caption: "the gift", tilt: -3, emoji: "🎁" },
+    stat: { value: "0", label: "notes from the client" },
+    gif: {
+      caption: "the second ask",
+      tilt: -3,
+      emoji: "🎁",
+      src: "https://media.giphy.com/media/e9UfxLdJ9V8V7H0UGR/giphy.gif",
+    },
     deliverables: [
       { label: "Competitive analysis", kind: "system" },
-      { label: "Google scaling model", kind: "system" },
-      { label: "LP audit", kind: "system" },
-      { label: "Betsy PPT", kind: "static" },
+      { label: "Paid search scaling model", kind: "system" },
+      { label: "Landing-page audit", kind: "system" },
+      { label: "Cold-submission deck", kind: "static" },
     ],
   },
   {
     id: "kickoff",
-    kicker: "Ch. 05–06 · Mar–Apr 2026",
-    title: "Jump450,\nthe book,\nthe laptop kiss",
-    body: "March: Sly called — we'd dropped to #2. Jump450 offered 3 months free + 4.5% Y1. Nima countered with a sliding-scale deal tied to spend trajectory. Then quietly planted a book for Sly at Better's office — no note, no fanfare. April 20 NYC: no real kickoff, so we made the strategy conversation the kickoff.",
+    kicker: "Spring 2026 · How we actually closed",
+    title: "And then:\nwe closed\nin a room\nnobody\nset up.",
+    body: "A bigger agency swooped in with a massive discount. We countered with a different kind of deal — tied to growth, not price. One of our partners quietly left a book at the client's office for the exec who was hardest to reach. He found it working late, no note attached, read the whole thing. And when the in-person kickoff had no agenda, we turned it into a live strategy conversation. The client walked out asking us to lead.",
     pullQuote:
-      "Jessica kissed her laptop when she saw Haley's dashboard. — Nima",
+      "Jessica kissed her laptop when she saw Haley's dashboard. — Nima, in the room",
     accent: "#fb923c",
     accent2: "#f43f5e",
     bg: "#fff7ed",
     Icon: Network,
-    stat: { value: "$1.5M", label: "incremental secured that day · $1M in May" },
-    gif: { caption: "the laptop kiss", tilt: 2, emoji: "💋" },
+    stat: {
+      value: "$1.5M",
+      label: "incremental budget secured in one meeting",
+    },
+    gif: {
+      caption: "closing live",
+      tilt: 2,
+      emoji: "💋",
+      src: "https://media.giphy.com/media/3kJXNPRBMUnMiZb8NR/giphy.gif",
+    },
     deliverables: [
-      { label: "Creative strategy dashboard", kind: "system" },
-      { label: "Meta plan v3", kind: "script" },
-      { label: "Google scaling model", kind: "system" },
-      { label: "The book (for Sly)", kind: "static" },
+      { label: "Live creative strategy dashboard", kind: "system" },
+      { label: "Paid social plan, v3", kind: "script" },
+      { label: "Paid search scaling model", kind: "system" },
+      { label: "One book. No note.", kind: "static" },
     ],
   },
   {
     id: "plot-twist",
-    kicker: "Part 4 · The Honest Plot Twist",
-    title: "We won\ndespite\nthe format",
-    body: "Jessica never read the RFP — she hates Notion. Sly bounced off the collapsed toggles too, came back late one night. But every time Jessica asked him which agency did X best, his answer was the same: Pearmill.",
-    pullQuote: "Your RFP response cooked every other agency. — Sly",
+    kicker: "The plot twist",
+    title: "The thing is:\nthey never\nactually read\nthe deck.",
+    body: "Our main decision-maker never opened the doc. She hates the tool it was built in. The other one took one look, bounced off the collapsed toggles, and only came back to it weeks later — late at night, alone. But when she asked him which agency did the best work on any given topic, his answer was the same every time. That's when we learned: the format has to fit the audience. At-a-glance AND with depth. Always both.",
+    pullQuote: "Your response cooked every other agency. — the eventual decision-maker, very late one night",
     accent: "#f59e0b",
     accent2: "#10b981",
     bg: "#fefce8",
     Icon: GraduationCap,
-    gif: { caption: "cooked", tilt: -2, emoji: "🍳" },
-    stat: { value: "1", label: "champion in the room (Josh)" },
+    gif: {
+      caption: "the twist",
+      tilt: -2,
+      emoji: "🙄",
+      src: "https://media.giphy.com/media/UbLnLnbbYQTDc2bmbJ/giphy.gif",
+    },
+    stat: { value: "1", label: "internal champion, worth more than the deck" },
   },
   {
     id: "onwards",
-    kicker: "Closer",
-    title: "Better(.com)\nthan we were\nthe last time",
-    body: "Audits integrated from day one. One doc, not many. Three-track as default. Stability framed as strategy. Format fits audience — at a glance AND with depth. Show, don't tell. Plant the book. Listen past what they said, hear what's at the heart of it.",
+    kicker: "What we take with us",
+    title: "Better than\nwe were\nlast time.",
+    body: "Integrate the audit from day one. One story to the client, not four. Three-track creative by default. Stability framed as strategy. Format fits audience — always both a glance and a deep dive. Show, don't tell. Listen past what they said. And sometimes: leave a book, no note.",
     pullQuote:
       "We haven't perfected our craft yet, and that's largely because we never will. We test, we learn, we iterate. That's what makes us us. — Coke",
     accent: "#ec4899",
     accent2: "#8b5cf6",
     bg: "#fdf4ff",
     Icon: Rocket,
-    gif: { caption: "mic drop", tilt: 5, emoji: "🎤" },
+    gif: {
+      caption: "mic drop",
+      tilt: 5,
+      emoji: "🎤",
+      src: "https://media.giphy.com/media/15BuyagtKucHm/giphy.gif",
+    },
   },
 ];
 
@@ -638,16 +682,27 @@ function GifPlaceholder({
         border: "1px solid rgba(255,255,255,0.6)",
       }}
     >
-      {/* Drop a real <img src="/gifs/foo.gif" /> in place of this block */}
-      <div className="absolute inset-0 flex items-center justify-center">
-        <div className="ecosystem-wobble text-7xl select-none">{gif.emoji}</div>
-      </div>
-      <div
-        className="absolute inset-0 opacity-60"
-        style={{
-          background: `repeating-linear-gradient(45deg, ${accent}11 0 8px, transparent 8px 16px)`,
-        }}
-      />
+      {gif.src ? (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
+          src={gif.src}
+          alt={gif.caption}
+          className="absolute inset-0 w-full h-full object-cover"
+          loading="lazy"
+        />
+      ) : (
+        <>
+          <div className="absolute inset-0 flex items-center justify-center">
+            <div className="ecosystem-wobble text-7xl select-none">{gif.emoji}</div>
+          </div>
+          <div
+            className="absolute inset-0 opacity-60"
+            style={{
+              background: `repeating-linear-gradient(45deg, ${accent}11 0 8px, transparent 8px 16px)`,
+            }}
+          />
+        </>
+      )}
       {/* Corner tag */}
       <div className="absolute top-3 left-3 px-2 py-1 rounded-full bg-white/80 backdrop-blur text-[10px] uppercase tracking-[0.18em] font-semibold text-zinc-700 flex items-center gap-1">
         <Film className="w-3 h-3" /> GIF · {gif.caption}

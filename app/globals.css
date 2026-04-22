@@ -9,11 +9,11 @@
 
 body {
   background: #ffffff;
-  color: #18181b;
-  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  color: #09090b;
+  font-family: var(--font-inter), system-ui, -apple-system, "Segoe UI", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  letter-spacing: -0.011em;
+  letter-spacing: -0.018em;
 }
 
 button,
