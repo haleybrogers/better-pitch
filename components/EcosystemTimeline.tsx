@@ -53,9 +53,9 @@ type Chapter = {
 const chapters: Chapter[] = [
   {
     id: "cover",
-    kicker: "A Pearmill team love letter",
-    title: "From Silos\nto Ecosystem",
-    body: "A year of pitching taught us one thing: stop showing up as four teams with four decks. Start showing up as one story. This is how that lesson landed.",
+    kicker: "Pearmill × Better",
+    title: "Strap in.",
+    body: "This is the story of one pitch — and how it fucking changed the way we think about everything.",
     pullQuote:
       "We're being really intentional about working as one ecosystem, rather than separate silos. — Coke",
     accent: "#014737",
@@ -63,10 +63,10 @@ const chapters: Chapter[] = [
     bg: "#ffffff",
     Icon: Sparkles,
     gif: {
-      caption: "the thesis",
+      caption: "strap in",
       tilt: -4,
-      emoji: "✨",
-      src: "https://media.giphy.com/media/UEJk41CaFgewU/giphy.gif",
+      emoji: "🎢",
+      src: "https://media.giphy.com/media/gHfdhl5JCAySFfkgTy/giphy.gif",
     },
   },
   {
@@ -616,15 +616,7 @@ function ChapterPanel({
                 offsetX={parallaxGif}
               />
             )}
-            {chapter.deliverables && (
-              <DeliverableStack
-                items={chapter.deliverables}
-                accent={chapter.accent}
-                accent2={chapter.accent2}
-                openness={oExtras}
-                offsetX={parallaxDeliv}
-              />
-            )}
+            {/* Deliverables block removed — telling the story, not selling the output */}
           </div>
         )}
 
