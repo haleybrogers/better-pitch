@@ -6,3 +6,6 @@ out/
 .vercel
 next-env.d.ts
 *.tsbuildinfo
+
+# Large pitch creatives — served from external CDN, not committed
+/public/creatives/
