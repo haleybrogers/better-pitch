@@ -469,8 +469,10 @@ export function EcosystemTimeline() {
   // Kinetic-typography reveal for the opening title frame only.
   // Dead zone at the very top so the typewriter doesn't start until the user
   // has deliberately scrolled a little — the title stays visually quiet first.
-  const heroDead = dwellPerChapter * 0.25;
-  const heroRevealSpan = dwellPerChapter * 0.55;
+  // Span is generous (≈1.3× viewport height of scroll) so the typing feels
+  // paced rather than rushed.
+  const heroDead = viewport.h * 0.25;
+  const heroRevealSpan = viewport.h * 1.3;
   const heroReveal =
     viewport.h > 0 && heroRevealSpan > 0
       ? clamp01((scrollY - heroDead) / heroRevealSpan)
@@ -643,6 +645,7 @@ function ChapterPanel({
         openness={oContent}
         parallax={parallaxX}
         kinetic={kinetic}
+        local={local}
       />
     );
   }
@@ -674,14 +677,19 @@ function HeroPanel({
   openness: o,
   parallax,
   kinetic,
+  local,
 }: {
   chapter: Chapter;
   openness: number;
   parallax: number;
   kinetic: number;
+  local: number;
 }) {
   const { Icon } = chapter;
   const isKinetic = kinetic < 1;
+  // Defer mounting the hero gif/video until the panel is close to view —
+  // otherwise the media starts playing long before the user has scrolled to it.
+  const mediaInView = Math.abs(local) < 0.7;
   return (
     <section
       className="relative flex-shrink-0 h-full w-screen flex items-center justify-center px-[6vw] overflow-hidden"
@@ -747,7 +755,7 @@ function HeroPanel({
             &ldquo;{chapter.pullQuote}&rdquo;
           </blockquote>
         )}
-        {chapter.gif?.src && (
+        {chapter.gif?.src && mediaInView && (
           <div
             className="mt-10"
             style={{ opacity: o, transform: `translate3d(0, ${(1 - o) * 30}px, 0)` }}
