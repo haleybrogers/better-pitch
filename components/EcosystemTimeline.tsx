@@ -79,9 +79,9 @@ const chapters: Chapter[] = [
   },
   {
     id: "round-1",
-    kicker: "Round 1 · Oct 2025",
+    kicker: "Round 1 · Oct 2025 · the old way",
     title: "We got in\nthe door.",
-    body: "Remote audit over Notion. We hooked them with how much we already knew about their account before they told us anything. Jessica wanted a deeper competitive dive. Nima suggested we fly to New York to present it. That 'deeper dive' turned into a full RFP.",
+    body: "We hooked them with our channel expertise. But they wanted more evidence of our understanding of the competitive landscape. So we sent an audit. An infinite, siloed Notion doc. The old way.",
     pullQuote:
       "We really hooked them with our knowledge. — Donovan, recalling the first call",
     accent: "#014737",
@@ -89,18 +89,17 @@ const chapters: Chapter[] = [
     bg: "#fafaf9",
     Icon: Radio,
     gif: {
-      caption: "the audit",
+      caption: "the infinite notion doc",
       tilt: 0,
       emoji: "📄",
-      src: "/moments/audit-screenshot.png",
-      asPhoto: true,
+      scrollPages: notionPages,
     },
   },
   {
     id: "round-2",
     kicker: "Round 2 · Nov 18 2025 · NYC",
-    title: "We brought\na cake.",
-    body: "Moojan built the deck through tonsillitis. The team found a bakery 12 min from the office. Karim ordered a yellow cake with strawberry jam filling, white frosting, green writing — our ad headline, actually on the cake — and Uber-couriered it to 1 WTC, 80th floor, 12:45pm. Then we sent a 50-page Notion doc as the RFP response. Every other agency sent a polished deck. Jessica — the decision-maker — hates Notion. She didn't open it. Sly opened it, bounced off the collapsed toggles, came back late one night alone. Clicked in. And in. And in.",
+    title: "We unified\nthe message.",
+    body: "Creative, media, and measurement — tied together as a single thread. But the client mis-represented the brief. And we overshot the moon with creative. Then Jessica didn't read the RFP, because it was in Notion.",
     pullQuote:
       "Your RFP response cooked every other agency. — Sly, very late one night",
     accent: "#014737",
@@ -108,11 +107,22 @@ const chapters: Chapter[] = [
     bg: "#ffffff",
     Icon: Lightbulb,
     gif: {
-      caption: "the rfp doc she didn't read",
+      caption: "nyc · 1 wtc",
       tilt: 0,
-      emoji: "📄",
-      scrollPages: notionPages,
+      emoji: "🗽",
+      src: "/moments/nyc-team.jpg",
+      asPhoto: true,
     },
+    gallery: [
+      "/moments/cake.jpg",
+      "/moments/statics/cake-creative.png",
+      "/moments/statics/melanoma.png",
+      "/moments/statics/cortisol-shirt.png",
+      "/moments/statics/mansplaining.png",
+      "/moments/statics/hotel-key.png",
+      "/moments/statics/coffee-cup.png",
+      "/moments/statics/apple-watch.png",
+    ],
   },
   {
     id: "round-3",
@@ -127,12 +137,16 @@ const chapters: Chapter[] = [
     Icon: Cog,
     stat: { value: "0", label: "notes back from the client" },
     gif: {
-      caption: "cold submission",
+      caption: "betsy · semi-static 1",
       tilt: 0,
-      emoji: "🎁",
-      src: "https://media.giphy.com/media/e9UfxLdJ9V8V7H0UGR/giphy.gif",
+      emoji: "🤖",
+      src: "/moments/betsy-1.gif",
       asPhoto: true,
     },
+    gallery: [
+      "/moments/betsy-2.gif",
+      "/moments/betsy-3.gif",
+    ],
   },
   {
     id: "fight",
@@ -575,7 +589,7 @@ function ChapterPanel({
 
         {/* Media column */}
         {!isCover && !isOutro && (
-          <div className="relative flex flex-col items-center gap-6">
+          <div className="relative flex flex-col items-center gap-4">
             {chapter.gif && (
               <GifPlaceholder
                 gif={chapter.gif}
@@ -585,7 +599,9 @@ function ChapterPanel({
                 offsetX={parallaxGif}
               />
             )}
-            {/* Deliverables block removed — telling the story, not selling the output */}
+            {chapter.gallery && chapter.gallery.length > 0 && (
+              <ChapterGallery items={chapter.gallery} openness={oExtras} offsetX={parallaxDeliv} />
+            )}
           </div>
         )}
 
@@ -764,6 +780,41 @@ function DeliverableStack({
           );
         })}
       </div>
+    </div>
+  );
+}
+
+function ChapterGallery({
+  items,
+  openness,
+  offsetX,
+}: {
+  items: string[];
+  openness: number;
+  offsetX: number;
+}) {
+  return (
+    <div
+      className="w-80 flex gap-2 overflow-x-auto pb-2"
+      style={{
+        opacity: openness,
+        transform: `translate3d(${offsetX}px, ${(1 - openness) * 20}px, 0)`,
+      }}
+    >
+      {items.map((src) => (
+        <div
+          key={src}
+          className="relative flex-shrink-0 w-20 h-28 rounded-lg overflow-hidden bg-white border border-zinc-200 shadow-sm"
+        >
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={src}
+            alt=""
+            loading="lazy"
+            className="absolute inset-0 w-full h-full object-cover"
+          />
+        </div>
+      ))}
     </div>
   );
 }
