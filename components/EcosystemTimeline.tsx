@@ -58,7 +58,7 @@ const chapters: Chapter[] = [
     id: "cover",
     kicker: "The ride",
     title: "Strap in.",
-    body: "This is the story of one pitch — and how it fucking changed the way we think about everything. Seven months. 90% → 75% → 50% → 90% → 95!! → 30% → 95. The odds swung every hour. Here's the ride.",
+    body: "This is the story of one pitch — and how it fucking changed the way we think about everything. Seven months. The odds swung every hour. Here's the ride.",
     accent: "#014737",
     accent2: "#09090b",
     bg: "#ffffff",
@@ -87,12 +87,6 @@ const chapters: Chapter[] = [
       emoji: "📜",
       src: "/moments/notion-scroll.mov",
       asPhoto: true,
-    },
-    leadGif: {
-      caption: "in the door",
-      tilt: 0,
-      emoji: "🚪",
-      src: "https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExajdwNWM2bnA1a2U3dmxuejByY2QzZTdqaG1qOTUxcXhvbHVhOG5zYiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/3o7aCPVTaKjiYIPvsk/giphy.gif",
     },
     learning:
       "We probably should have baked the competitive deep dive into the first audit — it's what the client was really asking for.",
@@ -257,7 +251,7 @@ const chapters: Chapter[] = [
     id: "onwards",
     kicker: "What we learned",
     title: "Tell\nthe whole\nstory.",
-    body: "Stop showing up as four silos with four decks. One story, four voices. Read the RFP between the lines. Build for both \"at a glance\" AND \"with depth.\" Peer-review everything — no one of us is perfect, including AI. Plant the book. Listen past what they said and hear what's at the heart of it. Show. Don't tell.",
+    body: "Stop showing up as four silos with four sprawling Notion docs. One story, four voices. Read the RFP between the lines. Build for both \"at a glance\" AND \"with depth.\" Peer-review everything — no one of us is perfect, including AI. Plant the book. Listen past what they said and hear what's at the heart of it. Show. Don't tell.",
     pullQuote:
       "We haven't perfected our craft yet, and that's largely because we never will. We test, we learn, we iterate. That's what makes us us. — Coke",
     accent: "#ffffff",
@@ -843,6 +837,7 @@ function ContentPanel({
   return (
     <section
       className="relative flex-shrink-0 h-full flex items-center"
+      style={{ backgroundColor: chapter.bg }}
       aria-label={chapter.title.replace(/\n/g, " ")}
     >
       <div className="flex items-center gap-10 pl-14 pr-16 h-full py-10">
