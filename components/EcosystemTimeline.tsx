@@ -1079,7 +1079,7 @@ const CREDITS: { name: string; line: string }[] = [
   { name: "Donovan", line: "guided the creative. Kept the train on the tracks. Has great hair." },
   { name: "Coke", line: "quarterbacked every room. Called the plays, read the defense, kept the team in sync." },
   { name: "Het", line: "smartest person in the room. Paid Search whisperer." },
-  { name: "Mariate", line: "Meta POV, measurement brain, quiet operator of the creative engine." },
+  { name: "Mariate", line: "Meta POV + measurement brain. Stayed online past midnight for the kickoff call. SO late." },
   { name: "Moojan", line: "powered the RFP research. Always the voice asking 'have we considered...?'" },
   { name: "Dino", line: "wooed Jessica. Made her fall in love with him on Pearmill's behalf." },
   { name: "Addie", line: "cast it, produced it, and made it fucking happen — on the weekend." },
