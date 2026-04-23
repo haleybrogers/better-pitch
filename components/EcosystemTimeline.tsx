@@ -1067,11 +1067,11 @@ function DashboardMockup({
       {/* MacBook body */}
       <div className="relative">
         {/* Screen */}
-        <div className="relative bg-zinc-900 rounded-[14px] p-[8px] shadow-2xl ring-1 ring-black/10">
+        <div className="relative bg-zinc-900 rounded-[12px] p-[6px] shadow-2xl ring-1 ring-black/10">
           {/* Notch */}
-          <div className="absolute top-[3px] left-1/2 -translate-x-1/2 w-20 h-[6px] bg-black rounded-b-md z-10" />
+          <div className="absolute top-[2px] left-1/2 -translate-x-1/2 w-16 h-[5px] bg-black rounded-b-md z-10" />
           {/* Screen content */}
-          <div className="relative w-[48rem] aspect-[16/10] overflow-hidden rounded-[6px] bg-zinc-100">
+          <div className="relative w-[30rem] aspect-[16/10] overflow-hidden rounded-[5px] bg-zinc-100">
             {hasVideo ? (
               <video
                 src={videoSrc}
