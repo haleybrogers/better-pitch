@@ -66,7 +66,7 @@ const chapters: Chapter[] = [
     id: "cover",
     kicker: "The ride",
     title: "Strap in.",
-    body: "This is the story of one pitch — and how it changed the way we think about everything. Seven months. The odds swung every hour. Here's the ride.",
+    body: "Seven months. One pitch. The odds swung every hour.",
     accent: "#014737",
     accent2: "#09090b",
     bg: "#ffffff",
@@ -235,8 +235,8 @@ const chapters: Chapter[] = [
   {
     id: "kickoff",
     kicker: "Kickoff · April 20 2026 · NYC",
-    title: "Jessica\nkissed her\nlaptop.",
-    body: "A strategy conversation without a kickoff. We sent kickoff questions that never got answered. We found out the week before — if you can even call it a week — that we'd be flying in. Each of us had to pivot our approach to make the client feel like they could trust us to hit goals they themselves deem impossible. Haley walked Jessica through the hub she'd built. Het explained Paid Search. Mariate did Meta. Coke quarterbacked. Nima closed. They walked out of that room thinking: if we don't hit those goals, it's not our team. OUR team — because Jessica trusted us enough to claim us as her own. Client pivoted mid-day and handed us $1.5M incremental — $1M of it in May.",
+    title: "WE DID IT.\nWE WON.",
+    body: "So we flew to NYC for an in-person kickoff. A strategy conversation without an actual kickoff — we sent kickoff questions that never got answered. We found out the week before — if you can even call it a week — that we'd be flying in. Each of us had to pivot our approach to make the client feel like they could trust us to hit goals they themselves deem impossible. Haley walked Jessica through the hub she'd built. Het explained Paid Search. Mariate did Meta. Coke quarterbacked. Nima closed. They walked out of that room thinking: if we don't hit those goals, it's not our team. OUR team — because Jessica trusted us enough to claim us as her own. Client pivoted mid-day and handed us $1.5M incremental — $1M of it in May. Jessica literally kissed her laptop.",
     pullQuote: "They didn't ask for it. But they needed it. — Haley",
     accent: "#014737",
     accent2: "#09090b",
@@ -247,7 +247,7 @@ const chapters: Chapter[] = [
       label: "incremental budget handed to us by lunch",
     },
     leadGif: {
-      caption: "kitty",
+      caption: "Jessica, allegedly, kissing her laptop",
       tilt: 0,
       emoji: "🐱",
       src: "https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExOHVybmxtaWxlZmx5cDdjMWpjbHY1djR6NDV0eXVhNHEyOXdvbzd3YSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/W1hd3uXRIbddu/giphy.gif",
@@ -320,6 +320,46 @@ const chapters: Chapter[] = [
 
 function clamp01(v: number) {
   return Math.max(0, Math.min(1, v));
+}
+
+// Scroll-triggered, time-based reveal. Returns a 0→1 progress that plays out
+// over `durationMs` once `triggered` flips to true, decoupled from scroll
+// deltas so the animation stays smooth regardless of jumpy trackpad input.
+// Resets to 0 if the trigger flips back off (e.g. user scrolls above it).
+function useTriggeredReveal(triggered: boolean, durationMs: number) {
+  const [progress, setProgress] = useState(0);
+  const rafRef = useRef<number | null>(null);
+  const startRef = useRef<number | null>(null);
+  const progressRef = useRef(0);
+  useEffect(() => {
+    if (!triggered) {
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+      rafRef.current = null;
+      startRef.current = null;
+      progressRef.current = 0;
+      setProgress(0);
+      return;
+    }
+    // Resume from wherever we were so toggling off/on keeps continuity.
+    startRef.current = performance.now() - progressRef.current * durationMs;
+    const tick = (t: number) => {
+      const base = startRef.current ?? t;
+      const p = clamp01((t - base) / durationMs);
+      progressRef.current = p;
+      setProgress(p);
+      if (p < 1) {
+        rafRef.current = requestAnimationFrame(tick);
+      } else {
+        rafRef.current = null;
+      }
+    };
+    rafRef.current = requestAnimationFrame(tick);
+    return () => {
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+      rafRef.current = null;
+    };
+  }, [triggered, durationMs]);
+  return progress;
 }
 
 function clamp(min: number, max: number, v: number) {
@@ -466,17 +506,37 @@ export function EcosystemTimeline() {
       ? clamp01(scrollY / (wrapperHeight - viewport.h))
       : 0;
 
-  // Kinetic-typography reveal for the opening title frame only.
-  // Dead zone at the very top so the typewriter doesn't start until the user
-  // has deliberately scrolled a little — the title stays visually quiet first.
-  // Span is generous (≈1.3× viewport height of scroll) so the typing feels
-  // paced rather than rushed.
-  const heroDead = viewport.h * 0.25;
-  const heroRevealSpan = viewport.h * 1.3;
-  const heroReveal =
-    viewport.h > 0 && heroRevealSpan > 0
-      ? clamp01((scrollY - heroDead) / heroRevealSpan)
+  // Scroll-TRIGGERED animations — once the scroll position crosses a panel's
+  // threshold, the reveal plays on its own internal timer, regardless of how
+  // the user keeps scrolling. This makes the animation feel smooth even when
+  // the user's scroll wheel / trackpad delivers jumpy input.
+
+  const heroTrigger = scrollY > viewport.h * 0.25;
+  const heroReveal = useTriggeredReveal(heroTrigger, 4200);
+
+  const dmIndex = chapters.findIndex((c) => c.id === "dm");
+  let dmTriggerScrollY = Infinity;
+  if (dmIndex >= 0) {
+    let cursor = 0;
+    for (let i = 0; i < dmIndex; i++) {
+      cursor += dwellPerChapter;
+      if (i < travelDistances.length) cursor += travelDistances[i];
+    }
+    const dmDwellStart = cursor;
+    const entryTravel = dmIndex > 0 ? travelDistances[dmIndex - 1] ?? 0 : 0;
+    // Trigger a bit before the panel fully centers, so the animation is
+    // already rolling by the time the user's eyes land on it.
+    dmTriggerScrollY = dmDwellStart - entryTravel * 0.5;
+  }
+  const dmTrigger = scrollY > dmTriggerScrollY;
+  const dmReveal = useTriggeredReveal(dmTrigger, 7500);
+
+  const endcardCenteredAt =
+    readPositions.length > 0
+      ? (readPositions.length - 1) * dwellPerChapter + totalTravel
       : 0;
+  const endcardTrigger = scrollY > endcardCenteredAt + viewport.h * 0.35;
+  const endcardReveal = useTriggeredReveal(endcardTrigger, 5000);
 
   // Active chapter = whichever panel's center is closest to viewport center.
   const viewportCenter = -translateX + viewport.w / 2;
@@ -549,6 +609,8 @@ export function EcosystemTimeline() {
                 index={i}
                 local={local}
                 heroReveal={heroReveal}
+                dmReveal={dmReveal}
+                endcardReveal={endcardReveal}
               />
             );
           })}
@@ -618,11 +680,15 @@ function ChapterPanel({
   index,
   local,
   heroReveal,
+  dmReveal,
+  endcardReveal,
 }: {
   chapter: Chapter;
   index: number;
   local: number;
   heroReveal: number;
+  dmReveal: number;
+  endcardReveal: number;
 }) {
   const isHero = chapter.id === "title" || chapter.id === "cover";
   const isOutro = chapter.id === "onwards";
@@ -653,10 +719,17 @@ function ChapterPanel({
     return <OutroPanel chapter={chapter} openness={oContent} />;
   }
   if (isDm) {
-    return <DmPanel chapter={chapter} openness={oContent} local={local} />;
+    return (
+      <DmPanel
+        chapter={chapter}
+        openness={oContent}
+        local={local}
+        reveal={dmReveal}
+      />
+    );
   }
   if (isEndcard) {
-    return <EndcardPanel chapter={chapter} />;
+    return <EndcardPanel chapter={chapter} reveal={endcardReveal} />;
   }
   return (
     <ContentPanel
@@ -919,7 +992,19 @@ function OutroPanel({
 /*  Endcard panel — final "Better × Pearmill" splash                 */
 /* ─────────────────────────────────────────────────────────────── */
 
-function EndcardPanel({ chapter }: { chapter: Chapter }) {
+function EndcardPanel({
+  chapter,
+  reveal,
+}: {
+  chapter: Chapter;
+  reveal: number;
+}) {
+  const stage = (start: number, end: number) =>
+    clamp01((reveal - start) / Math.max(0.001, end - start));
+  const kickerT = stage(0.0, 0.18);
+  const logosT = stage(0.18, 0.58);
+  const barT = stage(0.58, 0.72);
+  const subT = stage(0.72, 1.0);
   return (
     <section
       className="relative flex-shrink-0 h-full w-screen flex items-center justify-center text-white px-12"
@@ -927,7 +1012,13 @@ function EndcardPanel({ chapter }: { chapter: Chapter }) {
       aria-label="Better × Pearmill"
     >
       <div className="relative z-10 flex flex-col items-center gap-8 max-w-full">
-        <div className="text-[11px] uppercase tracking-[0.35em] text-white/40 font-semibold">
+        <div
+          className="text-[11px] uppercase tracking-[0.35em] text-white/40 font-semibold"
+          style={{
+            opacity: kickerT,
+            transform: `translate3d(0, ${(1 - kickerT) * 12}px, 0)`,
+          }}
+        >
           {chapter.kicker}
         </div>
         <div className="flex items-center gap-10 md:gap-14 text-white">
@@ -936,9 +1027,20 @@ function EndcardPanel({ chapter }: { chapter: Chapter }) {
             src="/logos/better.svg"
             alt="Better"
             className="h-[clamp(1.5rem,3.2vw,2.5rem)] w-auto"
-            style={{ filter: "invert(1) brightness(2)" }}
+            style={{
+              filter: "invert(1) brightness(2)",
+              opacity: clamp01(logosT * 2),
+              transform: `translate3d(${(1 - clamp01(logosT * 2)) * -30}px, 0, 0)`,
+            }}
           />
-          <span className="text-[clamp(1.5rem,3.5vw,2.75rem)] text-white/40 font-light leading-none">
+          <span
+            aria-hidden
+            className="flex items-center justify-center text-[clamp(1.5rem,3.5vw,2.75rem)] text-white/40 font-light leading-none h-[clamp(2rem,4.5vw,3.75rem)]"
+            style={{
+              opacity: clamp01((logosT - 0.4) / 0.3),
+              transform: `scale(${0.6 + clamp01((logosT - 0.4) / 0.3) * 0.4})`,
+            }}
+          >
             ×
           </span>
           {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -946,11 +1048,27 @@ function EndcardPanel({ chapter }: { chapter: Chapter }) {
             src="/logos/pearmill.svg"
             alt="Pearmill"
             className="h-[clamp(2rem,4.5vw,3.75rem)] w-auto"
-            style={{ filter: "invert(1) brightness(2)" }}
+            style={{
+              filter: "invert(1) brightness(2)",
+              opacity: clamp01((logosT - 0.5) / 0.5),
+              transform: `translate3d(${(1 - clamp01((logosT - 0.5) / 0.5)) * 30}px, 0, 0)`,
+            }}
           />
         </div>
-        <div className="h-[2px] w-24 bg-white/30" />
-        <div className="text-[11px] uppercase tracking-[0.3em] text-white/50 font-semibold">
+        <div
+          className="h-[2px] bg-white/30"
+          style={{
+            width: `${barT * 96}px`,
+            opacity: barT,
+          }}
+        />
+        <div
+          className="text-[11px] uppercase tracking-[0.3em] text-white/50 font-semibold"
+          style={{
+            opacity: subT,
+            transform: `translate3d(0, ${(1 - subT) * 10}px, 0)`,
+          }}
+        >
           A love letter, with learnings
         </div>
       </div>
@@ -967,25 +1085,26 @@ function DmPanel({
   chapter,
   openness: o,
   local,
+  reveal,
 }: {
   chapter: Chapter;
   openness: number;
   local: number;
+  reveal: number;
 }) {
-  // Reveal climbs from 0 as the panel enters from the right (local ≈ 1) to 1
-  // when it's centered (local ≈ 0) and stays at 1 as it leaves left.
-  const reveal = clamp01(1 - local);
-
-  // Schedule for the two incoming messages and the "Us." reply.
-  // Each stage's local progress 0→1 is its own typewriter / pop-in window.
+  void local;
+  // `reveal` is a scroll-driven 0→1 that spans the DM's entry travel plus
+  // ~95% of its dwell, so every beat lands while the panel is centered and
+  // the horizontal track is effectively paused.
   const stage = (start: number, end: number) =>
     clamp01((reveal - start) / Math.max(0.001, end - start));
 
-  const typing1 = stage(0.05, 0.18);
-  const msg1 = stage(0.18, 0.42);
-  const typing2 = stage(0.42, 0.55);
-  const msg2 = stage(0.55, 0.82);
-  const us = stage(0.82, 1.0);
+  const typing1 = stage(0.06, 0.14);
+  const msg1 = stage(0.14, 0.38);
+  const typing2 = stage(0.40, 0.48);
+  const msg2 = stage(0.48, 0.74);
+  const us = stage(0.80, 0.92);
+  const thanks = stage(0.93, 1.0);
 
   return (
     <section
@@ -1389,6 +1508,24 @@ function DashboardMockup({
 }) {
   const { videoSrc, posterSrc, href, password, label } = dashboard;
   const hasVideo = !!videoSrc;
+  const videoRef = useRef<HTMLVideoElement>(null);
+  useEffect(() => {
+    const v = videoRef.current;
+    if (!v) return;
+    let timer: ReturnType<typeof setTimeout> | null = null;
+    const onEnded = () => {
+      timer = setTimeout(() => {
+        if (!videoRef.current) return;
+        videoRef.current.currentTime = 0;
+        videoRef.current.play().catch(() => {});
+      }, 8000);
+    };
+    v.addEventListener("ended", onEnded);
+    return () => {
+      v.removeEventListener("ended", onEnded);
+      if (timer) clearTimeout(timer);
+    };
+  }, []);
   return (
     <div className="flex flex-col items-center gap-4 px-8 py-6">
       {/* MacBook body */}
@@ -1401,6 +1538,7 @@ function DashboardMockup({
           <div className="relative w-[30rem] aspect-[16/10] overflow-hidden rounded-[5px] bg-white flex items-center justify-center p-3">
             {hasVideo ? (
               <video
+                ref={videoRef}
                 src={videoSrc}
                 poster={posterSrc}
                 autoPlay
@@ -1454,11 +1592,20 @@ function LeadMedia({ src, caption }: { src: string; caption?: string }) {
   const isVideo = /\.(mp4|mov|webm)$/i.test(src);
   const cls =
     "w-44 h-44 md:w-52 md:h-52 rounded-2xl object-cover shadow-lg ring-1 ring-black/5";
-  return isVideo ? (
-    <video src={src} autoPlay loop muted playsInline className={cls} />
-  ) : (
-    // eslint-disable-next-line @next/next/no-img-element
-    <img src={src} alt={caption ?? ""} loading="lazy" className={cls} />
+  return (
+    <figure className="flex flex-col items-center gap-2">
+      {isVideo ? (
+        <video src={src} autoPlay loop muted playsInline className={cls} />
+      ) : (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img src={src} alt={caption ?? ""} loading="lazy" className={cls} />
+      )}
+      {caption && (
+        <figcaption className="text-[11px] italic text-zinc-500 text-center max-w-[14rem] leading-snug">
+          {caption}
+        </figcaption>
+      )}
+    </figure>
   );
 }
 
