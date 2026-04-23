@@ -1223,16 +1223,16 @@ function EndcardPanel({
         {/* Credits roll — small beat after the title card settles, then fades
             in under the subtitle before the whole column glides up. */}
         <div
-          className="w-full max-w-[60rem] px-10 flex flex-col items-center"
+          className="w-full px-6 flex flex-col items-center"
           style={{ opacity: clamp01((intro - 0.95) / 0.05 + scrollT * 3) }}
         >
-          <div className="grid grid-cols-[max-content_1fr] gap-x-8 gap-y-3 mb-14 w-full max-w-[54rem]">
+          <div className="grid grid-cols-[10rem_minmax(0,30rem)] gap-x-8 gap-y-3 mb-14">
             {CREDITS.map((c) => (
               <div key={c.name} className="contents">
-                <div className="text-[0.8rem] uppercase tracking-[0.12em] font-bold text-white text-right whitespace-nowrap self-baseline">
+                <div className="text-[0.8rem] uppercase tracking-[0.12em] font-bold text-white text-right self-baseline break-words">
                   {c.name}
                 </div>
-                <div className="text-white/60 text-[13px] italic leading-snug text-left self-baseline">
+                <div className="text-white/60 text-[13px] italic leading-snug text-left self-baseline min-w-0 break-words">
                   {c.line}
                 </div>
               </div>
