@@ -62,8 +62,18 @@ const notionPages = Array.from(
 
 const chapters: Chapter[] = [
   {
-    id: "cover",
+    id: "title",
     kicker: "Pearmill × Better",
+    title: "From Silos\nto Ecosystem.",
+    body: "What Better taught us.",
+    accent: "#014737",
+    accent2: "#09090b",
+    bg: "#ffffff",
+    Icon: Sparkles,
+  },
+  {
+    id: "cover",
+    kicker: "The ride",
     title: "Strap in.",
     body: "This is the story of one pitch — and how it fucking changed the way we think about everything. Seven months. 90% → 75% → 50% → 90% → 95!! → 30% → 95. The odds swung every hour. Here's the ride.",
     pullQuote:
@@ -83,9 +93,10 @@ const chapters: Chapter[] = [
     id: "round-1",
     kicker: "Round 1 · Oct 2025 · the old way",
     title: "We got in\nthe door.",
-    body: "We hooked them with our channel expertise. But they wanted more evidence of our understanding of the competitive landscape. So we sent an audit. An infinite, siloed Notion doc. The old way.",
+    body: "We really hooked them with our knowledge. Jessica wanted a deeper dive into competitors — Nima suggested we fly to NYC to present it. Jessica turned it into a full RFP, opened the call to more agencies. Meanwhile we sent an audit. An infinite, siloed Notion doc. The old way.",
     pullQuote:
       "We really hooked them with our knowledge. — Donovan, recalling the first call",
+    learning: "We probably should have baked the competitive deep dive into the first audit — it's what the client was really asking for.",
     accent: "#014737",
     accent2: "#09090b",
     bg: "#fafaf9",
@@ -103,7 +114,7 @@ const chapters: Chapter[] = [
     id: "round-2",
     kicker: "Round 2 · Nov 18 2025 · NYC",
     title: "We brought\na cake.",
-    body: "We unified the message — creative, media, and measurement tied together as a single thread. But the client mis-represented the brief. And we overshot the moon with creative. Then Jessica didn't read the RFP, because it was in Notion.",
+    body: "We unified the message. Creative, media, and measurement threaded as one. But Sly and Josh had written the RFP themselves — scrappy, first time — and we read it wrong. We overshot the moon with creative. Then Jessica never even opened it; it lived in Notion. Even Sly dismissed it at first because of the collapsed toggles. When he came back to it late one night, he told us our RFP response cooked every other agency. Jessica kept asking him which agency did X best, which did Y best. His answer was Pearmill, every time.",
     pullQuote:
       "Your RFP response cooked every other agency. — Sly, very late one night",
     accent: "#014737",
@@ -135,13 +146,13 @@ const chapters: Chapter[] = [
       "/moments/statics/coffee-cup.png",
       "/moments/statics/apple-watch.png",
     ],
-    learning: "Every pitch now gets a GM — the tyer of threads. One story, four voices, zero silos.",
+    learning: "Consider the audience — but find diverse ways to show the work, at-a-glance AND with depth. The format missed both Sly and Jessica, for opposite reasons.",
   },
   {
     id: "round-3a",
     kicker: "Round 3a · Dec 2025 – Jan 2026",
-    title: "Yet another\nfucking call.",
-    body: "Jessica wasn't satisfied after NYC, so we went deeper. A full competitive read — and Cosmin's AI dream for how creative should target copy. Het reframed Google as a quality/rank-score problem, not a budget one. We AI'd the Google copy pipeline end-to-end, landing keyword-to-LP message match at scale.",
+    title: "Yet another\ncall.",
+    body: "Coming out of NYC, Jessica was worried our creative wasn't backed enough by industry knowledge and competitive analysis. She was ready to move on — Josh saved it: \"wait, these guys have the creative chops to make really inventive work.\" So Jessica asked us (again) to go deeper on competitors. Another agency had taken their best-performing ads and iterated on them — the client loved that. She also wanted more evidence of Google copy and creative. Het reframed Google as a quality/rank-score problem, not a budget one. We AI'd the Google copy pipeline end-to-end, landing keyword-to-LP message match at scale.",
     pullQuote:
       "Chat told me it wasn't necessary to use all 15 headlines. Chat knows nothing. — Het, standing up for Better's ad strength",
     accent: "#014737",
@@ -160,7 +171,7 @@ const chapters: Chapter[] = [
     id: "round-3b",
     kicker: "Round 3b · Feb 2026 · Betsy",
     title: "Then\nthey asked\nfor Betsy.",
-    body: "Cold submission. No meeting. No voiceover. PowerPoint only. This is where the other agency shit the bed. Jessica couldn't get past it — so disappointed they missed the brief and didn't call or check in to make sure they were clear. Every POV on our side got QA'd and challenged inside the team before we shipped. They came back with zero notes.",
+    body: "Cold submission. No meeting. No voiceover. PowerPoint only. Other agencies shit the bed — Jessica was so disappointed they missed the brief and never called to check in. We read, and re-read, what Betsy needed. We have the expertise, but we listened to what they were actually asking, and then we went deeper. What's at the heart of it. Every POV on our side got QA'd inside the team before we shipped. Huge shoutout to creative for turning around client-winning work in two days. They came back with zero notes.",
     pullQuote:
       "In powerpoint no less, which we all know our preferred outlet [sic]. — Coke, on Betsy",
     accent: "#014737",
@@ -180,14 +191,15 @@ const chapters: Chapter[] = [
       "/moments/betsy-3.gif",
       "/moments/betsy-ai-girlie.mp4",
       "/moments/betsy-likegpt.mp4",
+      "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExMXhjMDR5eTFpczNjeW9hcXE4d3VmOGE3Zmo4Mm92cWZ6c3ZpampyaCZlcD12MV9naWZzX3NlYXJjaCZjdD1n/cZ6FrnA4NIuVUPgZMz/giphy.gif",
     ],
-    learning: "Hit the brief. When in doubt, pick up the phone — Nima emailed Sly every time we had a question.",
+    learning: "Listen past what they said to what's at the heart of it. When in doubt, pick up the phone — Nima emailed Sly every time we had a question.",
   },
   {
     id: "fight",
     kicker: "Fight to the death · Feb–Mar 2026",
     title: "Sly already\nhad the\nrejection\ndrafted.",
-    body: "Jump450 swooped in with 3 free months and a 4.5% Y1 undercut. Sly called Nima: we'd fallen to #2. While we waited, everyone kept guessing the odds: 90% → 75% → 50% → 90% → 95!! → 30% → 95. Then Nima and Val took a different approach to pricing — one that used performance as the reward, showing we stand behind our work. And then Nima slid a copy of Skin in the Game onto Sly's desk. No note. It was late one night. Sly was burnt out, frustrated, just done. Then he saw it. Opened it. Knew right away what it was and what it meant. That moved the needle. March 20: 90-day trial secured.",
+    body: "Jump450 swooped in with 3 free months and a 4.5% Y1 undercut. Sly called Nima: we'd fallen to #2. Then Nima and Val took a different approach to pricing — one that used performance as the reward, showing we stand behind our work. And then Nima slid a copy of Skin in the Game onto Sly's desk. No note. It was late one night. Sly was burnt out, frustrated, just done. Then he saw it. Opened it. Knew right away what it was and what it meant. That moved the needle. March 20: 90-day trial secured.",
     pullQuote:
       "He saw it. Opened it. Knew right away what it was and what it meant.",
     accent: "#014737",
@@ -208,7 +220,7 @@ const chapters: Chapter[] = [
     id: "kickoff",
     kicker: "Kickoff · April 20 2026 · NYC",
     title: "Jessica\nkissed her\nlaptop.",
-    body: "We flew in. The client sent no agenda, no kickoff questions, no prep. So we turned the meeting into a live strategy conversation. Haley walked Jessica through the hub she'd built. Het explained Paid Search. Mariate did Meta. Coke quarterbacked. Nima closed. Client pivoted mid-day and handed us $1.5M incremental — $1M of it in May. The huge push to incorporate AI quickly and intentionally — along with individual curiosity and drive — resulted in this hub. It proved our worth. (Scroll down to see it.)",
+    body: "A strategy conversation without a kickoff. We sent kickoff questions that never got answered. We found out the week before — if you can even call it a week — that we'd be flying in. Each of us had to pivot our approach to make the client feel like they could trust us to hit goals they themselves deem impossible. Haley walked Jessica through the hub she'd built. Het explained Paid Search. Mariate did Meta. Coke quarterbacked. Nima closed. They walked out of that room thinking: if we don't hit those goals, it's not our team. OUR team — because Jessica trusted us enough to claim us as her own. Client pivoted mid-day and handed us $1.5M incremental — $1M of it in May.",
     pullQuote:
       "They didn't ask for it. But they needed it. — Haley",
     accent: "#014737",
@@ -229,7 +241,7 @@ const chapters: Chapter[] = [
     gallery: [
       "/moments/kickoff-selfie.jpg",
     ],
-    learning: "Curiosity and a hard push to use AI — quickly, intentionally, together — is what built this hub. That's what proved our worth.",
+    learning: "Adapting in real time is the job. Curiosity and a hard push to use AI — quickly, intentionally, together — is what built this hub. That's what proved our worth.",
   },
   {
     id: "onwards",
@@ -483,7 +495,7 @@ function ChapterPanel({
   index: number;
   local: number; // -1 (off right) → 0 (center) → 1 (off left)
 }) {
-  const isCover = index === 0;
+  const isCover = chapter.id === "cover" || chapter.id === "title";
   const isOutro = chapter.id === "onwards";
   const darkPanel = isOutro;
 
@@ -1221,7 +1233,7 @@ function ProgressRail({ progress, activeIndex }: { progress: number; activeIndex
 
 // One value per chapter — emotional arc: strap in (0) → hooked (40) → VIBING (85) →
 // lost hope (30) → VIBING (90) → crashed (15) → WON (100) → won (100).
-const ODDS = [0, 40, 85, 30, 90, 15, 100, 100];
+const ODDS = [0, 0, 40, 85, 30, 90, 15, 95, 97];
 
 function OddsCounter({ progress }: { progress: number }) {
   const n = ODDS.length;
@@ -1256,7 +1268,7 @@ function OddsCounter({ progress }: { progress: number }) {
 // Rough day-count per chapter from Oct 1 2025 (day 0) to kickoff Apr 20 2026 (day 202)
 // cover = 0, round-1 ≈ day 1, round-2 Nov 18 ≈ 48, round-3a Dec–Jan ≈ 75,
 // round-3b Feb ≈ 125, fight Feb–Mar ≈ 140, kickoff Apr 20 = 202.
-const DAYS = [0, 1, 48, 75, 125, 140, 202, 202];
+const DAYS = [0, 0, 1, 48, 75, 125, 140, 202, 202];
 
 function DaysCounter({ progress }: { progress: number }) {
   const n = DAYS.length;
