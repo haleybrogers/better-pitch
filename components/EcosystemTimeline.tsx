@@ -285,6 +285,14 @@ export function EcosystemTimeline() {
     return () => mq.removeEventListener("change", onMq);
   }, []);
 
+  // Always open at the cover — don't restore the previous scroll position
+  useEffect(() => {
+    if ("scrollRestoration" in window.history) {
+      window.history.scrollRestoration = "manual";
+    }
+    window.scrollTo(0, 0);
+  }, []);
+
   useEffect(() => {
     let raf = 0;
     const tick = () => {
