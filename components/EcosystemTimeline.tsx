@@ -465,6 +465,14 @@ export function EcosystemTimeline() {
       ? clamp01(scrollY / (wrapperHeight - viewport.h))
       : 0;
 
+  // Kinetic-typography reveal for the opening title frame only.
+  // 0 on load; ramps to 1 across the first ~70% of the hero dwell so words
+  // keep animating while the user is actively scrolling.
+  const heroReveal =
+    viewport.h > 0
+      ? clamp01(scrollY / (dwellPerChapter * 0.7 || viewport.h))
+      : 0;
+
   // Active chapter = whichever panel's center is closest to viewport center.
   const viewportCenter = -translateX + viewport.w / 2;
   let activeIndex = 0;
@@ -530,7 +538,13 @@ export function EcosystemTimeline() {
               local = clamp(-1, 1, diff / half);
             }
             return (
-              <ChapterPanel key={ch.id} chapter={ch} index={i} local={local} />
+              <ChapterPanel
+                key={ch.id}
+                chapter={ch}
+                index={i}
+                local={local}
+                heroReveal={heroReveal}
+              />
             );
           })}
         </div>
@@ -598,10 +612,12 @@ function ChapterPanel({
   chapter,
   index,
   local,
+  heroReveal,
 }: {
   chapter: Chapter;
   index: number;
   local: number;
+  heroReveal: number;
 }) {
   const isHero = chapter.id === "title" || chapter.id === "cover";
   const isOutro = chapter.id === "onwards";
@@ -616,7 +632,16 @@ function ChapterPanel({
   const parallaxX = local * -50;
 
   if (isHero) {
-    return <HeroPanel chapter={chapter} openness={oContent} parallax={parallaxX} />;
+    // Only the opening "title" frame gets the scroll-driven kinetic reveal.
+    const kinetic = chapter.id === "title" ? heroReveal : 1;
+    return (
+      <HeroPanel
+        chapter={chapter}
+        openness={oContent}
+        parallax={parallaxX}
+        kinetic={kinetic}
+      />
+    );
   }
   if (isOutro) {
     return <OutroPanel chapter={chapter} openness={oContent} />;
@@ -645,23 +670,28 @@ function HeroPanel({
   chapter,
   openness: o,
   parallax,
+  kinetic,
 }: {
   chapter: Chapter;
   openness: number;
   parallax: number;
+  kinetic: number;
 }) {
   const { Icon } = chapter;
+  const isKinetic = kinetic < 1;
   return (
     <section
-      className="relative flex-shrink-0 h-full w-screen flex items-center justify-center px-[6vw]"
+      className="relative flex-shrink-0 h-full w-screen flex items-center justify-center px-[6vw] overflow-hidden"
       aria-label={chapter.title.replace(/\n/g, " ")}
     >
       <div className="relative z-10 flex flex-col items-center max-w-4xl text-center">
         <div
-          className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-[11px] font-semibold uppercase tracking-[0.18em] mb-6"
+          className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-[11px] font-semibold uppercase tracking-[0.18em] mb-6 transition-[opacity,transform] duration-300"
           style={{
-            opacity: o,
-            transform: `translate3d(${parallax * 0.3}px, ${(1 - o) * 20}px, 0)`,
+            opacity: o * easeOutCubic(clamp01((kinetic - 0) / 0.25)),
+            transform: `translate3d(${parallax * 0.3}px, ${
+              (1 - easeOutCubic(clamp01((kinetic - 0) / 0.25))) * 20 + (1 - o) * 20
+            }px, 0)`,
             background: `${chapter.accent}14`,
             color: chapter.accent,
             border: `1px solid ${chapter.accent}33`,
@@ -670,28 +700,38 @@ function HeroPanel({
           <Icon className="w-3.5 h-3.5" />
           {chapter.kicker}
         </div>
-        <h2
-          className="font-semibold leading-[0.92] tracking-tight text-zinc-900 whitespace-pre-line text-[clamp(3rem,9vw,8rem)]"
-          style={{
-            opacity: o,
-            transform: `translate3d(${parallax}px, ${(1 - o) * 40}px, 0)`,
-          }}
-        >
-          {chapter.title}
-        </h2>
+        {isKinetic ? (
+          <KineticTitle
+            title={chapter.title}
+            reveal={kinetic}
+            parallax={parallax}
+          />
+        ) : (
+          <h2
+            className="font-semibold leading-[0.92] tracking-tight text-zinc-900 whitespace-pre-line text-[clamp(3rem,9vw,8rem)]"
+            style={{
+              opacity: o,
+              transform: `translate3d(${parallax}px, ${(1 - o) * 40}px, 0)`,
+            }}
+          >
+            {chapter.title}
+          </h2>
+        )}
         <div
           className="h-1.5 rounded-full my-6"
           style={{
-            width: `${80 * o}px`,
+            width: `${80 * o * easeOutCubic(clamp01((kinetic - 0.6) / 0.3))}px`,
             background: `linear-gradient(90deg, ${chapter.accent}, ${chapter.accent2})`,
-            opacity: o,
+            opacity: o * easeOutCubic(clamp01((kinetic - 0.6) / 0.3)),
           }}
         />
         <p
           className="text-zinc-600 text-lg md:text-xl leading-relaxed max-w-2xl"
           style={{
-            opacity: o,
-            transform: `translate3d(0, ${(1 - o) * 30}px, 0)`,
+            opacity: o * easeOutCubic(clamp01((kinetic - 0.7) / 0.3)),
+            transform: `translate3d(0, ${
+              (1 - easeOutCubic(clamp01((kinetic - 0.7) / 0.3))) * 24 + (1 - o) * 30
+            }px, 0)`,
           }}
         >
           {chapter.body}
@@ -714,6 +754,79 @@ function HeroPanel({
         )}
       </div>
     </section>
+  );
+}
+
+function easeOutCubic(t: number) {
+  const x = clamp01(t);
+  return 1 - Math.pow(1 - x, 3);
+}
+
+/* ─────────────────────────────────────────────────────────────── */
+/*  KineticTitle — scroll-driven staggered word reveal for the       */
+/*  opening frame. Each word slides up, de-blurs, and rotates         */
+/*  in on its own schedule as the reveal progresses from 0 → 1.       */
+/* ─────────────────────────────────────────────────────────────── */
+
+function KineticTitle({
+  title,
+  reveal,
+  parallax,
+}: {
+  title: string;
+  reveal: number;
+  parallax: number;
+}) {
+  const lines = title.split("\n");
+  const allWords = lines.flatMap((l) => l.split(/\s+/).filter(Boolean));
+  const total = Math.max(1, allWords.length);
+  // Window per word inside the overall reveal timeline. Overlap them so the
+  // whole phrase flows rather than pops in piece by piece.
+  const wordWindow = 0.55;
+  const wordGap = (1 - wordWindow) / Math.max(1, total - 1);
+
+  let wordIndex = 0;
+  return (
+    <h2
+      aria-label={title.replace(/\n/g, " ")}
+      className="font-semibold leading-[0.92] tracking-tight text-zinc-900 text-[clamp(3rem,9vw,8rem)]"
+      style={{ transform: `translate3d(${parallax}px, 0, 0)` }}
+    >
+      {lines.map((line, li) => {
+        const words = line.split(/\s+/).filter(Boolean);
+        return (
+          <span key={li} className="block">
+            {words.map((w) => {
+              const i = wordIndex++;
+              const start = i * wordGap;
+              const t = easeOutCubic(clamp01((reveal - start) / wordWindow));
+              const direction = i % 2 === 0 ? 1 : -1;
+              const translateY = (1 - t) * 80;
+              const translateX = (1 - t) * 30 * direction;
+              const rotate = (1 - t) * 6 * direction;
+              const blur = (1 - t) * 10;
+              return (
+                <span
+                  key={`${li}-${i}`}
+                  className="inline-block align-baseline"
+                  aria-hidden={t < 1}
+                  style={{
+                    opacity: t,
+                    transform: `translate3d(${translateX}px, ${translateY}px, 0) rotate(${rotate}deg)`,
+                    filter: blur > 0.05 ? `blur(${blur}px)` : undefined,
+                    marginRight: "0.25em",
+                    transformOrigin: "50% 80%",
+                    willChange: "transform, opacity, filter",
+                  }}
+                >
+                  {w}
+                </span>
+              );
+            })}
+          </span>
+        );
+      })}
+    </h2>
   );
 }
 
