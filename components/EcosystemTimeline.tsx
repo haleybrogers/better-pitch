@@ -245,7 +245,7 @@ const chapters: Chapter[] = [
     id: "kickoff",
     kicker: "Kickoff · April 20 2026 · NYC",
     title: "WE DID IT.\nWE WON.",
-    body: "So we flew to NYC for an in-person kickoff. A strategy conversation without an actual kickoff — we sent kickoff questions that never got answered. We found out the week before — if you can even call it a week — that we'd be flying in. Each of us had to pivot our approach to make the client feel like they could trust us to hit goals they themselves deem impossible. Haley walked Jessica through the hub she'd built. Het explained Paid Search. Mariate did Meta. Coke quarterbacked. Nima closed. They walked out of that room thinking: if we don't hit those goals, it's not our team. OUR team — because Jessica trusted us enough to claim us as her own. Client pivoted mid-day and handed us $1.5M incremental — $1M of it in May. Then Jessica kissed her laptop. We were there.",
+    body: "So we flew to NYC for an in-person kickoff. A strategy conversation without an actual kickoff — we sent kickoff questions that never got answered. We found out the week before — if you can even call it a week — that we'd be flying in. Each of us had to pivot our approach to make the client feel like they could trust us to hit goals they themselves deem impossible. Haley walked Jessica through the hub she'd built. Het explained Paid Search. Mariate did Meta. Coke quarterbacked. Nima closed. They walked out of that room thinking: if we don't hit those goals, it's not our team. OUR team — because Jessica trusted us enough to claim us as her own. Client pivoted mid-day and handed us $1.5M incremental — $1M of it in May.",
     slackQuote: [
       {
         author: "Coke",
@@ -545,7 +545,7 @@ export function EcosystemTimeline() {
   // the user's scroll wheel / trackpad delivers jumpy input.
 
   const heroTrigger = scrollY > viewport.h * 0.25;
-  const heroReveal = useTriggeredReveal(heroTrigger, 1600);
+  const heroReveal = useTriggeredReveal(heroTrigger, 900);
 
   const dmIndex = chapters.findIndex((c) => c.id === "dm");
   let dmDwellStart = Infinity;
@@ -565,7 +565,7 @@ export function EcosystemTimeline() {
     dmTriggerScrollY = dmDwellStart - entryTravel * 0.5;
   }
   const dmTrigger = scrollY > dmTriggerScrollY;
-  const dmReveal = useTriggeredReveal(dmTrigger, 3200);
+  const dmReveal = useTriggeredReveal(dmTrigger, 1800);
 
   const endcardCenteredAt =
     readPositions.length > 0
@@ -577,13 +577,16 @@ export function EcosystemTimeline() {
   // Scroll HOLD: don't let the horizontal track leave a chapter until its
   // animation has finished. The user can keep scrolling vertically but the
   // panel stays pinned until the reveal completes.
-  let effectiveScrollY = scrollY;
+  let targetScrollY = scrollY;
   if (heroReveal < 1) {
-    effectiveScrollY = Math.min(effectiveScrollY, dwellPerChapter - 1);
+    targetScrollY = Math.min(targetScrollY, dwellPerChapter - 1);
   }
   if (dmIndex >= 0 && dmTrigger && dmReveal < 1) {
-    effectiveScrollY = Math.min(effectiveScrollY, dmDwellEnd - 1);
+    targetScrollY = Math.min(targetScrollY, dmDwellEnd - 1);
   }
+  // Smooth so the hold-release transitions from clamped → real without a jump
+  // and so jumpy scroll deltas don't visibly stutter the track.
+  const effectiveScrollY = useLerp(targetScrollY, 0.22);
 
   let targetTranslateX = readPositions[0] ?? 0;
   {
@@ -609,10 +612,7 @@ export function EcosystemTimeline() {
     }
   }
 
-  // Smooth the horizontal translation with a rAF lerp so jumpy scrolls don't
-  // visibly stutter, and so the catch-up after an animation-hold releases
-  // feels like an ease rather than a jump.
-  const translateX = useLerp(targetTranslateX, 0.16);
+  const translateX = targetTranslateX;
 
   const progress =
     wrapperHeight > viewport.h
@@ -951,9 +951,6 @@ function KineticTitle({
   const fadeWindow = Math.min(perCharWindow * 0.6, 0.04);
 
   let charIndex = 0;
-  // Find which character is currently "being typed" so we can park the caret
-  // right after it.
-  const typedCount = Math.floor(reveal * totalChars);
 
   return (
     <h2
@@ -961,52 +958,36 @@ function KineticTitle({
       className="font-semibold leading-[0.92] tracking-tight text-zinc-900 text-[clamp(3rem,9vw,8rem)]"
       style={{ transform: `translate3d(${parallax}px, 0, 0)` }}
     >
-      {lines.map((line, li) => {
-        const isLastLine = li === lines.length - 1;
-        return (
-          <span key={li} className="block">
-            {Array.from(line).map((ch, ci) => {
-              if (/\s/.test(ch)) {
-                return (
-                  <span key={`${li}-${ci}`} aria-hidden className="inline">
-                    {"\u00a0"}
-                  </span>
-                );
-              }
-              const i = charIndex++;
-              const start = i * perCharWindow;
-              const t = clamp01((reveal - start) / fadeWindow);
+      {lines.map((line, li) => (
+        <span key={li} className="block">
+          {Array.from(line).map((ch, ci) => {
+            if (/\s/.test(ch)) {
               return (
-                <span
-                  key={`${li}-${ci}`}
-                  aria-hidden={t < 1}
-                  className="inline-block"
-                  style={{
-                    opacity: t,
-                    transform: `translate3d(0, ${(1 - t) * 6}px, 0)`,
-                    willChange: "opacity, transform",
-                  }}
-                >
-                  {ch}
+                <span key={`${li}-${ci}`} aria-hidden className="inline">
+                  {"\u00a0"}
                 </span>
               );
-            })}
-            {isLastLine && reveal < 1 && typedCount > 0 && (
+            }
+            const i = charIndex++;
+            const start = i * perCharWindow;
+            const t = clamp01((reveal - start) / fadeWindow);
+            return (
               <span
-                aria-hidden
-                className="inline-block align-baseline ecosystem-caret"
+                key={`${li}-${ci}`}
+                aria-hidden={t < 1}
+                className="inline-block"
                 style={{
-                  width: "0.08em",
-                  height: "0.9em",
-                  marginLeft: "0.05em",
-                  backgroundColor: "currentColor",
-                  transform: "translateY(0.08em)",
+                  opacity: t,
+                  transform: `translate3d(0, ${(1 - t) * 6}px, 0)`,
+                  willChange: "opacity, transform",
                 }}
-              />
-            )}
-          </span>
-        );
-      })}
+              >
+                {ch}
+              </span>
+            );
+          })}
+        </span>
+      ))}
     </h2>
   );
 }
