@@ -265,7 +265,7 @@ const chapters: Chapter[] = [
       label: "incremental budget handed to us by lunch",
     },
     leadGif: {
-      caption: "Jessica kissing her laptop. We were there.",
+      caption: "Jessica kissing her laptop",
       tilt: 0,
       emoji: "🐱",
       src: "https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExOHVybmxtaWxlZmx5cDdjMWpjbHY1djR6NDV0eXVhNHEyOXdvbzd3YSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/W1hd3uXRIbddu/giphy.gif",
@@ -493,12 +493,60 @@ export function EcosystemTimeline() {
       ? totalDwell + totalTravel + viewport.h * 3
       : viewport.h;
 
+  // Scroll-TRIGGERED animations — once the scroll position crosses a panel's
+  // threshold, the reveal plays on its own internal timer, regardless of how
+  // the user keeps scrolling. This makes the animation feel smooth even when
+  // the user's scroll wheel / trackpad delivers jumpy input.
+
+  const heroTrigger = scrollY > viewport.h * 0.25;
+  const heroReveal = useTriggeredReveal(heroTrigger, 4200);
+
+  const dmIndex = chapters.findIndex((c) => c.id === "dm");
+  let dmDwellStart = Infinity;
+  let dmDwellEnd = Infinity;
+  let dmTriggerScrollY = Infinity;
+  if (dmIndex >= 0) {
+    let cursor = 0;
+    for (let i = 0; i < dmIndex; i++) {
+      cursor += dwellPerChapter;
+      if (i < travelDistances.length) cursor += travelDistances[i];
+    }
+    dmDwellStart = cursor;
+    dmDwellEnd = dmDwellStart + dwellPerChapter;
+    const entryTravel = dmIndex > 0 ? travelDistances[dmIndex - 1] ?? 0 : 0;
+    // Trigger a bit before the panel fully centers, so the animation is
+    // already rolling by the time the user's eyes land on it.
+    dmTriggerScrollY = dmDwellStart - entryTravel * 0.5;
+  }
+  const dmTrigger = scrollY > dmTriggerScrollY;
+  const dmReveal = useTriggeredReveal(dmTrigger, 7500);
+
+  const endcardCenteredAt =
+    readPositions.length > 0
+      ? (readPositions.length - 1) * dwellPerChapter + totalTravel
+      : 0;
+  const endcardTrigger = scrollY > endcardCenteredAt + viewport.h * 0.35;
+  const endcardReveal = useTriggeredReveal(endcardTrigger, 5000);
+
+  // Scroll HOLD: don't let the horizontal track leave a chapter until its
+  // animation has finished. The user can keep scrolling vertically but the
+  // panel stays pinned until the reveal completes.
+  let effectiveScrollY = scrollY;
+  // Hold the title on-screen until the typewriter is done.
+  if (heroReveal < 1) {
+    effectiveScrollY = Math.min(effectiveScrollY, dwellPerChapter - 1);
+  }
+  // Hold the DM panel on-screen until the message sequence is done.
+  if (dmIndex >= 0 && dmTrigger && dmReveal < 1) {
+    effectiveScrollY = Math.min(effectiveScrollY, dmDwellEnd - 1);
+  }
+
   let translateX = readPositions[0] ?? 0;
   {
     let cursor = 0;
     for (let i = 0; i < readPositions.length; i++) {
       // Dwell at chapter i — translate pinned at readPositions[i].
-      if (scrollY < cursor + dwellPerChapter) {
+      if (effectiveScrollY < cursor + dwellPerChapter) {
         translateX = readPositions[i];
         break;
       }
@@ -506,8 +554,8 @@ export function EcosystemTimeline() {
       // Travel to chapter i+1 if there is one.
       if (i < readPositions.length - 1) {
         const travel = travelDistances[i];
-        if (scrollY < cursor + travel) {
-          const t = travel > 0 ? (scrollY - cursor) / travel : 0;
+        if (effectiveScrollY < cursor + travel) {
+          const t = travel > 0 ? (effectiveScrollY - cursor) / travel : 0;
           translateX =
             readPositions[i] + (readPositions[i + 1] - readPositions[i]) * t;
           break;
@@ -523,38 +571,6 @@ export function EcosystemTimeline() {
     wrapperHeight > viewport.h
       ? clamp01(scrollY / (wrapperHeight - viewport.h))
       : 0;
-
-  // Scroll-TRIGGERED animations — once the scroll position crosses a panel's
-  // threshold, the reveal plays on its own internal timer, regardless of how
-  // the user keeps scrolling. This makes the animation feel smooth even when
-  // the user's scroll wheel / trackpad delivers jumpy input.
-
-  const heroTrigger = scrollY > viewport.h * 0.25;
-  const heroReveal = useTriggeredReveal(heroTrigger, 4200);
-
-  const dmIndex = chapters.findIndex((c) => c.id === "dm");
-  let dmTriggerScrollY = Infinity;
-  if (dmIndex >= 0) {
-    let cursor = 0;
-    for (let i = 0; i < dmIndex; i++) {
-      cursor += dwellPerChapter;
-      if (i < travelDistances.length) cursor += travelDistances[i];
-    }
-    const dmDwellStart = cursor;
-    const entryTravel = dmIndex > 0 ? travelDistances[dmIndex - 1] ?? 0 : 0;
-    // Trigger a bit before the panel fully centers, so the animation is
-    // already rolling by the time the user's eyes land on it.
-    dmTriggerScrollY = dmDwellStart - entryTravel * 0.5;
-  }
-  const dmTrigger = scrollY > dmTriggerScrollY;
-  const dmReveal = useTriggeredReveal(dmTrigger, 7500);
-
-  const endcardCenteredAt =
-    readPositions.length > 0
-      ? (readPositions.length - 1) * dwellPerChapter + totalTravel
-      : 0;
-  const endcardTrigger = scrollY > endcardCenteredAt + viewport.h * 0.35;
-  const endcardReveal = useTriggeredReveal(endcardTrigger, 5000);
 
   // Active chapter = whichever panel's center is closest to viewport center.
   const viewportCenter = -translateX + viewport.w / 2;
