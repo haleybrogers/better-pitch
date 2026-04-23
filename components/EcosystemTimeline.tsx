@@ -50,6 +50,7 @@ type Chapter = {
   gif?: GifSpec;
   deliverables?: Deliverable[];
   stat?: { value: string; label: string };
+  gallery?: string[]; // inline thumbnails below the main gif
 };
 
 const notionPages = Array.from(
@@ -89,9 +90,10 @@ const chapters: Chapter[] = [
     Icon: Radio,
     gif: {
       caption: "the door opens",
-      tilt: 3,
+      tilt: 0,
       emoji: "📬",
       src: "https://media.giphy.com/media/9ombSPmG6i3AryZ4lI/giphy.gif",
+      asPhoto: true,
     },
   },
   {
@@ -144,9 +146,10 @@ const chapters: Chapter[] = [
     stat: { value: "0", label: "notes back from the client" },
     gif: {
       caption: "cold submission",
-      tilt: -3,
+      tilt: 0,
       emoji: "🎁",
       src: "https://media.giphy.com/media/e9UfxLdJ9V8V7H0UGR/giphy.gif",
+      asPhoto: true,
     },
   },
   {
@@ -186,9 +189,10 @@ const chapters: Chapter[] = [
     },
     gif: {
       caption: "the laptop kiss",
-      tilt: -2,
+      tilt: 0,
       emoji: "💋",
       src: "https://media.giphy.com/media/3kJXNPRBMUnMiZb8NR/giphy.gif",
+      asPhoto: true,
     },
   },
   {
@@ -204,9 +208,10 @@ const chapters: Chapter[] = [
     Icon: Rocket,
     gif: {
       caption: "mic drop",
-      tilt: 5,
+      tilt: 0,
       emoji: "🎤",
       src: "https://media.giphy.com/media/15BuyagtKucHm/giphy.gif",
+      asPhoto: true,
     },
   },
 ];
