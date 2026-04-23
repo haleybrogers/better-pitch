@@ -253,7 +253,7 @@ const chapters: Chapter[] = [
         avatarInitials: "C",
         avatarColor: "#8b6f47",
         boldPrefix: "Running tally:",
-        text: "Het is the smartest person in the room & Haley is a badass quality callouts, I think",
+        text: "Het is the smartest person in the room & Haley is a badass\n\nquality callouts, I think",
         reactions: [
           { emoji: "🙌", count: 5 },
           { emoji: "🧠", count: 5 },
@@ -356,6 +356,34 @@ const chapters: Chapter[] = [
 
 function clamp01(v: number) {
   return Math.max(0, Math.min(1, v));
+}
+
+// rAF-based lerp: returns a value that eases toward `target` each frame.
+// Smooths jumpy scroll deltas and releases from scroll-hold clamps.
+function useLerp(target: number, factor = 0.15) {
+  const [value, setValue] = useState(target);
+  const currentRef = useRef(target);
+  const targetRef = useRef(target);
+  targetRef.current = target;
+  useEffect(() => {
+    let raf = 0;
+    const tick = () => {
+      const t = targetRef.current;
+      const c = currentRef.current;
+      const diff = t - c;
+      if (Math.abs(diff) > 0.25) {
+        currentRef.current = c + diff * factor;
+        setValue(currentRef.current);
+        raf = requestAnimationFrame(tick);
+      } else if (c !== t) {
+        currentRef.current = t;
+        setValue(t);
+      }
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, [target, factor]);
+  return value;
 }
 
 // Scroll-triggered, time-based reveal. Returns a 0→1 progress that plays out
@@ -517,7 +545,7 @@ export function EcosystemTimeline() {
   // the user's scroll wheel / trackpad delivers jumpy input.
 
   const heroTrigger = scrollY > viewport.h * 0.25;
-  const heroReveal = useTriggeredReveal(heroTrigger, 4200);
+  const heroReveal = useTriggeredReveal(heroTrigger, 1600);
 
   const dmIndex = chapters.findIndex((c) => c.id === "dm");
   let dmDwellStart = Infinity;
@@ -537,7 +565,7 @@ export function EcosystemTimeline() {
     dmTriggerScrollY = dmDwellStart - entryTravel * 0.5;
   }
   const dmTrigger = scrollY > dmTriggerScrollY;
-  const dmReveal = useTriggeredReveal(dmTrigger, 7500);
+  const dmReveal = useTriggeredReveal(dmTrigger, 3200);
 
   const endcardCenteredAt =
     readPositions.length > 0
@@ -550,40 +578,41 @@ export function EcosystemTimeline() {
   // animation has finished. The user can keep scrolling vertically but the
   // panel stays pinned until the reveal completes.
   let effectiveScrollY = scrollY;
-  // Hold the title on-screen until the typewriter is done.
   if (heroReveal < 1) {
     effectiveScrollY = Math.min(effectiveScrollY, dwellPerChapter - 1);
   }
-  // Hold the DM panel on-screen until the message sequence is done.
   if (dmIndex >= 0 && dmTrigger && dmReveal < 1) {
     effectiveScrollY = Math.min(effectiveScrollY, dmDwellEnd - 1);
   }
 
-  let translateX = readPositions[0] ?? 0;
+  let targetTranslateX = readPositions[0] ?? 0;
   {
     let cursor = 0;
     for (let i = 0; i < readPositions.length; i++) {
-      // Dwell at chapter i — translate pinned at readPositions[i].
       if (effectiveScrollY < cursor + dwellPerChapter) {
-        translateX = readPositions[i];
+        targetTranslateX = readPositions[i];
         break;
       }
       cursor += dwellPerChapter;
-      // Travel to chapter i+1 if there is one.
       if (i < readPositions.length - 1) {
         const travel = travelDistances[i];
         if (effectiveScrollY < cursor + travel) {
           const t = travel > 0 ? (effectiveScrollY - cursor) / travel : 0;
-          translateX =
+          targetTranslateX =
             readPositions[i] + (readPositions[i + 1] - readPositions[i]) * t;
           break;
         }
         cursor += travel;
       } else {
-        translateX = readPositions[i];
+        targetTranslateX = readPositions[i];
       }
     }
   }
+
+  // Smooth the horizontal translation with a rAF lerp so jumpy scrolls don't
+  // visibly stutter, and so the catch-up after an animation-hold releases
+  // feels like an ease rather than a jump.
+  const translateX = useLerp(targetTranslateX, 0.16);
 
   const progress =
     wrapperHeight > viewport.h
@@ -1073,18 +1102,23 @@ function EndcardPanel({
         >
           {chapter.kicker}
         </div>
-        <div className="flex items-center gap-10 md:gap-14 text-white">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src="/logos/better.svg"
-            alt="Better"
-            className="h-[clamp(1.5rem,3.2vw,2.5rem)] w-auto"
-            style={{
-              filter: "invert(1) brightness(2)",
-              opacity: clamp01(logosT * 2),
-              transform: `translate3d(${(1 - clamp01(logosT * 2)) * -30}px, 0, 0)`,
-            }}
-          />
+        {/* Grid so the × sits on the true horizontal center of the row,
+            independent of the Better/Pearmill logos having different widths.
+            Each side column is 1fr with the logo aligned toward the center. */}
+        <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-10 md:gap-14 text-white w-full max-w-[54rem]">
+          <div className="flex justify-end">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/logos/better.svg"
+              alt="Better"
+              className="h-[clamp(1.5rem,3.2vw,2.5rem)] w-auto"
+              style={{
+                filter: "invert(1) brightness(2)",
+                opacity: clamp01(logosT * 2),
+                transform: `translate3d(${(1 - clamp01(logosT * 2)) * -30}px, 0, 0)`,
+              }}
+            />
+          </div>
           <span
             aria-hidden
             className="flex items-center justify-center text-[clamp(1.5rem,3.5vw,2.75rem)] text-white/40 font-light leading-none h-[clamp(2rem,4.5vw,3.75rem)]"
@@ -1095,17 +1129,19 @@ function EndcardPanel({
           >
             ×
           </span>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src="/logos/pearmill.svg"
-            alt="Pearmill"
-            className="h-[clamp(2rem,4.5vw,3.75rem)] w-auto"
-            style={{
-              filter: "invert(1) brightness(2)",
-              opacity: clamp01((logosT - 0.5) / 0.5),
-              transform: `translate3d(${(1 - clamp01((logosT - 0.5) / 0.5)) * 30}px, 0, 0)`,
-            }}
-          />
+          <div className="flex justify-start">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/logos/pearmill.svg"
+              alt="Pearmill"
+              className="h-[clamp(2rem,4.5vw,3.75rem)] w-auto"
+              style={{
+                filter: "invert(1) brightness(2)",
+                opacity: clamp01((logosT - 0.5) / 0.5),
+                transform: `translate3d(${(1 - clamp01((logosT - 0.5) / 0.5)) * 30}px, 0, 0)`,
+              }}
+            />
+          </div>
         </div>
         <div
           className="h-[2px] bg-white/30"
@@ -1663,7 +1699,7 @@ function SlackQuote({
               </span>
               <span className="text-xs text-zinc-500">{m.time}</span>
             </div>
-            <p className="text-[15px] leading-snug text-zinc-900">
+            <p className="text-[15px] leading-snug text-zinc-900 whitespace-pre-line">
               {m.boldPrefix && (
                 <span className="font-bold">{m.boldPrefix} </span>
               )}
