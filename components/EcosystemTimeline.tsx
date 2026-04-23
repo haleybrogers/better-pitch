@@ -1081,7 +1081,6 @@ const CREDITS: { name: string; line: string }[] = [
 
 const SPEECH: string[] = [
   "…and to the ones back home, keeping every other account glowing while we vanished into the Better trenches — we see you. We love you. We owe you about a thousand coffees.",
-  "Thank you to Jessica — for saying yes. And for the kiss.",
   "Thank you to every agency that said we couldn't. You lit the fuse.",
   "Thank you to sleep — I'll be seeing you again very soon.",
 ];
@@ -1201,11 +1200,11 @@ function EndcardPanel({
             the credits appear to sit right under the title card. */}
         <div className="h-[4vh]" />
 
-        {/* Credits roll — fades in right as the subtitle settles so they
-            feel like they were always there, then the whole column glides up. */}
+        {/* Credits roll — small beat after the title card settles, then fades
+            in under the subtitle before the whole column glides up. */}
         <div
           className="w-full max-w-[60rem] px-10 flex flex-col items-center"
-          style={{ opacity: clamp01((subT - 0.5) * 3) }}
+          style={{ opacity: clamp01((reveal - 0.028) / 0.008) }}
         >
           <div className="grid grid-cols-[max-content_1fr] gap-x-8 gap-y-3 mb-14 w-full max-w-[54rem]">
             {CREDITS.map((c) => (
