@@ -411,11 +411,13 @@ export function EcosystemTimeline() {
   );
   const totalDwell = readPositions.length * dwellPerChapter;
   const totalTravel = travelDistances.reduce((a, b) => a + b, 0);
-  // Add one viewport.h of trailing buffer so the last chapter's dwell
-  // position is actually reachable before the sticky container releases.
-  // Wrapper bg is black so the tail blends into the DM panel.
+  // Trailing buffer = 2× viewport.h so the last chapter (DM) stays pinned
+  // long enough to actually read all three beats. Wrapper bg is black so
+  // the tail blends into the DM panel.
   const wrapperHeight =
-    readPositions.length > 0 ? totalDwell + totalTravel + viewport.h : viewport.h;
+    readPositions.length > 0
+      ? totalDwell + totalTravel + viewport.h * 2
+      : viewport.h;
 
   let translateX = readPositions[0] ?? 0;
   {
