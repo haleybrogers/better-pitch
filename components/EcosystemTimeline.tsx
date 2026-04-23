@@ -1067,7 +1067,7 @@ const CREDITS: { name: string; line: string }[] = [
   { name: "Karim", line: "picked up the cake. Had drinks waiting for us after the pitch." },
   { name: "Val", line: "morale. Hyped us up. Told us we could do it, mentored us, made it happen." },
   { name: "Masha", line: "made it all happen, no matter what hours her team had to pull." },
-  { name: "Janie", line: "in the room for kickoff. Helped me pull it all together, and she's running the account now." },
+  { name: "Janie", line: "moral support. Helped get the kickoff off the ground." },
   { name: "Cosmin", line: "the landing-page guy. When a campaign needs a page that converts, it's his." },
   { name: "Lilya", line: "set the visual language. The look + feel every deck built on started with her." },
   { name: "Polina", line: "layout surgeon. Made every page breathe. Nothing went out looking cramped." },
