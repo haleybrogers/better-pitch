@@ -941,15 +941,10 @@ function ContentPanel({
           />
         )}
 
-        {/* 5 · Key learning */}
+        {/* 5 · Key learning — always opaque so it stays readable while
+            scrolling; it's naturally revealed/hidden by horizontal position. */}
         {chapter.learning && (
-          <div
-            className="flex-shrink-0 w-[26rem]"
-            style={{
-              opacity: oExtras,
-              transform: `translate3d(0, ${(1 - oExtras) * 20}px, 0)`,
-            }}
-          >
+          <div className="flex-shrink-0 w-[26rem]">
             <LearningCard text={chapter.learning} accent={chapter.accent} />
           </div>
         )}
