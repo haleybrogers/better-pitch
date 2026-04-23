@@ -176,7 +176,7 @@ const chapters: Chapter[] = [
     id: "round-3b",
     kicker: "Round 3b · Feb 2026 · Betsy",
     title: "Then\nthey asked\nfor Betsy.",
-    body: "Cold submission. No meeting. No voiceover. PowerPoint only. Other agencies shit the bed — Jessica was so disappointed they missed the brief and never called to check in. We read, and re-read, what Betsy needed. We have the expertise, but we listened to what they were actually asking, and then we went deeper. What's at the heart of it. Every POV on our side got QA'd inside the team before we shipped. Huge shoutout to creative for turning around client-winning work in two days. They came back with zero notes.",
+    body: "Cold submission. No meeting. No voiceover. PowerPoint only. Other agencies shit the bed — Jessica was so disappointed they missed the brief and never called to check in. We read, and re-read, what Betsy needed. We have the expertise, but we listened to what they were actually asking, and then we went deeper. What's at the heart of it. Huge shoutout to creative for turning around client-winning work in two days. They came back with zero notes.",
     pullQuote:
       "In powerpoint no less, which we all know our preferred outlet [sic]. — Coke, on Betsy",
     accent: "#014737",
@@ -539,6 +539,10 @@ export function EcosystemTimeline() {
           progress={progress}
           activeIndex={activeIndex}
           total={chapters.length}
+          onSeek={(f) => {
+            const h = Math.max(0, wrapperHeight - viewport.h);
+            window.scrollTo({ top: f * h, behavior: "smooth" });
+          }}
         />
         <DaysCounter activeIndex={activeIndex} />
         <OddsCounter activeIndex={activeIndex} />
@@ -778,24 +782,32 @@ function OutroPanel({
 function EndcardPanel({ chapter }: { chapter: Chapter }) {
   return (
     <section
-      className="relative flex-shrink-0 h-full w-screen flex items-center justify-center text-white"
+      className="relative flex-shrink-0 h-full w-screen flex items-center justify-center text-white px-12"
       style={{ backgroundColor: chapter.bg }}
       aria-label="Better × Pearmill"
     >
-      <div className="relative z-10 flex flex-col items-center gap-8">
+      <div className="relative z-10 flex flex-col items-center gap-8 max-w-full">
         <div className="text-[11px] uppercase tracking-[0.35em] text-white/40 font-semibold">
           {chapter.kicker}
         </div>
-        <div className="flex items-center gap-10 md:gap-14">
-          <span className="text-[clamp(3rem,7vw,6rem)] font-semibold tracking-tight leading-none">
-            Better
-          </span>
-          <span className="text-[clamp(2.5rem,6vw,5rem)] text-white/40 font-light leading-none">
+        <div className="flex items-center gap-10 md:gap-14 text-white">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/logos/better.svg"
+            alt="Better"
+            className="h-[clamp(2.5rem,6vw,5rem)] w-auto"
+            style={{ filter: "invert(1) brightness(2)" }}
+          />
+          <span className="text-[clamp(2rem,5vw,4rem)] text-white/40 font-light leading-none">
             ×
           </span>
-          <span className="text-[clamp(3rem,7vw,6rem)] font-semibold tracking-tight leading-none italic">
-            Pearmill
-          </span>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/logos/pearmill.svg"
+            alt="Pearmill"
+            className="h-[clamp(2rem,4.5vw,3.75rem)] w-auto"
+            style={{ filter: "invert(1) brightness(2)" }}
+          />
         </div>
         <div className="h-[2px] w-24 bg-white/30" />
         <div className="text-[11px] uppercase tracking-[0.3em] text-white/50 font-semibold">
@@ -1112,7 +1124,7 @@ function DashboardMockup({
   const { videoSrc, posterSrc, href, password, label } = dashboard;
   const hasVideo = !!videoSrc;
   return (
-    <div className="flex flex-col items-center gap-4">
+    <div className="flex flex-col items-center gap-4 px-8 py-6">
       {/* MacBook body */}
       <div className="relative">
         {/* Screen */}
@@ -1120,7 +1132,7 @@ function DashboardMockup({
           {/* Notch */}
           <div className="absolute top-[2px] left-1/2 -translate-x-1/2 w-16 h-[5px] bg-black rounded-b-md z-10" />
           {/* Screen content */}
-          <div className="relative w-[30rem] aspect-[16/10] overflow-hidden rounded-[5px] bg-zinc-100">
+          <div className="relative w-[30rem] aspect-[16/10] overflow-hidden rounded-[5px] bg-white flex items-center justify-center p-3">
             {hasVideo ? (
               <video
                 src={videoSrc}
@@ -1128,17 +1140,17 @@ function DashboardMockup({
                 autoPlay
                 muted
                 playsInline
-                className="absolute inset-0 w-full h-full object-cover"
+                className="max-w-full max-h-full w-auto h-auto object-contain"
               />
             ) : posterSrc ? (
               // eslint-disable-next-line @next/next/no-img-element
               <img
                 src={posterSrc}
                 alt="Dashboard"
-                className="absolute inset-0 w-full h-full object-cover"
+                className="max-w-full max-h-full w-auto h-auto object-contain"
               />
             ) : (
-              <div className="absolute inset-0 flex items-center justify-center text-zinc-500 text-sm">
+              <div className="text-zinc-500 text-sm">
                 Dashboard preview
               </div>
             )}
@@ -1162,8 +1174,9 @@ function DashboardMockup({
           <ArrowUpRight className="w-4 h-4" />
         </a>
         {password && (
-          <div className="text-[11px] uppercase tracking-[0.2em] text-zinc-500 font-semibold">
-            password: <span className="text-zinc-800">{password}</span>
+          <div className="text-[11px] tracking-[0.2em] text-zinc-500 font-semibold">
+            <span className="uppercase">password:</span>{" "}
+            <span className="text-zinc-800 normal-case tracking-normal font-mono">{password}</span>
           </div>
         )}
       </div>
@@ -1446,27 +1459,58 @@ function ProgressRail({
   progress,
   activeIndex,
   total,
+  onSeek,
 }: {
   progress: number;
   activeIndex: number;
   total: number;
+  onSeek: (fraction: number) => void;
 }) {
+  const railRef = useRef<HTMLButtonElement>(null);
+  const seekFromEvent = (e: React.MouseEvent<HTMLElement>) => {
+    const el = railRef.current;
+    if (!el) return;
+    const rect = el.getBoundingClientRect();
+    const f = clamp01((e.clientX - rect.left) / rect.width);
+    onSeek(f);
+  };
   return (
     <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-30 flex items-center gap-3 bg-white/80 backdrop-blur px-4 py-2.5 rounded-full shadow-md border border-white">
-      <div className="relative h-1.5 w-48 rounded-full bg-zinc-200 overflow-hidden">
-        <div
-          className="absolute inset-y-0 left-0 rounded-full transition-[width] duration-100 ease-out"
-          style={{
-            width: `${progress * 100}%`,
-            background: "linear-gradient(90deg, #09090b 0%, #014737 100%)",
-          }}
-        />
-      </div>
+      <button
+        ref={railRef}
+        type="button"
+        onClick={seekFromEvent}
+        aria-label="Seek timeline"
+        title="Click to jump"
+        className="group relative h-4 w-48 flex items-center cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-[#014737] rounded-full"
+      >
+        <div className="relative h-1.5 w-full rounded-full bg-zinc-200 overflow-hidden group-hover:h-2 transition-[height] duration-150">
+          <div
+            className="absolute inset-y-0 left-0 rounded-full transition-[width] duration-100 ease-out"
+            style={{
+              width: `${progress * 100}%`,
+              background: "linear-gradient(90deg, #09090b 0%, #014737 100%)",
+            }}
+          />
+        </div>
+      </button>
+      <button
+        type="button"
+        onClick={() => onSeek(0)}
+        aria-label="Back to start"
+        title="Back to start"
+        className="text-[10px] font-semibold uppercase tracking-[0.15em] text-zinc-500 hover:text-zinc-900 transition-colors"
+      >
+        ↺
+      </button>
       <div className="flex items-center gap-1.5">
         {Array.from({ length: total }).map((_, i) => (
-          <span
+          <button
             key={i}
-            className={`h-1.5 rounded-full transition-all duration-300 ${
+            type="button"
+            onClick={() => onSeek(total > 1 ? i / (total - 1) : 0)}
+            aria-label={`Jump to chapter ${i + 1}`}
+            className={`h-1.5 rounded-full transition-all duration-300 cursor-pointer hover:bg-zinc-700 ${
               i === activeIndex ? "w-5 bg-zinc-900" : "w-1.5 bg-zinc-300"
             }`}
           />
