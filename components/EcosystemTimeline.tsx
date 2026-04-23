@@ -1290,7 +1290,7 @@ function DmPanel({
 
   return (
     <section
-      className="relative flex-shrink-0 h-full flex items-center text-white"
+      className="relative flex-shrink-0 h-full flex items-center text-white overflow-hidden"
       style={{ backgroundColor: chapter.bg }}
       aria-label={chapter.title.replace(/\n/g, " ")}
     >
@@ -1305,7 +1305,7 @@ function DmPanel({
         }}
       />
 
-      <div className="relative z-10 flex items-center gap-14 pl-16 pr-20 py-12">
+      <div className="relative z-10 flex items-center gap-14 pl-16 pr-40 py-12">
         {/* Beat 1 — setup (always visible, enters with openness only) */}
         <div
           className="flex-shrink-0 w-[26rem]"
