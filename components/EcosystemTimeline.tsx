@@ -569,9 +569,9 @@ export function EcosystemTimeline() {
       ? (readPositions.length - 1) * dwellPerChapter + totalTravel
       : 0;
   const endcardTrigger = scrollY > endcardCenteredAt + viewport.h * 0.35;
-  // Long duration: the title card animates in, then the credits roll plays
-  // out through the remaining ~85% of the reveal timeline.
-  const endcardReveal = useTriggeredReveal(endcardTrigger, 22000);
+  // Long duration: the title card animates in quickly, then the whole column
+  // (title + credits + speech) scrolls up together for the remaining time.
+  const endcardReveal = useTriggeredReveal(endcardTrigger, 42000);
 
   // Scroll HOLD: don't let the horizontal track leave a chapter until its
   // animation has finished. The user can keep scrolling vertically but the
@@ -1094,15 +1094,18 @@ function EndcardPanel({
 }) {
   const stage = (start: number, end: number) =>
     clamp01((reveal - start) / Math.max(0.001, end - start));
-  const kickerT = stage(0.0, 0.12);
-  const logosT = stage(0.12, 0.40);
-  const barT = stage(0.40, 0.50);
-  const subT = stage(0.50, 0.62);
-  // Credits start rolling after the title card lands. The credits scroll is
-  // driven by scroll progress (so it stays smooth and user-paced).
-  const creditsT = stage(0.62, 1.0);
-  // Lift the title card up as the credits begin so they have room to roll.
-  const lift = creditsT * -200;
+  // Fast intro — logos + subtitle land quickly at the top of the timeline.
+  const kickerT = stage(0.0, 0.04);
+  const logosT = stage(0.03, 0.18);
+  const barT = stage(0.18, 0.22);
+  const subT = stage(0.20, 0.26);
+  // Scroll phase — the ENTIRE column (title card + credits + speech) glides
+  // upward together, like movie credits. Slower, paced, lots of time to read.
+  const scrollT = stage(0.28, 1.0);
+  // Total upward travel of the column, in vh. Big enough that the "— fin. 💚"
+  // at the very bottom of the column clears the top of the viewport entirely.
+  const TRAVEL_VH = 480;
+  const offsetVh = scrollT * TRAVEL_VH;
 
   return (
     <section
@@ -1110,21 +1113,30 @@ function EndcardPanel({
       style={{ backgroundColor: chapter.bg }}
       aria-label="Better × Pearmill"
     >
-      {/* Title card */}
+      {/* One scrolling column — title card sits at the top, credits + speech
+          follow, and the whole thing translates upward as scrollT grows so
+          the Better × Pearmill card rides up with the roll. */}
       <div
-        className="absolute inset-0 flex items-center justify-center px-12"
-        style={{ transform: `translate3d(0, ${lift}px, 0)` }}
+        className="absolute inset-x-0 flex flex-col items-center pointer-events-none"
+        style={{
+          // Start the column centered in the viewport (top of column at 50vh),
+          // then slide upward by offsetVh.
+          top: `calc(50vh - ${offsetVh}vh)`,
+        }}
       >
-        <div className="relative z-10 flex flex-col items-center gap-8 max-w-full">
-          <div
-            className="text-[11px] uppercase tracking-[0.35em] text-white/40 font-semibold"
-            style={{
-              opacity: kickerT,
-              transform: `translate3d(0, ${(1 - kickerT) * 12}px, 0)`,
-            }}
-          >
-            {chapter.kicker}
-          </div>
+        {/* Title card */}
+        <div className="flex flex-col items-center gap-8 px-12 max-w-full">
+          {chapter.kicker && (
+            <div
+              className="text-[11px] uppercase tracking-[0.35em] text-white/40 font-semibold"
+              style={{
+                opacity: kickerT,
+                transform: `translate3d(0, ${(1 - kickerT) * 12}px, 0)`,
+              }}
+            >
+              {chapter.kicker}
+            </div>
+          )}
           <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-10 md:gap-14 text-white w-full max-w-[54rem]">
             <div className="flex justify-end">
               {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -1180,57 +1192,46 @@ function EndcardPanel({
             A love letter, with learnings
           </div>
         </div>
-      </div>
 
-      {/* Credits roll */}
-      {creditsT > 0 && (
-        <div
-          aria-hidden={creditsT < 0.1}
-          className="absolute inset-x-0 z-20 flex justify-center pointer-events-none"
-          style={{
-            top: "50%",
-            // Start the roll below the fold and scroll up as creditsT grows.
-            // Travels ~2x viewport height over the reveal span.
-            transform: `translate3d(0, calc(50vh - ${creditsT * 240}vh), 0)`,
-            opacity: creditsT < 0.05 ? creditsT / 0.05 : 1,
-          }}
-        >
-          <div className="w-full max-w-[46rem] px-10 flex flex-col items-center text-center">
-            <div className="text-[11px] uppercase tracking-[0.35em] text-white/40 font-semibold mb-12">
-              Thanks to — we couldn&rsquo;t have done it without you
-            </div>
-            <div className="flex flex-col gap-7 mb-20">
-              {CREDITS.map((c) => (
-                <div key={c.name} className="flex flex-col gap-1.5">
-                  <div className="text-[clamp(1.25rem,2.2vw,1.75rem)] font-semibold tracking-tight text-white">
-                    {c.name}
-                  </div>
-                  <div className="text-white/60 text-[15px] leading-snug max-w-xl mx-auto">
-                    {c.line}
-                  </div>
+        {/* Spacer so the credits don't appear right on top of the title card */}
+        <div className="h-[22vh]" />
+
+        {/* Credits roll */}
+        <div className="w-full max-w-[46rem] px-10 flex flex-col items-center text-center">
+          <div className="text-[11px] uppercase tracking-[0.35em] text-white/40 font-semibold mb-12">
+            Thanks to — we couldn&rsquo;t have done it without you
+          </div>
+          <div className="flex flex-col gap-7 mb-20">
+            {CREDITS.map((c) => (
+              <div key={c.name} className="flex flex-col gap-1.5">
+                <div className="text-[clamp(1.25rem,2.2vw,1.75rem)] font-semibold tracking-tight text-white">
+                  {c.name}
                 </div>
-              ))}
-            </div>
-            <div className="flex flex-col gap-5 my-16">
-              {SPEECH.map((line, i) => (
-                <p
-                  key={i}
-                  className={
-                    i === 0
-                      ? "italic text-white/70 text-[15px] leading-relaxed max-w-xl mx-auto"
-                      : "text-white/75 text-[15px] leading-relaxed max-w-xl mx-auto"
-                  }
-                >
-                  {line}
-                </p>
-              ))}
-            </div>
-            <div className="text-[11px] uppercase tracking-[0.4em] text-white/50 font-semibold mt-4">
-              — fin. 💚
-            </div>
+                <div className="text-white/60 text-[15px] leading-snug max-w-xl mx-auto">
+                  {c.line}
+                </div>
+              </div>
+            ))}
+          </div>
+          <div className="flex flex-col gap-5 my-16">
+            {SPEECH.map((line, i) => (
+              <p
+                key={i}
+                className={
+                  i === 0
+                    ? "italic text-white/70 text-[15px] leading-relaxed max-w-xl mx-auto"
+                    : "text-white/75 text-[15px] leading-relaxed max-w-xl mx-auto"
+                }
+              >
+                {line}
+              </p>
+            ))}
+          </div>
+          <div className="text-[11px] uppercase tracking-[0.4em] text-white/50 font-semibold mt-4 pb-[20vh]">
+            — fin. 💚
           </div>
         </div>
-      )}
+      </div>
     </section>
   );
 }
