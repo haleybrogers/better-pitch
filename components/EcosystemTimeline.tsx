@@ -34,6 +34,7 @@ type GifSpec = {
   emoji: string;
   src?: string; // optional real GIF url — falls back to emoji
   asPhoto?: boolean; // when true, render the full image without GIF chrome
+  scrollPages?: string[]; // when set, renders an infinite vertical scroll of these image paths
 };
 
 type Chapter = {
@@ -50,6 +51,11 @@ type Chapter = {
   deliverables?: Deliverable[];
   stat?: { value: string; label: string };
 };
+
+const notionPages = Array.from(
+  { length: 50 },
+  (_, i) => `/moments/notion-pages/page-${String(i + 1).padStart(2, "0")}.jpg`
+);
 
 const chapters: Chapter[] = [
   {
@@ -121,8 +127,7 @@ const chapters: Chapter[] = [
       caption: "the notion doc",
       tilt: 0,
       emoji: "📄",
-      src: "/moments/notion-doc.png",
-      asPhoto: true,
+      scrollPages: notionPages,
     },
   },
   {
@@ -650,17 +655,31 @@ function GifPlaceholder({
 }) {
   const dims = size === "lg" ? "w-[28rem] h-[22rem]" : size === "sm" ? "w-56 h-44" : "w-80 h-64";
   const isPhoto = gif.asPhoto === true;
+  const isScroll = Array.isArray(gif.scrollPages) && gif.scrollPages.length > 0;
   return (
     <div
-      className={`relative ${dims} rounded-3xl overflow-hidden ${isPhoto ? "shadow-2xl bg-white" : "shadow-xl"}`}
+      className={`relative ${dims} rounded-3xl overflow-hidden ${isPhoto || isScroll ? "shadow-2xl bg-white" : "shadow-xl"}`}
       style={{
         opacity: openness,
-        transform: `translate3d(${offsetX}px, ${(1 - openness) * 30}px, 0) rotate(${isPhoto ? 0 : gif.tilt}deg) scale(${lerp(0.94, 1, openness)})`,
-        background: isPhoto ? "#ffffff" : `linear-gradient(135deg, ${accent}33, ${accent2}33)`,
-        border: isPhoto ? "1px solid rgba(0,0,0,0.06)" : "1px solid rgba(255,255,255,0.6)",
+        transform: `translate3d(${offsetX}px, ${(1 - openness) * 30}px, 0) rotate(${isPhoto || isScroll ? 0 : gif.tilt}deg) scale(${lerp(0.94, 1, openness)})`,
+        background: isPhoto || isScroll ? "#ffffff" : `linear-gradient(135deg, ${accent}33, ${accent2}33)`,
+        border: isPhoto || isScroll ? "1px solid rgba(0,0,0,0.06)" : "1px solid rgba(255,255,255,0.6)",
       }}
     >
-      {gif.src ? (
+      {isScroll ? (
+        <div className="notion-scroll flex flex-col">
+          {[...gif.scrollPages!, ...gif.scrollPages!].map((src, i) => (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              key={`${src}-${i}`}
+              src={src}
+              alt=""
+              loading="lazy"
+              className="w-full block"
+            />
+          ))}
+        </div>
+      ) : gif.src ? (
         // eslint-disable-next-line @next/next/no-img-element
         <img
           src={gif.src}
@@ -681,7 +700,7 @@ function GifPlaceholder({
           />
         </>
       )}
-      {!isPhoto && (
+      {!isPhoto && !isScroll && (
         <>
           {/* Corner tag */}
           <div className="absolute top-3 left-3 px-2 py-1 rounded-full bg-white/80 backdrop-blur text-[10px] uppercase tracking-[0.18em] font-semibold text-zinc-700 flex items-center gap-1">

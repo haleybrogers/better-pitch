@@ -71,11 +71,20 @@ a {
   display: inline-block;
 }
 
+@keyframes notion-scroll {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(-50%); }
+}
+.notion-scroll {
+  animation: notion-scroll 180s linear infinite;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .ecosystem-wobble,
   .ecosystem-sweep,
   .ecosystem-blink,
-  .ecosystem-bounce {
+  .ecosystem-bounce,
+  .notion-scroll {
     animation: none;
   }
 }
