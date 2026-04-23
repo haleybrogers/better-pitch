@@ -373,6 +373,7 @@ export function EcosystemTimeline() {
         </div>
 
         <ProgressRail progress={progress} activeIndex={activeIndex} />
+        <OddsCounter progress={progress} />
         <ScrollHint hide={progress > 0.02} />
       </div>
     </div>
@@ -1048,6 +1049,40 @@ function ProgressRail({ progress, activeIndex }: { progress: number; activeIndex
       </div>
       <span className="text-[10px] font-mono tabular-nums text-zinc-600">
         {String(activeIndex + 1).padStart(2, "0")}
+      </span>
+    </div>
+  );
+}
+
+/* ─────────────────────────────────────────────────────────────── */
+/*  Odds counter — "percent we thought we'd win" swinging with scroll */
+/* ─────────────────────────────────────────────────────────────── */
+
+// One value per chapter — matches cover copy: 90 → 75 → 50 → 90 → 95 → 30 → 95
+// Final chapter lands at 100 (we won).
+const ODDS = [90, 75, 50, 90, 95, 30, 95, 100];
+
+function OddsCounter({ progress }: { progress: number }) {
+  const n = ODDS.length;
+  const scaled = Math.min(Math.max(progress, 0), 1) * (n - 1);
+  const i = Math.floor(scaled);
+  const t = scaled - i;
+  const raw = i >= n - 1 ? ODDS[n - 1] : lerp(ODDS[i], ODDS[i + 1], t);
+  const displayed = Math.round(raw);
+  // Green ≥75, amber ≥50, red <50. Final slide always feels like a win.
+  const color =
+    displayed >= 75 ? "#047857" : displayed >= 50 ? "#b45309" : "#b91c1c";
+
+  return (
+    <div className="absolute bottom-6 right-6 z-30 flex items-center gap-2.5 bg-white/80 backdrop-blur px-4 py-2.5 rounded-full shadow-md border border-white">
+      <span className="text-[10px] uppercase tracking-[0.2em] text-zinc-600 font-semibold">
+        odds we&rsquo;d win
+      </span>
+      <span
+        className="text-2xl font-bold tabular-nums transition-colors duration-500"
+        style={{ color }}
+      >
+        {displayed}%
       </span>
     </div>
   );
