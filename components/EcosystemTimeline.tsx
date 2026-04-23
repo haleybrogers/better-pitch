@@ -531,12 +531,10 @@ export function EcosystemTimeline() {
   // Trailing buffer: enough room for the endcard's title intro AND a scroll-
   // driven credits roll. Without this, the page would run out of scrollY
   // before the credits finished and the user would feel stuck.
-  // Buffer must be >= endcardScrollStart delta + endcardScrollSpan + viewport.h
-  // so the user can actually scroll all the way to scrollT = 1.
-  const endcardScrollSpan = viewport.h * 5;
+  const endcardScrollSpan = viewport.h * 8;
   const wrapperHeight =
     readPositions.length > 0
-      ? totalDwell + totalTravel + endcardScrollSpan + viewport.h * 2
+      ? totalDwell + totalTravel + endcardScrollSpan + viewport.h * 3
       : viewport.h;
 
   // Scroll-TRIGGERED animations — once the scroll position crosses a panel's
@@ -1125,7 +1123,7 @@ function EndcardPanel({
 
   // Scroll drives the column translation + the credits fade-in.
   const scrollT = scroll;
-  const TRAVEL_VH = 260;
+  const TRAVEL_VH = 320;
   const offsetVh = scrollT * TRAVEL_VH;
 
   return (
@@ -1367,10 +1365,13 @@ function DmPanel({
           style={{ opacity: o }}
         >
           <div
-            className="text-[clamp(5rem,12vw,12rem)] font-semibold tracking-tight leading-[0.92] flex items-baseline"
-            aria-label="Us."
+            className="text-[clamp(5rem,12vw,12rem)] font-semibold tracking-tight leading-[0.92]"
+            style={{
+              opacity: clamp01(us * 1.5),
+              transform: `translate3d(0, ${(1 - clamp01(us * 1.5)) * 20}px, 0)`,
+            }}
           >
-            <TypedText text="Us." reveal={us} showCaret />
+            Us.
           </div>
           <div
             className="mt-4 text-white/60 text-sm uppercase tracking-[0.3em]"
