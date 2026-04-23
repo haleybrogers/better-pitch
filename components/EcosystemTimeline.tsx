@@ -569,9 +569,10 @@ export function EcosystemTimeline() {
       ? (readPositions.length - 1) * dwellPerChapter + totalTravel
       : 0;
   const endcardTrigger = scrollY > endcardCenteredAt + viewport.h * 0.35;
-  // Fast title intro (~1.5s), short beat, then a very slow credits roll so
-  // every line is comfortably readable. Total 100s.
-  const endcardReveal = useTriggeredReveal(endcardTrigger, 100000);
+  // Fast title intro (~1.5s), short beat, then a slow credits roll so every
+  // line is comfortably readable. Column is compact now so the total can be
+  // shorter without feeling rushed.
+  const endcardReveal = useTriggeredReveal(endcardTrigger, 70000);
 
   // Scroll HOLD: don't let the horizontal track leave a chapter until its
   // animation has finished. The user can keep scrolling vertically but the
@@ -1102,8 +1103,9 @@ function EndcardPanel({
   const barT = stage(0.012, 0.018);
   const subT = stage(0.014, 0.024);
   const scrollT = stage(0.035, 1.0);
-  // Big travel so nothing is left on the screen by the end of the roll.
-  const TRAVEL_VH = 620;
+  // Travel so nothing is left on the screen by the end of the roll. Tuned
+  // for the compact two-column credits layout.
+  const TRAVEL_VH = 260;
   const offsetVh = scrollT * TRAVEL_VH;
 
   return (
@@ -1118,9 +1120,10 @@ function EndcardPanel({
       <div
         className="absolute inset-x-0 flex flex-col items-center pointer-events-none"
         style={{
-          // Start the column centered in the viewport (top of column at 50vh),
-          // then slide upward by offsetVh.
-          top: `calc(50vh - ${offsetVh}vh)`,
+          // Start the column roughly centered on the title card (40vh from
+          // top) then slide upward by offsetVh. Puts the top credits right
+          // under the Pearmill logo when the column is at rest.
+          top: `calc(40vh - ${offsetVh}vh)`,
         }}
       >
         {/* Title card */}
@@ -1192,36 +1195,36 @@ function EndcardPanel({
           </div>
         </div>
 
-        {/* Spacer wide enough that the title card fully clears the viewport
-            before the credits enter from below — they never share the screen. */}
-        <div className="h-[120vh]" />
+        {/* Small breathing room between the subtitle and the first credit —
+            the credits appear to sit right under the title card. */}
+        <div className="h-[4vh]" />
 
-        {/* Credits roll — fades in as the scroll phase begins so the title
-            card has its moment alone first, then the names fade + glide up. */}
+        {/* Credits roll — fades in right as the subtitle settles so they
+            feel like they were always there, then the whole column glides up. */}
         <div
-          className="w-full max-w-[46rem] px-10 flex flex-col items-center text-center"
-          style={{ opacity: clamp01(scrollT * 8) }}
+          className="w-full max-w-[60rem] px-10 flex flex-col items-center"
+          style={{ opacity: clamp01((subT - 0.5) * 3) }}
         >
-          <div className="flex flex-col gap-6 mb-16">
+          <div className="grid grid-cols-[max-content_1fr] gap-x-8 gap-y-3 mb-14 w-full max-w-[54rem]">
             {CREDITS.map((c) => (
-              <div key={c.name} className="flex flex-col gap-1">
-                <div className="text-[1rem] font-semibold tracking-tight text-white">
+              <div key={c.name} className="contents">
+                <div className="text-[0.8rem] uppercase tracking-[0.12em] font-bold text-white text-right whitespace-nowrap self-baseline">
                   {c.name}
                 </div>
-                <div className="text-white/55 text-[13px] italic leading-snug max-w-lg mx-auto">
+                <div className="text-white/60 text-[13px] italic leading-snug text-left self-baseline">
                   {c.line}
                 </div>
               </div>
             ))}
           </div>
-          <div className="flex flex-col gap-4 my-12">
+          <div className="flex flex-col gap-4 my-10 items-center text-center">
             {SPEECH.map((line, i) => (
               <p
                 key={i}
                 className={
                   i === 0
-                    ? "italic text-white/70 text-[14px] leading-relaxed max-w-lg mx-auto"
-                    : "text-white/75 text-[14px] leading-relaxed max-w-lg mx-auto"
+                    ? "italic text-white/70 text-[14px] leading-relaxed max-w-lg"
+                    : "text-white/75 text-[14px] leading-relaxed max-w-lg"
                 }
               >
                 {line}
