@@ -91,12 +91,13 @@ const chapters: Chapter[] = [
     bg: "#fafaf9",
     Icon: Radio,
     gif: {
-      caption: "the infinite notion doc",
+      caption: "we got in the door",
       tilt: 0,
-      emoji: "📄",
-      src: "/moments/notion-scroll.mov",
+      emoji: "🚪",
+      src: "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExamVyNWp6bGxudGcwbmEyejR4d2p4OWMzYWRjb2Ftczg1YTZ2ZXJuYSZlcD12MV9naWZzX3NlYXJjaCZjdD1n/3o7TKswXkG2qVFIop2/giphy.gif",
       asPhoto: true,
     },
+    gallery: ["/moments/notion-scroll.mov"],
   },
   {
     id: "round-2",
