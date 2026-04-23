@@ -337,7 +337,7 @@ const chapters: Chapter[] = [
   },
   {
     id: "endcard",
-    kicker: "Fin",
+    kicker: "",
     title: "Better × Pearmill",
     body: "",
     accent: "#ffffff",
@@ -562,7 +562,7 @@ export function EcosystemTimeline() {
     dmTriggerScrollY = dmDwellStart - entryTravel * 0.5;
   }
   const dmTrigger = scrollY > dmTriggerScrollY;
-  const dmReveal = useTriggeredReveal(dmTrigger, 2600);
+  const dmReveal = useTriggeredReveal(dmTrigger, 3800);
 
   const endcardCenteredAt =
     readPositions.length > 0
@@ -1258,12 +1258,13 @@ function DmPanel({
   const stage = (start: number, end: number) =>
     clamp01((reveal - start) / Math.max(0.001, end - start));
 
-  const typing1 = stage(0.03, 0.10);
-  const msg1 = stage(0.10, 0.28);
-  const typing2 = stage(0.30, 0.38);
-  const msg2 = stage(0.38, 0.56);
-  // Beat of silence before "Us." lands.
-  const us = stage(0.66, 0.76);
+  const typing1 = stage(0.02, 0.08);
+  const msg1 = stage(0.08, 0.22);
+  const typing2 = stage(0.24, 0.30);
+  const msg2 = stage(0.30, 0.44);
+  // Long beat of silence while the panel sits still — the scroll track is
+  // held through this period so the pause is visible to the user.
+  const us = stage(0.62, 0.72);
   // Another beat before "Thanks for asking." tags on.
   const thanks = stage(0.90, 1.0);
 
