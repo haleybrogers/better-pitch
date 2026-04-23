@@ -561,7 +561,7 @@ export function EcosystemTimeline() {
     dmTriggerScrollY = dmDwellStart - entryTravel * 0.5;
   }
   const dmTrigger = scrollY > dmTriggerScrollY;
-  const dmReveal = useTriggeredReveal(dmTrigger, 1800);
+  const dmReveal = useTriggeredReveal(dmTrigger, 2600);
 
   const endcardCenteredAt =
     readPositions.length > 0
@@ -1164,12 +1164,14 @@ function DmPanel({
   const stage = (start: number, end: number) =>
     clamp01((reveal - start) / Math.max(0.001, end - start));
 
-  const typing1 = stage(0.06, 0.14);
-  const msg1 = stage(0.14, 0.38);
-  const typing2 = stage(0.40, 0.48);
-  const msg2 = stage(0.48, 0.74);
-  const us = stage(0.80, 0.92);
-  const thanks = stage(0.93, 1.0);
+  const typing1 = stage(0.03, 0.10);
+  const msg1 = stage(0.10, 0.28);
+  const typing2 = stage(0.30, 0.38);
+  const msg2 = stage(0.38, 0.56);
+  // Beat of silence before "Us." lands.
+  const us = stage(0.66, 0.76);
+  // Another beat before "Thanks for asking." tags on.
+  const thanks = stage(0.90, 1.0);
 
   return (
     <section
