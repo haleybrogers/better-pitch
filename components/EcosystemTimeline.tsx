@@ -204,7 +204,7 @@ const chapters: Chapter[] = [
     id: "fight",
     kicker: "Fight to the death · Feb–Mar 2026",
     title: "Sly already\nhad the\nrejection\ndrafted.",
-    body: "Jump450 swooped in with 3 free months and a 4.5% Y1 undercut. Sly called Nima: we'd fallen to #2. Then Nima and Val took a different approach to pricing — one that used performance as the reward, showing we stand behind our work. And then Nima slid a copy of Skin in the Game onto Sly's desk. No note. It was late one night. Sly was burnt out, frustrated, just done. Then he saw it. Opened it. Knew right away what it was and what it meant. That moved the needle. March 20: 90-day trial secured.",
+    body: "Jump450 swooped in with 3 free months and a 4.5% Y1 undercut. Sly called Nima: we'd fallen to #2. Then Nima and Val took a different approach to pricing — one that used performance as the reward, showing we stand behind our work. Weeks earlier, Nima had quietly slid a copy of Skin in the Game onto Sly's desk. No note. Sly hadn't even noticed it. Then one late night — burnt out, frustrated, just done — he saw it. Opened it. Knew right away what it was and what it meant. That moved the needle. March 20: 90-day trial secured.",
     pullQuote:
       "He saw it. Opened it. Knew right away what it was and what it meant.",
     accent: "#014737",
