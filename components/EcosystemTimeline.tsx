@@ -143,10 +143,10 @@ const chapters: Chapter[] = [
     bg: "#fafaf9",
     Icon: Cog,
     gif: {
-      caption: "google copy, ai'd",
+      caption: "google copy, ai'd live",
       tilt: 0,
       emoji: "🔎",
-      src: "/moments/statics/mansplaining.png",
+      src: "/moments/google-ai-copy.mov",
       asPhoto: true,
     },
   },
@@ -169,7 +169,13 @@ const chapters: Chapter[] = [
       src: "/moments/betsy-1.gif",
       asPhoto: true,
     },
-    creativeGallery: ["/moments/betsy-2.gif", "/moments/betsy-3.gif"],
+    creativeGallery: [
+      "/moments/betsy-2.gif",
+      "/moments/betsy-3.gif",
+      "/moments/betsy-ai-girlie.mp4",
+      "/moments/betsy-likegpt.mp4",
+      "/moments/betsy-heloc-15s.mp4",
+    ],
   },
   {
     id: "fight",
