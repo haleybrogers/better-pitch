@@ -180,7 +180,6 @@ const chapters: Chapter[] = [
       asPhoto: true,
     },
     creativeGallery: [
-      "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExMXhjMDR5eTFpczNjeW9hcXE4d3VmOGE3Zmo4Mm92cWZ6c3ZpampyaCZlcD12MV9naWZzX3NlYXJjaCZjdD1n/cZ6FrnA4NIuVUPgZMz/giphy.gif",
       "/moments/betsy-2.gif",
       "/moments/betsy-3.gif",
       "/moments/betsy-ai-girlie.mp4",
@@ -202,6 +201,12 @@ const chapters: Chapter[] = [
     Icon: Network,
     stat: { value: "#2 → #1", label: "the odds swung every hour" },
     heroSize: "sm",
+    leadGif: {
+      caption: "betsy, triumphant",
+      tilt: 0,
+      emoji: "👑",
+      src: "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExMXhjMDR5eTFpczNjeW9hcXE4d3VmOGE3Zmo4Mm92cWZ6c3ZpampyaCZlcD12MV9naWZzX3NlYXJjaCZjdD1n/cZ6FrnA4NIuVUPgZMz/giphy.gif",
+    },
     gif: {
       caption: "the book nima left",
       tilt: 0,
@@ -705,7 +710,7 @@ function ContentPanel({
       className="relative flex-shrink-0 h-full flex items-center"
       aria-label={chapter.title.replace(/\n/g, " ")}
     >
-      <div className="flex items-center gap-8 pl-8 pr-4 h-full py-10">
+      <div className="flex items-center gap-10 pl-14 pr-16 h-full py-10">
         {/* 1 · Timeline-node section marker (left rail vibe) */}
         <ChapterMarker chapter={chapter} openness={oContent} />
 
