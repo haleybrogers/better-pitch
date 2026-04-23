@@ -1281,7 +1281,7 @@ function GalleryTile({
       onMouseLeave={handleLeave}
       onFocus={handleEnter}
       onBlur={handleLeave}
-      className="group relative flex-shrink-0 w-48 h-64 rounded-xl overflow-hidden bg-zinc-100 cursor-zoom-in ring-1 ring-black/5 ecosystem-focus"
+      className="group relative flex-shrink-0 w-48 h-64 rounded-xl overflow-visible bg-zinc-100 cursor-zoom-in ring-1 ring-black/5 ecosystem-focus transition-transform duration-300 hover:scale-[1.35] hover:z-20 hover:shadow-2xl"
       aria-label={`Open ${src.split("/").pop()}`}
     >
       {isVideo ? (
@@ -1292,7 +1292,7 @@ function GalleryTile({
           playsInline
           loop
           preload="metadata"
-          className="absolute inset-0 w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-500"
+          className="absolute inset-0 w-full h-full object-cover rounded-xl"
         />
       ) : (
         // eslint-disable-next-line @next/next/no-img-element
@@ -1300,7 +1300,7 @@ function GalleryTile({
           src={src}
           alt=""
           loading="lazy"
-          className="absolute inset-0 w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-500"
+          className="absolute inset-0 w-full h-full object-cover rounded-xl"
         />
       )}
     </button>
