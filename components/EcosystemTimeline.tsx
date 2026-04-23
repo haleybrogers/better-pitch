@@ -1301,10 +1301,10 @@ function DmPanel({
         }}
       />
 
-      <div className="relative z-10 flex items-center gap-20 pl-20 pr-24 py-12">
+      <div className="relative z-10 flex items-center gap-14 pl-16 pr-20 py-12">
         {/* Beat 1 — setup (always visible, enters with openness only) */}
         <div
-          className="flex-shrink-0 w-[30rem]"
+          className="flex-shrink-0 w-[26rem]"
           style={{ opacity: o, transform: `translate3d(0, ${(1 - o) * 30}px, 0)` }}
         >
           <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-[11px] font-semibold uppercase tracking-[0.2em] bg-white/5 text-white/70 border border-white/10 mb-5">
