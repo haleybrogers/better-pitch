@@ -2211,16 +2211,21 @@ function OddsCounter({ activeIndex }: { activeIndex: number }) {
   const color =
     intPart >= 75 ? "#047857" : intPart >= 50 ? "#b45309" : "#b91c1c";
   return (
-    <div className="absolute bottom-6 right-6 z-30 flex items-center gap-2.5 bg-white/85 backdrop-blur px-4 py-2.5 rounded-full shadow-md border border-white">
-      <span className="text-[10px] uppercase tracking-[0.2em] text-zinc-600 font-semibold">
-        odds we&rsquo;d win
-      </span>
-      <span
-        className="text-2xl font-bold tabular-nums transition-colors duration-500"
-        style={{ color }}
-      >
-        {display}%
-      </span>
+    <div className="absolute bottom-6 right-6 z-30 flex flex-col items-end gap-1.5">
+      <div className="text-[10px] tracking-[0.15em] text-zinc-300 italic font-medium drop-shadow-[0_1px_2px_rgba(0,0,0,0.5)]">
+        not 100% until we have a signed SOW
+      </div>
+      <div className="flex items-center gap-2.5 bg-white/85 backdrop-blur px-4 py-2.5 rounded-full shadow-md border border-white">
+        <span className="text-[10px] uppercase tracking-[0.2em] text-zinc-600 font-semibold">
+          odds we&rsquo;d win
+        </span>
+        <span
+          className="text-2xl font-bold tabular-nums transition-colors duration-500"
+          style={{ color }}
+        >
+          {display}%
+        </span>
+      </div>
     </div>
   );
 }
