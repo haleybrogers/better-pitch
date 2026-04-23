@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import {
   Sparkles,
   ArrowRight,
+  ArrowUpRight,
   Radio,
   Lightbulb,
   Cog,
@@ -37,6 +38,13 @@ type Chapter = {
   gif?: GifSpec;
   leadGif?: GifSpec; // small media rendered between the chapter marker and text
   heroSize?: "sm" | "md" | "lg";
+  dashboard?: {
+    videoSrc?: string;
+    posterSrc?: string;
+    href: string;
+    password?: string;
+    label?: string;
+  };
   stat?: { value: string; label: string };
   gallery?: string[];
   creativeGallery?: string[];
@@ -244,6 +252,12 @@ const chapters: Chapter[] = [
       emoji: "🐱",
       src: "https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExOHVybmxtaWxlZmx5cDdjMWpjbHY1djR6NDV0eXVhNHEyOXdvbzd3YSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/W1hd3uXRIbddu/giphy.gif",
     },
+    dashboard: {
+      videoSrc: "/moments/kickoff-dashboard.mov",
+      href: "https://better-portal-two.vercel.app",
+      password: "pearmill",
+      label: "Open the dashboard",
+    },
     gallery: [
       "/moments/kickoff-selfie.jpg",
       "/moments/kickoff-dinner.jpg",
@@ -407,7 +421,7 @@ export function EcosystemTimeline() {
   // the tail blends into the DM panel.
   const wrapperHeight =
     readPositions.length > 0
-      ? totalDwell + totalTravel + viewport.h * 2
+      ? totalDwell + totalTravel + viewport.h * 3
       : viewport.h;
 
   let translateX = readPositions[0] ?? 0;
@@ -930,6 +944,13 @@ function ContentPanel({
           )}
         </div>
 
+        {/* 2.5 · Dashboard MacBook mockup (optional) */}
+        {chapter.dashboard && (
+          <div className="flex-shrink-0">
+            <DashboardMockup dashboard={chapter.dashboard} />
+          </div>
+        )}
+
         {/* 3 · Day gallery */}
         {hasGallery && (
           <ChapterGallery
@@ -1033,6 +1054,74 @@ function ChapterMarker({
 /*  HeroMedia — photo/video, natural aspect, no chrome               */
 /*  Hero videos autoplay; gallery videos play on hover               */
 /* ─────────────────────────────────────────────────────────────── */
+
+function DashboardMockup({
+  dashboard,
+}: {
+  dashboard: NonNullable<Chapter["dashboard"]>;
+}) {
+  const { videoSrc, posterSrc, href, password, label } = dashboard;
+  const hasVideo = !!videoSrc;
+  return (
+    <div className="flex flex-col items-center gap-4">
+      {/* MacBook body */}
+      <div className="relative">
+        {/* Screen */}
+        <div className="relative bg-zinc-900 rounded-[14px] p-[8px] shadow-2xl ring-1 ring-black/10">
+          {/* Notch */}
+          <div className="absolute top-[3px] left-1/2 -translate-x-1/2 w-20 h-[6px] bg-black rounded-b-md z-10" />
+          {/* Screen content */}
+          <div className="relative w-[48rem] aspect-[16/10] overflow-hidden rounded-[6px] bg-zinc-100">
+            {hasVideo ? (
+              <video
+                src={videoSrc}
+                poster={posterSrc}
+                autoPlay
+                loop
+                muted
+                playsInline
+                className="absolute inset-0 w-full h-full object-cover"
+              />
+            ) : posterSrc ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                src={posterSrc}
+                alt="Dashboard"
+                className="absolute inset-0 w-full h-full object-cover"
+              />
+            ) : (
+              <div className="absolute inset-0 flex items-center justify-center text-zinc-500 text-sm">
+                Dashboard preview
+              </div>
+            )}
+          </div>
+        </div>
+        {/* Hinge + base */}
+        <div className="relative -mt-[1px] mx-auto h-[14px] w-[calc(100%+28px)] -translate-x-[14px] bg-gradient-to-b from-zinc-300 to-zinc-200 rounded-b-[16px] shadow-md">
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-20 h-[4px] bg-zinc-400/50 rounded-b-md" />
+        </div>
+      </div>
+
+      {/* CTA button + password hint */}
+      <div className="flex flex-col items-center gap-2">
+        <a
+          href={href}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-2 px-5 py-3 rounded-full bg-[#014737] text-white text-sm font-semibold shadow-md hover:bg-[#023a2d] transition-colors"
+        >
+          {label ?? "Open the dashboard"}
+          <ArrowUpRight className="w-4 h-4" />
+        </a>
+        {password && (
+          <div className="text-[11px] uppercase tracking-[0.2em] text-zinc-500 font-semibold">
+            password: <span className="text-zinc-800">{password}</span>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
 
 function LeadMedia({ src, caption }: { src: string; caption?: string }) {
   const isVideo = /\.(mp4|mov|webm)$/i.test(src);
