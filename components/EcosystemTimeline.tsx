@@ -227,7 +227,7 @@ const chapters: Chapter[] = [
     Icon: Network,
     heroSize: "sm",
     leadGif: {
-      caption: "robot fight",
+      caption: "there can only be 1",
       tilt: 0,
       emoji: "🤖",
       src: "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExbHVmcjNsZWh0cjhlaXloeXZ0MDhyMXg3cG12cGlwc21zcmU5c3MzYyZlcD12MV9naWZzX3NlYXJjaCZjdD1n/ydhTdPES8pJ5BRF9TP/giphy.gif",
