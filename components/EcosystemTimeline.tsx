@@ -33,6 +33,7 @@ type GifSpec = {
   tilt: number; // degrees
   emoji: string;
   src?: string; // optional real GIF url — falls back to emoji
+  asPhoto?: boolean; // when true, render the full image without GIF chrome
 };
 
 type Chapter = {
@@ -99,9 +100,10 @@ const chapters: Chapter[] = [
     Icon: Lightbulb,
     gif: {
       caption: "the actual cake",
-      tilt: 4,
+      tilt: 0,
       emoji: "🎂",
       src: "/moments/cake.jpg",
+      asPhoto: true,
     },
   },
   {
@@ -127,7 +129,7 @@ const chapters: Chapter[] = [
     id: "fight",
     kicker: "Fight to the death · Feb–Mar 2026",
     title: "Sly already\nhad the\nrejection\ndrafted.",
-    body: "Jump450 swooped in with 3 free months and a 4.5% Y1 undercut. Sly called Nima: we'd fallen to #2. While we waited, everyone kept guessing: 90% chance we win → 75% → 50% → 90% → 95!! → 30% → 95. Nima countered with a sliding-scale partnership tied to spend, not a discount. Quietly planted a book for Sly at Better's office — no note. He found it late one night, read the whole thing. On March 20: 90-day trial secured.",
+    body: "Jump450 swooped in with 3 free months and a 4.5% Y1 undercut. Sly called Nima: we'd fallen to #2. While we waited, everyone kept guessing the odds: 90% chance → 75% → 50% → 90% → 95!! → 30% → 95. Nima countered with a sliding-scale partnership tied to spend, not a discount. Then he slid a copy of Skin in the Game onto Sly's desk. No note. Sly didn't even notice until 10pm that night, alone in the office — \"WTF, Nima left that?\" He read the whole thing. That moved the needle. March 20: 90-day trial secured.",
     pullQuote:
       "Your RFP response cooked every other agency. — Sly, very late one night",
     accent: "#014737",
@@ -136,10 +138,11 @@ const chapters: Chapter[] = [
     Icon: Network,
     stat: { value: "#2 → #1", label: "the odds swung every hour" },
     gif: {
-      caption: "free falling",
-      tilt: 2,
-      emoji: "🎢",
-      src: "https://media.giphy.com/media/UbLnLnbbYQTDc2bmbJ/giphy.gif",
+      caption: "the book nima left",
+      tilt: 0,
+      emoji: "📕",
+      src: "/moments/skin-in-the-game.jpg",
+      asPhoto: true,
     },
   },
   {
@@ -626,15 +629,16 @@ function GifPlaceholder({
   offsetX: number;
   size?: "sm" | "md" | "lg";
 }) {
-  const dims = size === "lg" ? "w-[28rem] h-[17rem]" : size === "sm" ? "w-56 h-36" : "w-80 h-52";
+  const dims = size === "lg" ? "w-[28rem] h-[22rem]" : size === "sm" ? "w-56 h-44" : "w-80 h-64";
+  const isPhoto = gif.asPhoto === true;
   return (
     <div
-      className={`relative ${dims} rounded-3xl overflow-hidden shadow-xl`}
+      className={`relative ${dims} rounded-3xl overflow-hidden ${isPhoto ? "shadow-2xl bg-white" : "shadow-xl"}`}
       style={{
         opacity: openness,
-        transform: `translate3d(${offsetX}px, ${(1 - openness) * 30}px, 0) rotate(${gif.tilt}deg) scale(${lerp(0.94, 1, openness)})`,
-        background: `linear-gradient(135deg, ${accent}33, ${accent2}33)`,
-        border: "1px solid rgba(255,255,255,0.6)",
+        transform: `translate3d(${offsetX}px, ${(1 - openness) * 30}px, 0) rotate(${isPhoto ? 0 : gif.tilt}deg) scale(${lerp(0.94, 1, openness)})`,
+        background: isPhoto ? "#ffffff" : `linear-gradient(135deg, ${accent}33, ${accent2}33)`,
+        border: isPhoto ? "1px solid rgba(0,0,0,0.06)" : "1px solid rgba(255,255,255,0.6)",
       }}
     >
       {gif.src ? (
@@ -642,7 +646,7 @@ function GifPlaceholder({
         <img
           src={gif.src}
           alt={gif.caption}
-          className="absolute inset-0 w-full h-full object-cover"
+          className={`absolute inset-0 w-full h-full ${isPhoto ? "object-contain" : "object-cover"}`}
           loading="lazy"
         />
       ) : (
@@ -658,22 +662,26 @@ function GifPlaceholder({
           />
         </>
       )}
-      {/* Corner tag */}
-      <div className="absolute top-3 left-3 px-2 py-1 rounded-full bg-white/80 backdrop-blur text-[10px] uppercase tracking-[0.18em] font-semibold text-zinc-700 flex items-center gap-1">
-        <Film className="w-3 h-3" /> GIF · {gif.caption}
-      </div>
-      {/* Scan line sweep */}
-      <div className="ecosystem-sweep absolute inset-y-0 -left-1/2 w-1/2 bg-gradient-to-r from-transparent via-white/40 to-transparent" />
-      {/* Playhead dots */}
-      <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5">
-        {[0, 1, 2, 3].map((i) => (
-          <span
-            key={i}
-            className="w-1.5 h-1.5 rounded-full bg-white/80 ecosystem-blink"
-            style={{ animationDelay: `${i * 0.15}s` }}
-          />
-        ))}
-      </div>
+      {!isPhoto && (
+        <>
+          {/* Corner tag */}
+          <div className="absolute top-3 left-3 px-2 py-1 rounded-full bg-white/80 backdrop-blur text-[10px] uppercase tracking-[0.18em] font-semibold text-zinc-700 flex items-center gap-1">
+            <Film className="w-3 h-3" /> GIF · {gif.caption}
+          </div>
+          {/* Scan line sweep */}
+          <div className="ecosystem-sweep absolute inset-y-0 -left-1/2 w-1/2 bg-gradient-to-r from-transparent via-white/40 to-transparent" />
+          {/* Playhead dots */}
+          <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5">
+            {[0, 1, 2, 3].map((i) => (
+              <span
+                key={i}
+                className="w-1.5 h-1.5 rounded-full bg-white/80 ecosystem-blink"
+                style={{ animationDelay: `${i * 0.15}s` }}
+              />
+            ))}
+          </div>
+        </>
+      )}
     </div>
   );
 }
