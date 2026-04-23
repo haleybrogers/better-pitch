@@ -301,6 +301,16 @@ const chapters: Chapter[] = [
       asPhoto: true,
     },
   },
+  {
+    id: "endcard",
+    kicker: "Fin",
+    title: "Better × Pearmill",
+    body: "",
+    accent: "#ffffff",
+    accent2: "#d1fae5",
+    bg: "#09090b",
+    Icon: Sparkles,
+  },
 ];
 
 /* ─────────────────────────────────────────────────────────────── */
@@ -592,6 +602,7 @@ function ChapterPanel({
   const isHero = chapter.id === "title" || chapter.id === "cover";
   const isOutro = chapter.id === "onwards";
   const isDm = chapter.id === "dm";
+  const isEndcard = chapter.id === "endcard";
   void index;
 
   // No fade when scrolling — content stays fully opaque. Horizontal parallax
@@ -608,6 +619,9 @@ function ChapterPanel({
   }
   if (isDm) {
     return <DmPanel chapter={chapter} openness={oContent} />;
+  }
+  if (isEndcard) {
+    return <EndcardPanel chapter={chapter} />;
   }
   return (
     <ContentPanel
@@ -751,6 +765,41 @@ function OutroPanel({
           style={{ opacity: o, transform: `translate3d(0, ${(1 - o) * 20}px, 0)` }}
         >
           onwards <ArrowRight className="w-4 h-4" />
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ─────────────────────────────────────────────────────────────── */
+/*  Endcard panel — final "Better × Pearmill" splash                 */
+/* ─────────────────────────────────────────────────────────────── */
+
+function EndcardPanel({ chapter }: { chapter: Chapter }) {
+  return (
+    <section
+      className="relative flex-shrink-0 h-full w-screen flex items-center justify-center text-white"
+      style={{ backgroundColor: chapter.bg }}
+      aria-label="Better × Pearmill"
+    >
+      <div className="relative z-10 flex flex-col items-center gap-8">
+        <div className="text-[11px] uppercase tracking-[0.35em] text-white/40 font-semibold">
+          {chapter.kicker}
+        </div>
+        <div className="flex items-center gap-10 md:gap-14">
+          <span className="text-[clamp(3rem,7vw,6rem)] font-semibold tracking-tight leading-none">
+            Better
+          </span>
+          <span className="text-[clamp(2.5rem,6vw,5rem)] text-white/40 font-light leading-none">
+            ×
+          </span>
+          <span className="text-[clamp(3rem,7vw,6rem)] font-semibold tracking-tight leading-none italic">
+            Pearmill
+          </span>
+        </div>
+        <div className="h-[2px] w-24 bg-white/30" />
+        <div className="text-[11px] uppercase tracking-[0.3em] text-white/50 font-semibold">
+          A love letter, with learnings
         </div>
       </div>
     </section>
@@ -1432,8 +1481,8 @@ function ProgressRail({
 }
 
 // Emotional arc — caps at 99.9% (never 100 until SOW is signed)
-const ODDS = [0, 0, 40, 85, 30, 90, 15, 95, 97, 99.9, 99.9];
-const DAYS = [0, 0, 1, 48, 75, 125, 140, 202, 202, 202, 202];
+const ODDS = [0, 0, 40, 85, 30, 90, 15, 95, 97, 99.9, 99.9, 99.9];
+const DAYS = [0, 0, 1, 48, 75, 125, 140, 202, 202, 202, 202, 202];
 
 function useSmoothedValue(target: number) {
   const [value, setValue] = useState(target);
