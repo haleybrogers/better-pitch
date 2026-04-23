@@ -562,7 +562,7 @@ export function EcosystemTimeline() {
     dmTriggerScrollY = dmDwellStart - entryTravel * 0.5;
   }
   const dmTrigger = scrollY > dmTriggerScrollY;
-  const dmReveal = useTriggeredReveal(dmTrigger, 3800);
+  const dmReveal = useTriggeredReveal(dmTrigger, 5800);
 
   const endcardCenteredAt =
     readPositions.length > 0
@@ -1277,15 +1277,15 @@ function DmPanel({
   const stage = (start: number, end: number) =>
     clamp01((reveal - start) / Math.max(0.001, end - start));
 
-  const typing1 = stage(0.02, 0.08);
-  const msg1 = stage(0.08, 0.22);
-  const typing2 = stage(0.24, 0.30);
-  const msg2 = stage(0.30, 0.44);
-  // Long beat of silence while the panel sits still — the scroll track is
-  // held through this period so the pause is visible to the user.
-  const us = stage(0.62, 0.72);
+  const typing1 = stage(0.02, 0.07);
+  // Wider message windows = slower, more readable character-by-character typing.
+  const msg1 = stage(0.07, 0.32);
+  const typing2 = stage(0.34, 0.40);
+  const msg2 = stage(0.40, 0.66);
+  // Beat of silence before "Us." lands.
+  const us = stage(0.74, 0.82);
   // Another beat before "Thanks for asking." tags on.
-  const thanks = stage(0.90, 1.0);
+  const thanks = stage(0.92, 1.0);
 
   return (
     <section
