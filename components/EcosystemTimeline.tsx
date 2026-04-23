@@ -52,6 +52,7 @@ type Chapter = {
   stat?: { value: string; label: string };
   gallery?: string[]; // cute moments — selfies, team photos, real artifacts
   creativeGallery?: string[]; // the creative work we shipped for this round
+  learning?: string; // the big "key learning" — what we'd do differently / what this taught us
 };
 
 const notionPages = Array.from(
@@ -96,6 +97,7 @@ const chapters: Chapter[] = [
       src: "/moments/notion-scroll.mov",
       asPhoto: true,
     },
+    learning: "Donovan should have told me in Slack.",
   },
   {
     id: "round-2",
@@ -134,6 +136,7 @@ const chapters: Chapter[] = [
       "/moments/statics/coffee-cup.png",
       "/moments/statics/apple-watch.png",
     ],
+    learning: "Every pitch now is led by a GM — the tyer of threads. One story, integrated across disciplines.",
   },
   {
     id: "round-3a",
@@ -153,6 +156,7 @@ const chapters: Chapter[] = [
       src: "/moments/google-ai-copy.mov",
       asPhoto: true,
     },
+    learning: "Every channel gets an AI'd POV. Nothing stays manual.",
   },
   {
     id: "round-3b",
@@ -179,7 +183,9 @@ const chapters: Chapter[] = [
       "/moments/betsy-ai-girlie.mp4",
       "/moments/betsy-likegpt.mp4",
       "/moments/betsy-heloc-15s.mp4",
+      "/moments/betsy-heloc-long.mp4",
     ],
+    learning: "Hit the brief. Call the client to ask questions — Nima emailed Sly any time we had one.",
   },
   {
     id: "fight",
@@ -200,6 +206,7 @@ const chapters: Chapter[] = [
       src: "/moments/skin-in-the-game.jpg",
       asPhoto: true,
     },
+    learning: "Every touch point — even pricing — is a chance to show the client you understand them.",
   },
   {
     id: "kickoff",
@@ -226,6 +233,7 @@ const chapters: Chapter[] = [
     gallery: [
       "/moments/kickoff-selfie.jpg",
     ],
+    learning: "The push to incorporate AI quickly and intentionally — plus individual curiosity — is what built this hub. It proved our worth.",
   },
   {
     id: "onwards",
@@ -320,8 +328,8 @@ export function EcosystemTimeline() {
   const n = chapters.length;
   const activeIndex = Math.min(n - 1, Math.round(progress * (n - 1)));
   const activeChapter = chapters[activeIndex];
-  // Track moves from 0 → -(n-1)*100vw as progress goes 0 → 1
-  const translatePct = -progress * (n - 1) * 100;
+  // Track moves from 0 → -(n-1)*200vw as progress goes 0 → 1
+  const translatePct = -progress * (n - 1) * 200;
 
   if (reducedMotion) {
     return <ReducedStack />;
@@ -330,7 +338,7 @@ export function EcosystemTimeline() {
   return (
     <div
       ref={wrapperRef}
-      style={{ height: `${n * 100}vh` }}
+      style={{ height: `${n * 200}vh` }}
       className="relative"
       aria-label="Horizontal timeline: From Silos to Ecosystem"
     >
@@ -359,7 +367,7 @@ export function EcosystemTimeline() {
         <div
           className="flex h-full"
           style={{
-            width: `${n * 100}vw`,
+            width: `${n * 200}vw`,
             transform: `translate3d(${translatePct}vw, 0, 0)`,
             willChange: "transform",
           }}
@@ -480,56 +488,128 @@ function ChapterPanel({
 }) {
   const isCover = index === 0;
   const isOutro = chapter.id === "onwards";
-  const darkPanel = isOutro; // deep-green closer → invert text
+  const darkPanel = isOutro;
 
-  // Element-level openness (builds open, then closes)
-  const oKicker = openness(local, -0.95, -0.35, 0.4, 0.95);
-  const oTitle = openness(local, -0.85, -0.25, 0.35, 0.9);
-  const oBody = openness(local, -0.7, -0.1, 0.3, 0.85);
-  const oExtras = openness(local, -0.55, 0.05, 0.25, 0.8);
+  // Gentle openness — content stays visible through a wider window since panels are big
+  const oKicker = openness(local, -0.95, -0.55, 0.55, 0.95);
+  const oTitle = openness(local, -0.9, -0.45, 0.5, 0.95);
+  const oBody = openness(local, -0.82, -0.3, 0.45, 0.92);
+  const oExtras = openness(local, -0.72, -0.15, 0.35, 0.9);
 
-  // Parallax offsets relative to local (in px) — more amplitude
-  const parallaxTitle = local * -90;
-  const parallaxBody = local * -60;
-  const parallaxGif = local * 140;
-  const parallaxDeliv = local * -140;
-  const parallaxQuote = local * -45;
-  const parallaxStat = local * 70;
-  const parallaxNumeral = local * -240;
+  // Smaller parallax — wider panels, less jitter
+  const parallaxTitle = local * -40;
+  const parallaxBody = local * -25;
+  const parallaxMedia = local * 70;
 
   const { Icon } = chapter;
   const inkTitle = darkPanel ? "text-white" : "text-zinc-900";
   const inkBody = darkPanel ? "text-white/80" : "text-zinc-600";
   const inkQuote = darkPanel ? "text-white" : "text-zinc-800";
-  const numeralColor = darkPanel ? "rgba(255,255,255,0.06)" : "rgba(9,9,11,0.045)";
+
+  /* Cover + outro stay centered. Body chapters flow horizontally across the wide panel. */
+  if (isCover || isOutro) {
+    return (
+      <section
+        className="relative flex-shrink-0 h-full flex items-center justify-center px-[8vw]"
+        style={{ width: "200vw" }}
+        aria-label={chapter.title.replace(/\n/g, " ")}
+      >
+        <div className="relative z-10 flex flex-col items-center max-w-4xl text-center">
+          <div
+            className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-[11px] font-semibold uppercase tracking-[0.18em] mb-6"
+            style={{
+              opacity: oKicker,
+              transform: `translate3d(0, ${(1 - oKicker) * 20}px, 0)`,
+              background: `linear-gradient(135deg, ${chapter.accent}22, ${chapter.accent2}22)`,
+              color: darkPanel ? "#ffffff" : chapter.accent,
+              border: `1px solid ${chapter.accent}33`,
+            }}
+          >
+            <Icon className="w-3.5 h-3.5" />
+            {chapter.kicker}
+          </div>
+          <h2
+            className={`font-semibold leading-[0.95] tracking-tight whitespace-pre-line ${inkTitle} ${
+              isCover ? "text-[clamp(3rem,9vw,8rem)]" : "text-[clamp(2.25rem,6vw,5.5rem)]"
+            }`}
+            style={{
+              opacity: oTitle,
+              transform: `translate3d(0, ${(1 - oTitle) * 40}px, 0)`,
+            }}
+          >
+            {chapter.title.split("\n").map((line, i) => (
+              <span key={i} className="block">
+                {line}
+              </span>
+            ))}
+          </h2>
+          <div
+            className="h-1.5 rounded-full my-6"
+            style={{
+              width: `${lerp(0, 120, oTitle)}px`,
+              background: `linear-gradient(90deg, ${chapter.accent}, ${chapter.accent2})`,
+              opacity: oTitle,
+            }}
+          />
+          <p
+            className={`${inkBody} text-lg md:text-xl leading-relaxed max-w-2xl mx-auto`}
+            style={{
+              opacity: oBody,
+              transform: `translate3d(0, ${(1 - oBody) * 30}px, 0)`,
+            }}
+          >
+            {chapter.body}
+          </p>
+          {chapter.pullQuote && (
+            <blockquote
+              className={`mt-6 italic ${inkQuote} text-lg max-w-2xl`}
+              style={{
+                opacity: oExtras,
+                transform: `translate3d(0, ${(1 - oExtras) * 20}px, 0)`,
+              }}
+            >
+              “{chapter.pullQuote}”
+            </blockquote>
+          )}
+          {chapter.gif && (
+            <div
+              className="mt-10"
+              style={{
+                opacity: oExtras,
+                transform: `translate3d(0, ${(1 - oExtras) * 30}px, 0)`,
+              }}
+            >
+              <CleanMedia src={chapter.gif.src} caption={chapter.gif.caption} size="lg" />
+            </div>
+          )}
+          {isOutro && (
+            <div
+              className="mt-8 inline-flex items-center gap-2 px-6 py-3 rounded-full text-white font-semibold shadow-lg"
+              style={{
+                opacity: oExtras,
+                background: `linear-gradient(135deg, ${chapter.accent}, ${chapter.accent2})`,
+                transform: `translate3d(0, ${(1 - oExtras) * 20}px, 0)`,
+              }}
+            >
+              onwards <ArrowRight className="w-4 h-4" />
+            </div>
+          )}
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section
-      className="relative flex-shrink-0 h-full w-screen flex items-center justify-center px-8 md:px-16"
-      style={{ width: "100vw" }}
+      className="relative flex-shrink-0 h-full flex items-center"
+      style={{ width: "200vw" }}
       aria-label={chapter.title.replace(/\n/g, " ")}
     >
-      {/* Chapter side label — small vertical number */}
-      <div
-        className="absolute left-6 top-1/2 -translate-y-1/2 text-[10px] uppercase tracking-[0.4em] text-zinc-500 font-medium"
-        style={{
-          writingMode: "vertical-rl",
-          transform: `translate(${local * -30}px, -50%) rotate(180deg)`,
-        }}
-      >
-        {String(index + 1).padStart(2, "0")} / {String(chapters.length).padStart(2, "0")}
-      </div>
-
-      <div
-        className={`relative z-10 grid gap-10 items-center w-full max-w-6xl ${
-          isCover || isOutro ? "grid-cols-1 text-center justify-items-center" : "grid-cols-1 md:grid-cols-[1.1fr_1fr]"
-        }`}
-      >
-        {/* Text column */}
-        <div className={isCover || isOutro ? "flex flex-col items-center" : ""}>
-          {/* Kicker chip */}
+      <div className="relative z-10 flex items-center gap-16 pl-[6vw] pr-[4vw] h-full py-[8vh]">
+        {/* 1 · Text block */}
+        <div className="flex-shrink-0 w-[40rem] flex flex-col justify-center">
           <div
-            className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-[11px] font-semibold uppercase tracking-[0.18em] mb-6 shadow-sm"
+            className="self-start inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-[11px] font-semibold uppercase tracking-[0.18em] mb-6"
             style={{
               opacity: oKicker,
               transform: `translate3d(0, ${(1 - oKicker) * 20}px, 0)`,
@@ -541,12 +621,8 @@ function ChapterPanel({
             <Icon className="w-3.5 h-3.5" />
             {chapter.kicker}
           </div>
-
-          {/* Title */}
           <h2
-            className={`font-semibold leading-[0.95] tracking-tight whitespace-pre-line ${inkTitle} ${
-              isCover ? "text-[clamp(3rem,9vw,8rem)]" : "text-[clamp(2.25rem,6vw,5.5rem)]"
-            }`}
+            className={`font-semibold leading-[0.95] tracking-tight whitespace-pre-line ${inkTitle} text-[clamp(2.5rem,5.5vw,5.5rem)]`}
             style={{
               opacity: oTitle,
               transform: `translate3d(${parallaxTitle}px, ${(1 - oTitle) * 40}px, 0)`,
@@ -558,8 +634,6 @@ function ChapterPanel({
               </span>
             ))}
           </h2>
-
-          {/* Accent underline */}
           <div
             className="h-1.5 rounded-full my-6"
             style={{
@@ -568,10 +642,8 @@ function ChapterPanel({
               opacity: oTitle,
             }}
           />
-
-          {/* Body */}
           <p
-            className={`${inkBody} text-lg md:text-xl leading-relaxed max-w-xl ${isCover || isOutro ? "mx-auto" : ""}`}
+            className={`${inkBody} text-lg md:text-xl leading-relaxed max-w-xl`}
             style={{
               opacity: oBody,
               transform: `translate3d(${parallaxBody}px, ${(1 - oBody) * 30}px, 0)`,
@@ -579,25 +651,21 @@ function ChapterPanel({
           >
             {chapter.body}
           </p>
-
-          {/* Pull quote */}
           {chapter.pullQuote && (
             <blockquote
               className={`mt-6 pl-4 border-l-4 italic ${inkQuote} text-lg max-w-xl`}
               style={{
                 borderColor: chapter.accent,
                 opacity: oExtras,
-                transform: `translate3d(${parallaxBody * 0.5}px, ${(1 - oExtras) * 20}px, 0)`,
+                transform: `translate3d(0, ${(1 - oExtras) * 20}px, 0)`,
               }}
             >
               “{chapter.pullQuote}”
             </blockquote>
           )}
-
-          {/* Stat */}
           {chapter.stat && (
             <div
-              className="mt-6 inline-flex items-baseline gap-3 px-5 py-3 rounded-2xl bg-white/70 backdrop-blur shadow-sm border border-white"
+              className="mt-6 self-start inline-flex items-baseline gap-3 px-5 py-3 rounded-2xl bg-white/70 backdrop-blur border border-white"
               style={{
                 opacity: oExtras,
                 transform: `translate3d(0, ${(1 - oExtras) * 20}px, 0)`,
@@ -616,72 +684,122 @@ function ChapterPanel({
               <span className="text-xs uppercase tracking-wider text-zinc-600">{chapter.stat.label}</span>
             </div>
           )}
-
-          {/* Mic-drop tag for the outro */}
-          {isOutro && (
-            <div
-              className="mt-8 inline-flex items-center gap-2 px-6 py-3 rounded-full text-white font-semibold shadow-lg"
-              style={{
-                opacity: oExtras,
-                background: `linear-gradient(135deg, ${chapter.accent}, ${chapter.accent2})`,
-                transform: `translate3d(0, ${(1 - oExtras) * 20}px, 0)`,
-              }}
-            >
-              onwards <ArrowRight className="w-4 h-4" />
-            </div>
-          )}
         </div>
 
-        {/* Media column */}
-        {!isCover && !isOutro && (
-          <div className="relative flex flex-col items-center gap-4">
-            {chapter.gif && (
-              <GifPlaceholder
-                gif={chapter.gif}
-                accent={chapter.accent}
-                accent2={chapter.accent2}
-                openness={oExtras}
-                offsetX={parallaxGif}
-              />
-            )}
-            {chapter.gallery && chapter.gallery.length > 0 && (
-              <ChapterGallery items={chapter.gallery} openness={oExtras} offsetX={parallaxDeliv} label="the day" />
-            )}
-            {chapter.creativeGallery && chapter.creativeGallery.length > 0 && (
-              <ChapterGallery items={chapter.creativeGallery} openness={oExtras} offsetX={parallaxDeliv * -1} label="the work" />
-            )}
+        {/* 2 · Key Learning block (big, visually distinct) */}
+        {chapter.learning && (
+          <div
+            className="flex-shrink-0 w-[30rem] flex items-center"
+            style={{
+              opacity: oExtras,
+              transform: `translate3d(${parallaxMedia * 0.3}px, ${(1 - oExtras) * 30}px, 0)`,
+            }}
+          >
+            <LearningCard text={chapter.learning} accent={chapter.accent} accent2={chapter.accent2} />
           </div>
         )}
 
-        {/* Cover gets a hero gif centered */}
-        {isCover && chapter.gif && (
-          <div className="mt-4">
-            <GifPlaceholder
-              gif={chapter.gif}
-              accent={chapter.accent}
-              accent2={chapter.accent2}
-              openness={oExtras}
-              offsetX={parallaxGif}
-              size="lg"
-            />
+        {/* 3 · Hero media */}
+        {chapter.gif && (
+          <div
+            className="flex-shrink-0 flex items-center"
+            style={{
+              opacity: oExtras,
+              transform: `translate3d(${parallaxMedia}px, ${(1 - oExtras) * 30}px, 0)`,
+            }}
+          >
+            <CleanMedia src={chapter.gif.src} caption={chapter.gif.caption} size="lg" />
           </div>
         )}
 
-        {/* Outro gets a cute sprouting placeholder */}
-        {isOutro && chapter.gif && (
-          <div className="mt-4">
-            <GifPlaceholder
-              gif={chapter.gif}
-              accent={chapter.accent}
-              accent2={chapter.accent2}
-              openness={oExtras}
-              offsetX={parallaxGif}
-              size="md"
-            />
-          </div>
+        {/* 4 · "the day" gallery */}
+        {chapter.gallery && chapter.gallery.length > 0 && (
+          <ChapterGallery items={chapter.gallery} openness={oExtras} offsetX={0} label="the day" />
+        )}
+
+        {/* 5 · "the work" gallery */}
+        {chapter.creativeGallery && chapter.creativeGallery.length > 0 && (
+          <ChapterGallery items={chapter.creativeGallery} openness={oExtras} offsetX={0} label="the work" />
         )}
       </div>
     </section>
+  );
+}
+
+/* ─────────────────────────────────────────────────────────────── */
+/*  CleanMedia — photo/video with no chrome, no shadow              */
+/* ─────────────────────────────────────────────────────────────── */
+
+function CleanMedia({
+  src,
+  caption,
+  size = "md",
+}: {
+  src?: string;
+  caption?: string;
+  size?: "sm" | "md" | "lg";
+}) {
+  const dims = size === "lg" ? "w-[34rem] h-[26rem]" : size === "sm" ? "w-60 h-72" : "w-80 h-96";
+  if (!src) return null;
+  const isVideo = /\.(mp4|mov|webm)$/i.test(src);
+  return (
+    <div className={`relative ${dims} rounded-2xl overflow-hidden bg-zinc-100`}>
+      {isVideo ? (
+        <video
+          src={src}
+          autoPlay
+          loop
+          muted
+          playsInline
+          className="absolute inset-0 w-full h-full object-cover"
+        />
+      ) : (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
+          src={src}
+          alt={caption ?? ""}
+          loading="lazy"
+          className="absolute inset-0 w-full h-full object-cover"
+        />
+      )}
+    </div>
+  );
+}
+
+/* ─────────────────────────────────────────────────────────────── */
+/*  LearningCard — big, colored, invites conversation               */
+/* ─────────────────────────────────────────────────────────────── */
+
+function LearningCard({
+  text,
+  accent,
+  accent2,
+}: {
+  text: string;
+  accent: string;
+  accent2: string;
+}) {
+  return (
+    <div
+      className="relative rounded-3xl p-10 w-full text-white overflow-hidden"
+      style={{ background: `linear-gradient(135deg, ${accent}, ${accent2})` }}
+    >
+      <div
+        className="absolute inset-0 opacity-[0.08]"
+        style={{
+          backgroundImage: "radial-gradient(circle, #ffffff 1px, transparent 1px)",
+          backgroundSize: "16px 16px",
+        }}
+      />
+      <div className="relative">
+        <div className="text-[10px] uppercase tracking-[0.3em] font-bold opacity-70 mb-5 flex items-center gap-2">
+          <Lightbulb className="w-3 h-3" /> Key learning
+        </div>
+        <div className="text-[1.75rem] leading-[1.15] font-semibold">
+          &ldquo;{text}&rdquo;
+        </div>
+      </div>
+    </div>
   );
 }
 
@@ -887,25 +1005,32 @@ function ChapterGallery({
   return (
     <>
       <div
-        className="w-[28rem] max-w-full"
+        className="flex-shrink-0 flex flex-col justify-center gap-3"
         style={{
-          opacity: openness,
-          transform: `translate3d(${offsetX * 0.5}px, ${(1 - openness) * 20}px, 0)`,
+          transform: `translate3d(${offsetX * 0.3}px, 0, 0)`,
         }}
       >
         {label && (
-          <div className="text-[10px] uppercase tracking-[0.25em] text-zinc-500 font-semibold mb-2">
+          <div
+            className="text-[10px] uppercase tracking-[0.3em] text-zinc-500 font-bold"
+            style={{ opacity: openness }}
+          >
             {label}
           </div>
         )}
-        <div className="flex gap-2 overflow-x-auto pb-2 -mx-2 px-2">
+        <div className="flex gap-3">
           {items.map((src, i) => {
             const isVideo = /\.(mp4|mov|webm)$/i.test(src);
+            const localOpen = clamp01((openness - i * 0.05) * 1.2);
             return (
               <button
                 key={src}
                 onClick={() => setOpenIndex(i)}
-                className="group relative flex-shrink-0 w-40 h-52 rounded-xl overflow-hidden bg-white border border-zinc-200 shadow-sm hover:shadow-lg transition-shadow"
+                className="group relative flex-shrink-0 w-52 h-72 rounded-xl overflow-hidden bg-zinc-100 cursor-zoom-in"
+                style={{
+                  opacity: localOpen,
+                  transform: `translate3d(0, ${(1 - localOpen) * 20}px, 0) scale(${lerp(0.93, 1, localOpen)})`,
+                }}
                 aria-label={`Open ${src.split("/").pop()}`}
               >
                 {isVideo ? (
@@ -915,7 +1040,7 @@ function ChapterGallery({
                     loop
                     muted
                     playsInline
-                    className="absolute inset-0 w-full h-full object-cover group-hover:scale-[1.02] transition-transform"
+                    className="absolute inset-0 w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-500"
                   />
                 ) : (
                   // eslint-disable-next-line @next/next/no-img-element
@@ -923,7 +1048,7 @@ function ChapterGallery({
                     src={src}
                     alt=""
                     loading="lazy"
-                    className="absolute inset-0 w-full h-full object-cover group-hover:scale-[1.02] transition-transform"
+                    className="absolute inset-0 w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-500"
                   />
                 )}
               </button>
