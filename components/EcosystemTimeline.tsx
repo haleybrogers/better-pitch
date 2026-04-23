@@ -134,7 +134,7 @@ const chapters: Chapter[] = [
       "/moments/statics/coffee-cup.png",
       "/moments/statics/apple-watch.png",
     ],
-    learning: "Every pitch now is led by a GM — the tyer of threads. One story, integrated across disciplines.",
+    learning: "Every pitch now gets a GM — the tyer of threads. One story, four voices, zero silos.",
   },
   {
     id: "round-3a",
@@ -179,10 +179,8 @@ const chapters: Chapter[] = [
       "/moments/betsy-3.gif",
       "/moments/betsy-ai-girlie.mp4",
       "/moments/betsy-likegpt.mp4",
-      "/moments/betsy-heloc-15s.mp4",
-      "/moments/betsy-heloc-long.mp4",
     ],
-    learning: "Hit the brief. Call the client to ask questions — Nima emailed Sly any time we had one.",
+    learning: "Hit the brief. When in doubt, pick up the phone — Nima emailed Sly every time we had a question.",
   },
   {
     id: "fight",
@@ -203,7 +201,7 @@ const chapters: Chapter[] = [
       src: "/moments/skin-in-the-game.jpg",
       asPhoto: true,
     },
-    learning: "Every touch point — even pricing — is a chance to show the client you understand them.",
+    learning: "Every touch point — even pricing — is a chance to prove you actually understood them.",
   },
   {
     id: "kickoff",
@@ -230,7 +228,7 @@ const chapters: Chapter[] = [
     gallery: [
       "/moments/kickoff-selfie.jpg",
     ],
-    learning: "The push to incorporate AI quickly and intentionally — plus individual curiosity — is what built this hub. It proved our worth.",
+    learning: "Curiosity and a hard push to use AI — quickly, intentionally, together — is what built this hub. That's what proved our worth.",
   },
   {
     id: "onwards",
@@ -378,6 +376,7 @@ export function EcosystemTimeline() {
         </div>
 
         <ProgressRail progress={progress} activeIndex={activeIndex} />
+        <DaysCounter progress={progress} />
         <OddsCounter progress={progress} />
         <ScrollHint hide={progress > 0.02} />
       </div>
@@ -605,19 +604,8 @@ function ChapterPanel({
       <div className="relative z-10 flex items-center gap-16 pl-[6vw] pr-[4vw] h-full py-[8vh]">
         {/* 1 · Text block */}
         <div className="flex-shrink-0 w-[40rem] flex flex-col justify-center">
-          <div
-            className="self-start inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-[11px] font-semibold uppercase tracking-[0.18em] mb-6"
-            style={{
-              opacity: oKicker,
-              transform: `translate3d(0, ${(1 - oKicker) * 20}px, 0)`,
-              background: `linear-gradient(135deg, ${chapter.accent}22, ${chapter.accent2}22)`,
-              color: chapter.accent,
-              border: `1px solid ${chapter.accent}33`,
-            }}
-          >
-            <Icon className="w-3.5 h-3.5" />
-            {chapter.kicker}
-          </div>
+          <SectionHeader chapter={chapter} openness={oKicker} />
+
           <h2
             className={`font-semibold leading-[0.95] tracking-tight whitespace-pre-line ${inkTitle} text-[clamp(2.5rem,5.5vw,5.5rem)]`}
             style={{
@@ -724,6 +712,57 @@ function ChapterPanel({
 }
 
 /* ─────────────────────────────────────────────────────────────── */
+/*  SectionHeader — big, cute section divider at each chapter start */
+/* ─────────────────────────────────────────────────────────────── */
+
+function SectionHeader({ chapter, openness }: { chapter: Chapter; openness: number }) {
+  const { Icon } = chapter;
+  const parts = chapter.kicker.split(" · ");
+  const headline = parts[0];
+  const detail = parts.slice(1).join(" · ");
+  return (
+    <div
+      className="self-start flex items-center gap-4 mb-10"
+      style={{
+        opacity: openness,
+        transform: `translate3d(0, ${(1 - openness) * 20}px, 0)`,
+      }}
+    >
+      <div
+        className="flex items-center gap-4 px-7 py-4 rounded-2xl shadow-sm"
+        style={{
+          background: `linear-gradient(135deg, ${chapter.accent}, ${chapter.accent2})`,
+          color: "#ffffff",
+        }}
+      >
+        <div
+          className="w-9 h-9 rounded-xl bg-white/15 flex items-center justify-center"
+          style={{ backdropFilter: "blur(6px)" }}
+        >
+          <Icon className="w-5 h-5" />
+        </div>
+        <div className="flex flex-col leading-tight">
+          <span className="text-xl md:text-2xl font-bold uppercase tracking-[0.14em]">
+            {headline}
+          </span>
+          {detail && (
+            <span className="text-[11px] md:text-xs uppercase tracking-[0.3em] opacity-75 mt-1">
+              {detail}
+            </span>
+          )}
+        </div>
+      </div>
+      <div
+        className="h-[2px] w-20 rounded-full"
+        style={{
+          background: `linear-gradient(90deg, ${chapter.accent}, transparent)`,
+        }}
+      />
+    </div>
+  );
+}
+
+/* ─────────────────────────────────────────────────────────────── */
 /*  CleanMedia — photo/video with no chrome, no shadow              */
 /* ─────────────────────────────────────────────────────────────── */
 
@@ -736,30 +775,31 @@ function CleanMedia({
   caption?: string;
   size?: "sm" | "md" | "lg";
 }) {
-  const dims = size === "lg" ? "w-[34rem] h-[26rem]" : size === "sm" ? "w-60 h-72" : "w-80 h-96";
+  // Let the media show at its NATURAL aspect ratio — no cropping.
+  // Each source gets bounded by max-height + max-width, and figures shrink
+  // the container to match the media's real dimensions.
+  const maxH = size === "lg" ? "max-h-[72vh]" : size === "sm" ? "max-h-[34vh]" : "max-h-[54vh]";
+  const maxW = size === "lg" ? "max-w-[50vw]" : size === "sm" ? "max-w-[20vw]" : "max-w-[32vw]";
   if (!src) return null;
   const isVideo = /\.(mp4|mov|webm)$/i.test(src);
-  return (
-    <div className={`relative ${dims} rounded-2xl overflow-hidden bg-zinc-100`}>
-      {isVideo ? (
-        <video
-          src={src}
-          autoPlay
-          loop
-          muted
-          playsInline
-          className="absolute inset-0 w-full h-full object-cover"
-        />
-      ) : (
-        // eslint-disable-next-line @next/next/no-img-element
-        <img
-          src={src}
-          alt={caption ?? ""}
-          loading="lazy"
-          className="absolute inset-0 w-full h-full object-cover"
-        />
-      )}
-    </div>
+  const mediaCls = `${maxH} ${maxW} w-auto h-auto block rounded-2xl ecosystem-focus`;
+  return isVideo ? (
+    <video
+      src={src}
+      autoPlay
+      loop
+      muted
+      playsInline
+      className={mediaCls}
+    />
+  ) : (
+    // eslint-disable-next-line @next/next/no-img-element
+    <img
+      src={src}
+      alt={caption ?? ""}
+      loading="lazy"
+      className={mediaCls}
+    />
   );
 }
 
@@ -1023,10 +1063,9 @@ function ChapterGallery({
               <button
                 key={src}
                 onClick={() => setOpenIndex(i)}
-                className="group relative flex-shrink-0 w-52 h-72 rounded-xl overflow-hidden bg-zinc-100 cursor-zoom-in"
+                className="group relative flex-shrink-0 w-52 h-72 rounded-xl overflow-hidden bg-zinc-100 cursor-zoom-in ecosystem-focus"
                 style={{
                   opacity: localOpen,
-                  transform: `translate3d(0, ${(1 - localOpen) * 20}px, 0) scale(${lerp(0.93, 1, localOpen)})`,
                 }}
                 aria-label={`Open ${src.split("/").pop()}`}
               >
@@ -1204,6 +1243,37 @@ function OddsCounter({ progress }: { progress: number }) {
         style={{ color }}
       >
         {displayed}%
+      </span>
+    </div>
+  );
+}
+
+/* ─────────────────────────────────────────────────────────────── */
+/*  Days counter — how many fucking days it took to win the account  */
+/* ─────────────────────────────────────────────────────────────── */
+
+// Rough day-count per chapter from Oct 1 2025 (day 0) to kickoff Apr 20 2026 (day 202)
+// cover = 0, round-1 ≈ day 1, round-2 Nov 18 ≈ 48, round-3a Dec–Jan ≈ 75,
+// round-3b Feb ≈ 125, fight Feb–Mar ≈ 140, kickoff Apr 20 = 202.
+const DAYS = [0, 1, 48, 75, 125, 140, 202, 202];
+
+function DaysCounter({ progress }: { progress: number }) {
+  const n = DAYS.length;
+  const scaled = Math.min(Math.max(progress, 0), 1) * (n - 1);
+  const i = Math.floor(scaled);
+  const t = scaled - i;
+  const raw = i >= n - 1 ? DAYS[n - 1] : lerp(DAYS[i], DAYS[i + 1], t);
+  const displayed = Math.round(raw);
+
+  return (
+    <div className="absolute bottom-6 left-6 z-30 flex items-baseline gap-2.5 bg-white/80 backdrop-blur px-4 py-2.5 rounded-full shadow-md border border-white">
+      <span className="text-2xl font-bold tabular-nums text-zinc-900">
+        {displayed}
+      </span>
+      <span className="text-[10px] uppercase tracking-[0.2em] text-zinc-600 font-semibold leading-none">
+        days
+        <br />
+        to win
       </span>
     </div>
   );
