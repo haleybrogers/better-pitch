@@ -574,16 +574,16 @@ export function EcosystemTimeline() {
   // shorter without feeling rushed.
   const endcardReveal = useTriggeredReveal(endcardTrigger, 70000);
 
-  // Scroll HOLD: don't let the horizontal track leave a chapter until its
-  // animation has finished. The user can keep scrolling vertically but the
-  // panel stays pinned until the reveal completes.
+  // Scroll HOLD: hold only the very first (title) chapter until its typewriter
+  // completes. The DM section's animation plays on its own timer once triggered
+  // — we don't pin the horizontal track there anymore, because pinning was
+  // making the page feel like it wouldn't scroll through the text-message beat.
   let targetScrollY = scrollY;
   if (heroReveal < 1) {
     targetScrollY = Math.min(targetScrollY, dwellPerChapter - 1);
   }
-  if (dmIndex >= 0 && dmTrigger && dmReveal < 1) {
-    targetScrollY = Math.min(targetScrollY, dmDwellEnd - 1);
-  }
+  // Reference dmDwellEnd so it doesn't become an unused-variable warning.
+  void dmDwellEnd;
   // Smooth so the hold-release transitions from clamped → real without a jump
   // and so jumpy scroll deltas don't visibly stutter the track.
   const effectiveScrollY = useLerp(targetScrollY, 0.22);
