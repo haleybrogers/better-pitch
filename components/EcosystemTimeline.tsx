@@ -531,10 +531,12 @@ export function EcosystemTimeline() {
   // Trailing buffer: enough room for the endcard's title intro AND a scroll-
   // driven credits roll. Without this, the page would run out of scrollY
   // before the credits finished and the user would feel stuck.
+  // Buffer must be >= endcardScrollStart delta + endcardScrollSpan + viewport.h
+  // so the user can actually scroll all the way to scrollT = 1.
   const endcardScrollSpan = viewport.h * 5;
   const wrapperHeight =
     readPositions.length > 0
-      ? totalDwell + totalTravel + endcardScrollSpan + viewport.h * 0.5
+      ? totalDwell + totalTravel + endcardScrollSpan + viewport.h * 2
       : viewport.h;
 
   // Scroll-TRIGGERED animations — once the scroll position crosses a panel's
@@ -715,7 +717,10 @@ export function EcosystemTimeline() {
             window.scrollTo({ top: f * h, behavior: "smooth" });
           }}
         />
-        <DaysCounter activeIndex={activeIndex} />
+        <DaysCounter
+          activeIndex={activeIndex}
+          hide={activeChapter.id === "endcard"}
+        />
         <OddsCounter activeIndex={activeIndex} />
         <ScrollHint hide={progress > 0.02 || scrollDistance === 0} />
       </div>
@@ -2224,18 +2229,28 @@ function OddsCounter({ activeIndex }: { activeIndex: number }) {
   );
 }
 
-function DaysCounter({ activeIndex }: { activeIndex: number }) {
+function DaysCounter({
+  activeIndex,
+  hide,
+}: {
+  activeIndex: number;
+  hide: boolean;
+}) {
   const target = DAYS[Math.min(activeIndex, DAYS.length - 1)] ?? 0;
   const value = useSmoothedValue(target);
   return (
-    <div className="absolute bottom-6 left-6 z-30 flex items-baseline gap-2.5 bg-white/85 backdrop-blur px-4 py-2.5 rounded-full shadow-md border border-white">
+    <div
+      className={`absolute bottom-6 left-6 z-30 flex items-baseline gap-2.5 bg-white/85 backdrop-blur px-4 py-2.5 rounded-full shadow-md border border-white transition-opacity duration-500 ${
+        hide ? "opacity-0 pointer-events-none" : "opacity-100"
+      }`}
+    >
       <span className="text-2xl font-bold tabular-nums text-zinc-900">
         {Math.round(value)}
       </span>
       <span className="text-[10px] uppercase tracking-[0.2em] text-zinc-600 font-semibold leading-none">
         days
         <br />
-        to win
+        in
       </span>
     </div>
   );
