@@ -87,6 +87,12 @@ const chapters: Chapter[] = [
       src: "/moments/notion-scroll.mov",
       asPhoto: true,
     },
+    leadGif: {
+      caption: "in the door",
+      tilt: 0,
+      emoji: "🚪",
+      src: "https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExajdwNWM2bnA1a2U3dmxuejByY2QzZTdqaG1qOTUxcXhvbHVhOG5zYiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/3o7aCPVTaKjiYIPvsk/giphy.gif",
+    },
     learning:
       "We probably should have baked the competitive deep dive into the first audit — it's what the client was really asking for.",
   },
