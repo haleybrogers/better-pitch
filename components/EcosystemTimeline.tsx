@@ -260,6 +260,7 @@ const chapters: Chapter[] = [
     },
     gallery: [
       "/moments/kickoff-selfie.jpg",
+      "/moments/kickoff-call.png",
       "/moments/kickoff-dinner.jpg",
     ],
     learning:
@@ -763,9 +764,9 @@ function easeOutCubic(t: number) {
 }
 
 /* ─────────────────────────────────────────────────────────────── */
-/*  KineticTitle — scroll-driven staggered word reveal for the       */
-/*  opening frame. Each word slides up, de-blurs, and rotates         */
-/*  in on its own schedule as the reveal progresses from 0 → 1.       */
+/*  KineticTitle — scroll-driven typewriter. Letters "type" in one   */
+/*  at a time as the reveal progresses from 0 → 1, with a blinking   */
+/*  caret trailing the most recently typed character.                 */
 /* ─────────────────────────────────────────────────────────────── */
 
 function KineticTitle({
@@ -778,14 +779,18 @@ function KineticTitle({
   parallax: number;
 }) {
   const lines = title.split("\n");
-  const allWords = lines.flatMap((l) => l.split(/\s+/).filter(Boolean));
-  const total = Math.max(1, allWords.length);
-  // Window per word inside the overall reveal timeline. Overlap them so the
-  // whole phrase flows rather than pops in piece by piece.
-  const wordWindow = 0.55;
-  const wordGap = (1 - wordWindow) / Math.max(1, total - 1);
+  // Count non-space characters for pacing — spaces feel "instant" but we
+  // still render them inline so the line never collapses.
+  const totalChars = lines.reduce((n, l) => n + l.replace(/\s+/g, "").length, 0);
+  const perCharWindow = totalChars > 0 ? 1 / totalChars : 1;
+  // Small crossfade per char so it doesn't pop harshly.
+  const fadeWindow = Math.min(perCharWindow * 0.6, 0.04);
 
-  let wordIndex = 0;
+  let charIndex = 0;
+  // Find which character is currently "being typed" so we can park the caret
+  // right after it.
+  const typedCount = Math.floor(reveal * totalChars);
+
   return (
     <h2
       aria-label={title.replace(/\n/g, " ")}
@@ -793,36 +798,48 @@ function KineticTitle({
       style={{ transform: `translate3d(${parallax}px, 0, 0)` }}
     >
       {lines.map((line, li) => {
-        const words = line.split(/\s+/).filter(Boolean);
+        const isLastLine = li === lines.length - 1;
         return (
           <span key={li} className="block">
-            {words.map((w) => {
-              const i = wordIndex++;
-              const start = i * wordGap;
-              const t = easeOutCubic(clamp01((reveal - start) / wordWindow));
-              const direction = i % 2 === 0 ? 1 : -1;
-              const translateY = (1 - t) * 80;
-              const translateX = (1 - t) * 30 * direction;
-              const rotate = (1 - t) * 6 * direction;
-              const blur = (1 - t) * 10;
+            {Array.from(line).map((ch, ci) => {
+              if (/\s/.test(ch)) {
+                return (
+                  <span key={`${li}-${ci}`} aria-hidden className="inline">
+                    {"\u00a0"}
+                  </span>
+                );
+              }
+              const i = charIndex++;
+              const start = i * perCharWindow;
+              const t = clamp01((reveal - start) / fadeWindow);
               return (
                 <span
-                  key={`${li}-${i}`}
-                  className="inline-block align-baseline"
+                  key={`${li}-${ci}`}
                   aria-hidden={t < 1}
+                  className="inline-block"
                   style={{
                     opacity: t,
-                    transform: `translate3d(${translateX}px, ${translateY}px, 0) rotate(${rotate}deg)`,
-                    filter: blur > 0.05 ? `blur(${blur}px)` : undefined,
-                    marginRight: "0.25em",
-                    transformOrigin: "50% 80%",
-                    willChange: "transform, opacity, filter",
+                    transform: `translate3d(0, ${(1 - t) * 6}px, 0)`,
+                    willChange: "opacity, transform",
                   }}
                 >
-                  {w}
+                  {ch}
                 </span>
               );
             })}
+            {isLastLine && reveal < 1 && typedCount > 0 && (
+              <span
+                aria-hidden
+                className="inline-block align-baseline ecosystem-caret"
+                style={{
+                  width: "0.08em",
+                  height: "0.9em",
+                  marginLeft: "0.05em",
+                  backgroundColor: "currentColor",
+                  transform: "translateY(0.08em)",
+                }}
+              />
+            )}
           </span>
         );
       })}
