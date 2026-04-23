@@ -245,7 +245,7 @@ const chapters: Chapter[] = [
   {
     id: "kickoff",
     kicker: "Kickoff · April 20 2026 · NYC",
-    title: "WE DID IT.\nWE WON.",
+    title: "Closed\nwith a kiss.",
     body: "So we flew to NYC for an in-person kickoff. A strategy conversation without an actual kickoff — we sent kickoff questions that never got answered. We found out the week before — if you can even call it a week — that we'd be flying in. Each of us had to pivot our approach to make the client feel like they could trust us to hit goals they themselves deem impossible. Haley walked Jessica through the hub she'd built. Het explained Paid Search. Mariate did Meta. Coke quarterbacked. Nima closed. They walked out of that room thinking: if we don't hit those goals, it's not our team. OUR team — because Jessica trusted us enough to claim us as her own. Client pivoted mid-day and handed us $1.5M incremental — $1M of it in May.",
     slackQuote: [
       {
