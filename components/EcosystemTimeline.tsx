@@ -1120,10 +1120,12 @@ function EndcardPanel({
       <div
         className="absolute inset-x-0 flex flex-col items-center pointer-events-none"
         style={{
-          // Start the column roughly centered on the title card (40vh from
-          // top) then slide upward by offsetVh. Puts the top credits right
-          // under the Pearmill logo when the column is at rest.
-          top: `calc(40vh - ${offsetVh}vh)`,
+          // Fixed anchor at 40vh — scroll happens via transform for a GPU-
+          // accelerated path. Animating `top` causes layout every frame,
+          // which is the source of the jank the user was seeing.
+          top: "40vh",
+          transform: `translate3d(0, ${-offsetVh}vh, 0)`,
+          willChange: "transform",
         }}
       >
         {/* Title card */}
