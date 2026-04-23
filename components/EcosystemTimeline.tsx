@@ -32,7 +32,7 @@ type GifSpec = {
   caption: string;
   tilt: number; // degrees
   emoji: string;
-  src?: string; // optional real GIF url — falls back to emoji
+  src?: string; // optional real media url (image, gif, or mp4/mov video)
   asPhoto?: boolean; // when true, render the full image without GIF chrome
   scrollPages?: string[]; // when set, renders an infinite vertical scroll of these image paths
 };
@@ -92,7 +92,8 @@ const chapters: Chapter[] = [
       caption: "the infinite notion doc",
       tilt: 0,
       emoji: "📄",
-      scrollPages: notionPages,
+      src: "/moments/notion-scroll.mov",
+      asPhoto: true,
     },
   },
   {
@@ -125,15 +126,34 @@ const chapters: Chapter[] = [
     ],
   },
   {
-    id: "round-3",
-    kicker: "Round 3 · Feb 2026",
-    title: "The other\npitch.",
-    body: "Jessica wasn't satisfied after NYC — so we did another comp deep-dive. Then Better asked us to pitch their AI brand, Betsy. Cold. No meeting. No voiceover. PowerPoint only. Every idea had to land on the page by itself. POVs got QA'd and challenged inside the team before we shipped. They came back with zero notes.",
+    id: "round-3a",
+    kicker: "Round 3a · Dec 2025 – Jan 2026",
+    title: "Comp\nanalysis +\nGoogle AI\ncopy.",
+    body: "Jessica wasn't satisfied after NYC, so we went deeper. A full competitive read — and Cosmin's AI dream for how creative should target copy. Het reframed Google as a quality/rank-score problem, not a budget one. We AI'd the Google copy pipeline end-to-end, landing keyword-to-LP message match at scale.",
+    pullQuote:
+      "Chat told me it wasn't necessary to use all 15 headlines. Chat knows nothing. — Het, standing up for Better's ad strength",
+    accent: "#014737",
+    accent2: "#09090b",
+    bg: "#fafaf9",
+    Icon: Cog,
+    gif: {
+      caption: "google copy, ai'd",
+      tilt: 0,
+      emoji: "🔎",
+      src: "/moments/statics/mansplaining.png",
+      asPhoto: true,
+    },
+  },
+  {
+    id: "round-3b",
+    kicker: "Round 3b · Feb 2026 · Betsy",
+    title: "Then\nthey asked\nfor Betsy.",
+    body: "Cold submission. No meeting. No voiceover. PowerPoint only. This is where the other agency shit the bed. Jessica couldn't get past it — so disappointed they missed the brief and didn't call or check in to make sure they were clear. Every POV on our side got QA'd and challenged inside the team before we shipped. They came back with zero notes.",
     pullQuote:
       "In powerpoint no less, which we all know our preferred outlet [sic]. — Coke, on Betsy",
     accent: "#014737",
     accent2: "#09090b",
-    bg: "#fafaf9",
+    bg: "#ffffff",
     Icon: Cog,
     stat: { value: "0", label: "notes back from the client" },
     gif: {
@@ -143,10 +163,7 @@ const chapters: Chapter[] = [
       src: "/moments/betsy-1.gif",
       asPhoto: true,
     },
-    gallery: [
-      "/moments/betsy-2.gif",
-      "/moments/betsy-3.gif",
-    ],
+    gallery: ["/moments/betsy-2.gif", "/moments/betsy-3.gif"],
   },
   {
     id: "fight",
@@ -187,7 +204,7 @@ const chapters: Chapter[] = [
       caption: "the laptop kiss",
       tilt: 0,
       emoji: "💋",
-      src: "https://media.giphy.com/media/3kJXNPRBMUnMiZb8NR/giphy.gif",
+      src: "https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExOHVybmxtaWxlZmx5cDdjMWpjbHY1djR6NDV0eXVhNHEyOXdvbzd3YSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/W1hd3uXRIbddu/giphy.gif",
       asPhoto: true,
     },
   },
@@ -683,13 +700,24 @@ function GifPlaceholder({
           ))}
         </div>
       ) : gif.src ? (
-        // eslint-disable-next-line @next/next/no-img-element
-        <img
-          src={gif.src}
-          alt={gif.caption}
-          className={`absolute inset-0 w-full h-full ${isPhoto ? "object-contain" : "object-cover"}`}
-          loading="lazy"
-        />
+        /\.(mp4|mov|webm)$/i.test(gif.src) ? (
+          <video
+            src={gif.src}
+            autoPlay
+            loop
+            muted
+            playsInline
+            className={`absolute inset-0 w-full h-full ${isPhoto ? "object-contain" : "object-cover"}`}
+          />
+        ) : (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={gif.src}
+            alt={gif.caption}
+            className={`absolute inset-0 w-full h-full ${isPhoto ? "object-contain" : "object-cover"}`}
+            loading="lazy"
+          />
+        )
       ) : (
         <>
           <div className="absolute inset-0 flex items-center justify-center">
