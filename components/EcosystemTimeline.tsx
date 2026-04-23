@@ -1094,14 +1094,14 @@ function EndcardPanel({
 }) {
   const stage = (start: number, end: number) =>
     clamp01((reveal - start) / Math.max(0.001, end - start));
-  // VERY FAST intro — Better × Pearmill pops in inside ~1.5s of the 100s
-  // reveal. Logos animate in parallel, not sequentially.
-  const kickerT = stage(0.0, 0.003);
-  const logosT = stage(0.002, 0.015);
-  const barT = stage(0.015, 0.02);
-  const subT = stage(0.018, 0.025);
-  // Short beat where the card sits fully formed before the roll begins.
-  const scrollT = stage(0.055, 1.0);
+  // VERY FAST intro — Better × Pearmill pops in, then the bar + subtitle
+  // cascade in right underneath as one continuous movement. Short beat
+  // before the whole column starts scrolling up together.
+  const kickerT = stage(0.0, 0.002);
+  const logosT = stage(0.001, 0.013);
+  const barT = stage(0.012, 0.018);
+  const subT = stage(0.014, 0.024);
+  const scrollT = stage(0.035, 1.0);
   // Big travel so nothing is left on the screen by the end of the roll.
   const TRAVEL_VH = 620;
   const offsetVh = scrollT * TRAVEL_VH;
@@ -1205,26 +1205,26 @@ function EndcardPanel({
           <div className="text-[11px] uppercase tracking-[0.35em] text-white/40 font-semibold mb-12">
             Thanks to — we couldn&rsquo;t have done it without you
           </div>
-          <div className="flex flex-col gap-7 mb-20">
+          <div className="flex flex-col gap-6 mb-16">
             {CREDITS.map((c) => (
-              <div key={c.name} className="flex flex-col gap-1.5">
-                <div className="text-[clamp(1.25rem,2.2vw,1.75rem)] font-semibold tracking-tight text-white">
+              <div key={c.name} className="flex flex-col gap-1">
+                <div className="text-[1rem] font-semibold tracking-tight text-white">
                   {c.name}
                 </div>
-                <div className="text-white/60 text-[15px] leading-snug max-w-xl mx-auto">
+                <div className="text-white/55 text-[13px] italic leading-snug max-w-lg mx-auto">
                   {c.line}
                 </div>
               </div>
             ))}
           </div>
-          <div className="flex flex-col gap-5 my-16">
+          <div className="flex flex-col gap-4 my-12">
             {SPEECH.map((line, i) => (
               <p
                 key={i}
                 className={
                   i === 0
-                    ? "italic text-white/70 text-[15px] leading-relaxed max-w-xl mx-auto"
-                    : "text-white/75 text-[15px] leading-relaxed max-w-xl mx-auto"
+                    ? "italic text-white/70 text-[14px] leading-relaxed max-w-lg mx-auto"
+                    : "text-white/75 text-[14px] leading-relaxed max-w-lg mx-auto"
                 }
               >
                 {line}
