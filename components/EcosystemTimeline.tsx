@@ -467,11 +467,13 @@ export function EcosystemTimeline() {
       : 0;
 
   // Kinetic-typography reveal for the opening title frame only.
-  // 0 on load; ramps to 1 across the first ~70% of the hero dwell so words
-  // keep animating while the user is actively scrolling.
+  // Dead zone at the very top so the typewriter doesn't start until the user
+  // has deliberately scrolled a little — the title stays visually quiet first.
+  const heroDead = dwellPerChapter * 0.25;
+  const heroRevealSpan = dwellPerChapter * 0.55;
   const heroReveal =
-    viewport.h > 0
-      ? clamp01(scrollY / (dwellPerChapter * 0.7 || viewport.h))
+    viewport.h > 0 && heroRevealSpan > 0
+      ? clamp01((scrollY - heroDead) / heroRevealSpan)
       : 0;
 
   // Active chapter = whichever panel's center is closest to viewport center.
@@ -648,7 +650,7 @@ function ChapterPanel({
     return <OutroPanel chapter={chapter} openness={oContent} />;
   }
   if (isDm) {
-    return <DmPanel chapter={chapter} openness={oContent} />;
+    return <DmPanel chapter={chapter} openness={oContent} local={local} />;
   }
   if (isEndcard) {
     return <EndcardPanel chapter={chapter} />;
@@ -925,10 +927,10 @@ function EndcardPanel({ chapter }: { chapter: Chapter }) {
           <img
             src="/logos/better.svg"
             alt="Better"
-            className="h-[clamp(2.5rem,6vw,5rem)] w-auto"
+            className="h-[clamp(1.5rem,3.2vw,2.5rem)] w-auto"
             style={{ filter: "invert(1) brightness(2)" }}
           />
-          <span className="text-[clamp(2rem,5vw,4rem)] text-white/40 font-light leading-none">
+          <span className="text-[clamp(1.5rem,3.5vw,2.75rem)] text-white/40 font-light leading-none">
             ×
           </span>
           {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -956,18 +958,34 @@ function EndcardPanel({ chapter }: { chapter: Chapter }) {
 function DmPanel({
   chapter,
   openness: o,
+  local,
 }: {
   chapter: Chapter;
   openness: number;
+  local: number;
 }) {
+  // Reveal climbs from 0 as the panel enters from the right (local ≈ 1) to 1
+  // when it's centered (local ≈ 0) and stays at 1 as it leaves left.
+  const reveal = clamp01(1 - local);
+
+  // Schedule for the two incoming messages and the "Us." reply.
+  // Each stage's local progress 0→1 is its own typewriter / pop-in window.
+  const stage = (start: number, end: number) =>
+    clamp01((reveal - start) / Math.max(0.001, end - start));
+
+  const typing1 = stage(0.05, 0.18);
+  const msg1 = stage(0.18, 0.42);
+  const typing2 = stage(0.42, 0.55);
+  const msg2 = stage(0.55, 0.82);
+  const us = stage(0.82, 1.0);
+
   return (
     <section
       className="relative flex-shrink-0 h-full flex items-center text-white"
       style={{ backgroundColor: chapter.bg }}
       aria-label={chapter.title.replace(/\n/g, " ")}
     >
-      {/* Left-edge fade in from the outro green so the transition is seamless
-          — opacity 1 + exact match to the onwards bg so there is no visible line */}
+      {/* Left-edge fade in from the outro green so the transition is seamless */}
       <div
         aria-hidden
         className="absolute inset-y-0 left-0 pointer-events-none"
@@ -979,7 +997,7 @@ function DmPanel({
       />
 
       <div className="relative z-10 flex items-center gap-20 pl-20 pr-24 py-12">
-        {/* Beat 1 — setup */}
+        {/* Beat 1 — setup (always visible, enters with openness only) */}
         <div
           className="flex-shrink-0 w-[30rem]"
           style={{ opacity: o, transform: `translate3d(0, ${(1 - o) * 30}px, 0)` }}
@@ -995,35 +1013,145 @@ function DmPanel({
           </p>
         </div>
 
-        {/* Beat 2 — the actual DM quote */}
-        {chapter.gif?.src && (
-          <div
-            className="flex-shrink-0 relative max-w-[40rem] rounded-2xl overflow-hidden border border-white/10 shadow-2xl bg-[#1c1c1e]"
-            style={{ opacity: o, transform: `translate3d(0, ${(1 - o) * 30}px, 0)` }}
-          >
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={chapter.gif.src}
-              alt="DM from the competitor agency asking who won Better"
-              className="max-h-[70vh] w-auto block"
+        {/* Beat 2 — animated chat transcript */}
+        <div
+          className="flex-shrink-0 relative w-[36rem] rounded-2xl border border-white/10 shadow-2xl bg-[#1c1c1e] p-6 pt-5"
+          style={{ opacity: o }}
+        >
+          <div className="flex items-center justify-between text-xs text-white/50 mb-4">
+            <span className="font-semibold text-white/70">Nicole Jennings</span>
+            <span>Today 12:55 PM</span>
+          </div>
+          <div className="flex flex-col gap-3 min-h-[11rem]">
+            <ChatBubble
+              typingT={typing1}
+              messageT={msg1}
+              text="Ok which of you won better"
+            />
+            <ChatBubble
+              typingT={typing2}
+              messageT={msg2}
+              text="To be clear just curious and congrats! Lol"
             />
           </div>
-        )}
+        </div>
 
-        {/* Beat 3 — the mic-drop answer */}
+        {/* Beat 3 — the mic-drop answer, types in after the messages land */}
         <div
           className="flex-shrink-0 flex flex-col items-start"
-          style={{ opacity: o, transform: `translate3d(0, ${(1 - o) * 30}px, 0)` }}
+          style={{ opacity: o }}
         >
-          <div className="text-[clamp(5rem,12vw,12rem)] font-semibold tracking-tight leading-[0.92]">
-            Us.
+          <div
+            className="text-[clamp(5rem,12vw,12rem)] font-semibold tracking-tight leading-[0.92] flex items-baseline"
+            aria-label="Us."
+          >
+            <TypedText text="Us." reveal={us} showCaret />
           </div>
-          <div className="mt-4 text-white/60 text-sm uppercase tracking-[0.3em]">
+          <div
+            className="mt-4 text-white/60 text-sm uppercase tracking-[0.3em]"
+            style={{
+              opacity: us > 0.8 ? (us - 0.8) / 0.2 : 0,
+              transform: `translate3d(0, ${(1 - clamp01((us - 0.8) / 0.2)) * 10}px, 0)`,
+            }}
+          >
             Thanks for asking.
           </div>
         </div>
       </div>
     </section>
+  );
+}
+
+function ChatBubble({
+  typingT,
+  messageT,
+  text,
+}: {
+  typingT: number;
+  messageT: number;
+  text: string;
+}) {
+  const showTyping = typingT > 0 && messageT < 0.05;
+  const showMessage = messageT > 0;
+  return (
+    <div className="flex items-start gap-2.5">
+      <div
+        className="flex-shrink-0 w-8 h-8 rounded-full bg-[#6b6bb0] flex items-center justify-center text-[11px] font-bold text-white"
+        style={{
+          opacity: typingT > 0 ? 1 : 0,
+          transform: `scale(${typingT > 0 ? 1 : 0.7})`,
+          transition: "opacity 150ms, transform 200ms",
+        }}
+      >
+        NJ
+      </div>
+      <div className="flex flex-col gap-1 flex-1 min-h-[2rem]">
+        {showTyping && (
+          <div
+            className="inline-flex items-center gap-1 px-3.5 py-2.5 rounded-2xl bg-[#3a3a3c] w-fit"
+            style={{ opacity: clamp01(typingT * 2) }}
+          >
+            <span className="ecosystem-dot-1 w-1.5 h-1.5 rounded-full bg-white/60" />
+            <span className="ecosystem-dot-2 w-1.5 h-1.5 rounded-full bg-white/60" />
+            <span className="ecosystem-dot-3 w-1.5 h-1.5 rounded-full bg-white/60" />
+          </div>
+        )}
+        {showMessage && (
+          <div
+            className="inline-flex px-3.5 py-2 rounded-2xl bg-[#3a3a3c] text-white text-base w-fit max-w-full"
+            style={{
+              opacity: clamp01(messageT * 4),
+              transform: `translate3d(0, ${(1 - clamp01(messageT * 4)) * 6}px, 0) scale(${0.96 + clamp01(messageT * 4) * 0.04})`,
+              transformOrigin: "0% 100%",
+            }}
+          >
+            <TypedText text={text} reveal={messageT} />
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function TypedText({
+  text,
+  reveal,
+  showCaret = false,
+}: {
+  text: string;
+  reveal: number;
+  showCaret?: boolean;
+}) {
+  const chars = Array.from(text);
+  const nonSpace = chars.filter((c) => !/\s/.test(c)).length;
+  const shown = Math.floor(clamp01(reveal) * nonSpace);
+  let counted = 0;
+  const caretShouldShow = showCaret && reveal > 0 && reveal < 1;
+  return (
+    <>
+      {chars.map((c, i) => {
+        if (/\s/.test(c)) return <span key={i}>{c === "\n" ? <br /> : "\u00a0"}</span>;
+        const visible = counted++ < shown;
+        return (
+          <span key={i} style={{ opacity: visible ? 1 : 0 }}>
+            {c}
+          </span>
+        );
+      })}
+      {caretShouldShow && (
+        <span
+          aria-hidden
+          className="inline-block align-baseline ecosystem-caret"
+          style={{
+            width: "0.08em",
+            height: "0.9em",
+            marginLeft: "0.05em",
+            backgroundColor: "currentColor",
+            transform: "translateY(0.08em)",
+          }}
+        />
+      )}
+    </>
   );
 }
 

@@ -87,12 +87,23 @@ a {
   animation: ecosystem-caret 0.9s step-end infinite;
 }
 
+@keyframes ecosystem-dot {
+  0%, 80%, 100% { opacity: 0.3; transform: translateY(0); }
+  40% { opacity: 1; transform: translateY(-3px); }
+}
+.ecosystem-dot-1 { animation: ecosystem-dot 1.2s ease-in-out infinite; animation-delay: 0s; }
+.ecosystem-dot-2 { animation: ecosystem-dot 1.2s ease-in-out infinite; animation-delay: 0.15s; }
+.ecosystem-dot-3 { animation: ecosystem-dot 1.2s ease-in-out infinite; animation-delay: 0.3s; }
+
 @media (prefers-reduced-motion: reduce) {
   .ecosystem-wobble,
   .ecosystem-sweep,
   .ecosystem-blink,
   .ecosystem-bounce,
   .ecosystem-caret,
+  .ecosystem-dot-1,
+  .ecosystem-dot-2,
+  .ecosystem-dot-3,
   .notion-scroll {
     animation: none;
   }
