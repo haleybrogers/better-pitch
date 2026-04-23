@@ -1352,16 +1352,11 @@ function DmPanel({
             <span className="font-semibold text-white/70">Nicole Jennings</span>
             <span>Today 12:55 PM</span>
           </div>
-          <div className="flex flex-col gap-3 min-h-[11rem]">
+          <div className="flex flex-col gap-3 min-h-[7rem]">
             <ChatBubble
               typingT={typing1}
               messageT={msg1}
               text="Ok which of you won better"
-            />
-            <ChatBubble
-              typingT={typing2}
-              messageT={msg2}
-              text="To be clear just curious and congrats! Lol"
             />
           </div>
         </div>
