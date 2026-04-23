@@ -59,8 +59,6 @@ const chapters: Chapter[] = [
     kicker: "The ride",
     title: "Strap in.",
     body: "This is the story of one pitch — and how it fucking changed the way we think about everything. Seven months. 90% → 75% → 50% → 90% → 95!! → 30% → 95. The odds swung every hour. Here's the ride.",
-    pullQuote:
-      "We're being really intentional about working as one ecosystem, rather than separate silos. — Coke",
     accent: "#014737",
     accent2: "#09090b",
     bg: "#ffffff",
@@ -126,7 +124,7 @@ const chapters: Chapter[] = [
     gallery: [
       "/moments/nyc-day-1.mov",
       "/moments/nyc-team.jpg",
-      "/moments/nyc-walk-1.mov",
+      "/moments/nyc-before-cake.mov",
     ],
     creativeGallery: [
       "/moments/statics/cake-creative.png",
@@ -136,6 +134,8 @@ const chapters: Chapter[] = [
       "/moments/statics/hotel-key.png",
       "/moments/statics/coffee-cup.png",
       "/moments/statics/apple-watch.png",
+      "/moments/statics/sensitive-tummies.mp4",
+      "/moments/statics/scared-of-carl.mp4",
     ],
     learning:
       "Consider the audience — but find diverse ways to show the work, at-a-glance AND with depth. The format missed both Sly and Jessica, for opposite reasons.",
@@ -165,6 +165,7 @@ const chapters: Chapter[] = [
       asPhoto: true,
       playbackRate: 0.4,
     },
+    gallery: ["/moments/yet-another-call-end.png"],
   },
   {
     id: "round-3b",
@@ -276,6 +277,23 @@ const chapters: Chapter[] = [
       tilt: 0,
       emoji: "🎤",
       src: "https://media.giphy.com/media/15BuyagtKucHm/giphy.gif",
+      asPhoto: true,
+    },
+  },
+  {
+    id: "dm",
+    kicker: "One more thing",
+    title: "Then the competitor\nDM'd us.",
+    body: "Just to be sure. — Us.",
+    accent: "#ffffff",
+    accent2: "#d1fae5",
+    bg: "#09090b",
+    Icon: Sparkles,
+    gif: {
+      caption: "the DM",
+      tilt: 0,
+      emoji: "📩",
+      src: "/moments/competitor-dm.png",
       asPhoto: true,
     },
   },
@@ -580,6 +598,7 @@ function ChapterPanel({
 }) {
   const isHero = chapter.id === "title" || chapter.id === "cover";
   const isOutro = chapter.id === "onwards";
+  const isDm = chapter.id === "dm";
   void index;
 
   const oContent = openness(local, -0.95, -0.4, 0.4, 0.95);
@@ -591,6 +610,9 @@ function ChapterPanel({
   }
   if (isOutro) {
     return <OutroPanel chapter={chapter} openness={oContent} />;
+  }
+  if (isDm) {
+    return <DmPanel chapter={chapter} openness={oContent} />;
   }
   return (
     <ContentPanel
@@ -745,6 +767,77 @@ function OutroPanel({
         >
           onwards <ArrowRight className="w-4 h-4" />
         </div>
+      </div>
+    </section>
+  );
+}
+
+/* ─────────────────────────────────────────────────────────────── */
+/*  DM panel — the mic-drop ending: black background, big text       */
+/*  beside the competitor screenshot, all stays legible              */
+/* ─────────────────────────────────────────────────────────────── */
+
+function DmPanel({
+  chapter,
+  openness: o,
+}: {
+  chapter: Chapter;
+  openness: number;
+}) {
+  return (
+    <section
+      className="relative flex-shrink-0 h-full flex items-center text-white"
+      style={{ backgroundColor: chapter.bg }}
+      aria-label={chapter.title.replace(/\n/g, " ")}
+    >
+      {/* Left-edge fade in from the outro green so the transition feels soft */}
+      <div
+        aria-hidden
+        className="absolute inset-y-0 left-0 pointer-events-none"
+        style={{
+          width: "40vw",
+          background: "linear-gradient(90deg, #014737, transparent)",
+          opacity: 0.8,
+        }}
+      />
+
+      <div className="relative z-10 flex items-center gap-14 pl-16 pr-24 py-12">
+        <div
+          className="flex-shrink-0 w-[32rem]"
+          style={{ opacity: o, transform: `translate3d(0, ${(1 - o) * 30}px, 0)` }}
+        >
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-[11px] font-semibold uppercase tracking-[0.2em] bg-white/5 text-white/70 border border-white/10 mb-5">
+            {chapter.kicker}
+          </div>
+          <h2 className="font-semibold leading-[0.95] tracking-tight whitespace-pre-line text-[clamp(2.5rem,5vw,4.5rem)]">
+            {chapter.title}
+          </h2>
+          <p className="mt-5 text-white/65 text-lg max-w-md">
+            {chapter.body}
+          </p>
+          <div className="mt-10">
+            <div className="text-[clamp(3rem,7vw,6rem)] font-semibold tracking-tight leading-[0.95]">
+              Us.
+            </div>
+            <div className="mt-3 text-white/50 text-xs uppercase tracking-[0.3em]">
+              Thanks for asking.
+            </div>
+          </div>
+        </div>
+
+        {chapter.gif?.src && (
+          <div
+            className="flex-shrink-0 relative max-w-[40rem] rounded-2xl overflow-hidden border border-white/10 shadow-2xl bg-[#1c1c1e]"
+            style={{ opacity: o, transform: `translate3d(0, ${(1 - o) * 30}px, 0)` }}
+          >
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={chapter.gif.src}
+              alt="DM from the competitor agency asking who won Better"
+              className="max-h-[70vh] w-auto block"
+            />
+          </div>
+        )}
       </div>
     </section>
   );
@@ -1274,9 +1367,9 @@ function ProgressRail({
   );
 }
 
-// Emotional arc — never 100% (no signed SOW yet)
-const ODDS = [0, 0, 40, 85, 30, 90, 15, 95, 97];
-const DAYS = [0, 0, 1, 48, 75, 125, 140, 202, 202];
+// Emotional arc — caps at 99.9% (never 100 until SOW is signed)
+const ODDS = [0, 0, 40, 85, 30, 90, 15, 95, 97, 99.9, 99.9];
+const DAYS = [0, 0, 1, 48, 75, 125, 140, 202, 202, 202, 202];
 
 function useSmoothedValue(target: number) {
   const [value, setValue] = useState(target);
@@ -1303,9 +1396,10 @@ function useSmoothedValue(target: number) {
 function OddsCounter({ activeIndex }: { activeIndex: number }) {
   const target = ODDS[Math.min(activeIndex, ODDS.length - 1)] ?? 0;
   const value = useSmoothedValue(target);
-  const rounded = Math.round(value);
+  const display = value >= 99 ? value.toFixed(1) : String(Math.round(value));
+  const intPart = Math.round(value);
   const color =
-    rounded >= 75 ? "#047857" : rounded >= 50 ? "#b45309" : "#b91c1c";
+    intPart >= 75 ? "#047857" : intPart >= 50 ? "#b45309" : "#b91c1c";
   return (
     <div className="absolute bottom-6 right-6 z-30 flex items-center gap-2.5 bg-white/85 backdrop-blur px-4 py-2.5 rounded-full shadow-md border border-white">
       <span className="text-[10px] uppercase tracking-[0.2em] text-zinc-600 font-semibold">
@@ -1315,7 +1409,7 @@ function OddsCounter({ activeIndex }: { activeIndex: number }) {
         className="text-2xl font-bold tabular-nums transition-colors duration-500"
         style={{ color }}
       >
-        {rounded}%
+        {display}%
       </span>
     </div>
   );
