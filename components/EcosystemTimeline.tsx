@@ -107,6 +107,25 @@ const chapters: Chapter[] = [
     },
   },
   {
+    id: "notion-doc",
+    kicker: "The plot twist · late Nov 2025",
+    title: "The doc\nshe didn't\nread.",
+    body: "Every other agency sent polished decks. We sent a Notion doc with nested toggles. Jessica — the decision-maker — hates Notion. She didn't open it. Sly opened it, saw the toggles, was like \"are you serious?\" — bounced. Then late one night, alone, he came back. Clicked in. And in. And in. And he didn't stop.",
+    pullQuote:
+      "Your RFP response cooked every other agency. — Sly, very late one night",
+    accent: "#014737",
+    accent2: "#09090b",
+    bg: "#fafaf9",
+    Icon: FileText,
+    gif: {
+      caption: "the notion doc",
+      tilt: 0,
+      emoji: "📄",
+      src: "/moments/notion-doc.png",
+      asPhoto: true,
+    },
+  },
+  {
     id: "round-3",
     kicker: "Round 3 · Feb 2026",
     title: "The other\npitch.",
