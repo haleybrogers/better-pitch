@@ -115,8 +115,8 @@ const chapters: Chapter[] = [
       asPhoto: true,
     },
     gallery: [
-      "/moments/nyc-day-1.mov",
       "/moments/nyc-day-extra.mov",
+      "/moments/nyc-day-1.mov",
       "/moments/nyc-team.jpg",
     ],
     creativeGallery: [
@@ -575,8 +575,10 @@ function ChapterPanel({
   const isDm = chapter.id === "dm";
   void index;
 
-  const oContent = openness(local, -0.95, -0.4, 0.4, 0.95);
-  const oExtras = openness(local, -0.85, -0.25, 0.3, 0.9);
+  // No fade when scrolling — content stays fully opaque. Horizontal parallax
+  // (via `local`) still applies for a subtle drift.
+  const oContent = 1;
+  const oExtras = 1;
   const parallaxX = local * -50;
 
   if (isHero) {
