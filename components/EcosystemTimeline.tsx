@@ -1086,7 +1086,7 @@ const CREDITS: { name: string; line: string }[] = [
   { name: "Karim", line: "jumped in to save the RFP the night before the pitch." },
   { name: "Val", line: "unified our message. Found the thread running through all of it. Confidence in the room." },
   { name: "Masha", line: "led the competitive analysis — in on it from the very first audit." },
-  { name: "Janie", line: "moral support. Helped get the kickoff off the ground." },
+  { name: "Janie", line: "taking in 200 days of context in 2 weeks to pick up the account." },
   { name: "Cosmin", line: "the landing-page guy. When a campaign needs a page that converts, it's his." },
   { name: "Lilya", line: "set the visual language. The look + feel every deck built on started with her." },
   { name: "Polina", line: "layout surgeon. Made every page breathe. Nothing went out looking cramped." },
@@ -1095,13 +1095,11 @@ const CREDITS: { name: string; line: string }[] = [
   { name: "Anar", line: "video edited under the gun. Turnaround times that should not have been possible." },
   { name: "Oleh", line: "planted the best easter eggs in Betsy. If you spotted something and smiled, that was him." },
   { name: "The Homeaglow team", line: "impressed the client without being in the room. Sold a $19 cleaning and made Better want what they had." },
-  { name: "Claude", line: "built this site with Haley at all hours. Also wrote these credits. Including this one. Obviously." },
+  { name: "Claude", line: "built this site AND the dashboard, ran the research, wrote these credits — all with Haley, at all hours. Obviously." },
 ];
 
 const SPEECH: string[] = [
   "…and to the ones back home, keeping every other account glowing while we vanished into the Better trenches — we see you. We love you. We owe you about a thousand coffees.",
-  "Thank you to every agency that said we couldn't. You lit the fuse.",
-  "Thank you to sleep — I'll be seeing you again very soon.",
 ];
 
 function EndcardPanel({
