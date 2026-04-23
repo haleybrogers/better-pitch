@@ -123,6 +123,7 @@ const chapters: Chapter[] = [
     },
     gallery: [
       "/moments/nyc-day-1.mov",
+      "/moments/nyc-day-extra.mov",
       "/moments/nyc-team.jpg",
     ],
     creativeGallery: [
