@@ -205,13 +205,10 @@ const chapters: Chapter[] = [
     kicker: "Fight to the death · Feb–Mar 2026",
     title: "Sly already\nhad the\nrejection\ndrafted.",
     body: "Jump450 swooped in with 3 free months and a 4.5% Y1 undercut. Sly called Nima: we'd fallen to #2. Then Nima and Val took a different approach to pricing — one that used performance as the reward, showing we stand behind our work. Weeks earlier, Nima had quietly slid a copy of Skin in the Game onto Sly's desk. No note. Sly hadn't even noticed it. Then one late night — burnt out, frustrated, just done — he saw it. Opened it. Knew right away what it was and what it meant. That moved the needle. March 20: 90-day trial secured.",
-    pullQuote:
-      "He saw it. Opened it. Knew right away what it was and what it meant.",
     accent: "#014737",
     accent2: "#09090b",
     bg: "#ffffff",
     Icon: Network,
-    stat: { value: "#2 → #1", label: "the odds swung every hour" },
     heroSize: "sm",
     leadGif: {
       caption: "enemies",
