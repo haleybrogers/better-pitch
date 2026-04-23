@@ -1075,7 +1075,7 @@ function OutroPanel({
 /* ─────────────────────────────────────────────────────────────── */
 
 const CREDITS: { name: string; line: string }[] = [
-  { name: "Nima", line: "the closer + data engineer. Used his Claw Open Claw to surface the real motivation behind the panic and how to solve for it." },
+  { name: "Nima", line: "the closer + data engineer. Used his Open Claw to surface the real motivation behind the panic and how to solve for it." },
   { name: "Donovan", line: "guided the creative. Kept the train on the tracks. Has great hair." },
   { name: "Coke", line: "quarterbacked every room. Called the plays, read the defense, kept the team in sync." },
   { name: "Het", line: "smartest person in the room. Paid Search whisperer." },
