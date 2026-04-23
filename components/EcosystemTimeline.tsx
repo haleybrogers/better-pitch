@@ -179,10 +179,10 @@ const chapters: Chapter[] = [
     Icon: Cog,
     stat: { value: "0", label: "notes back from the client" },
     leadGif: {
-      caption: "cat",
+      caption: "unimpressed",
       tilt: 0,
-      emoji: "🐱",
-      src: "https://media.giphy.com/media/v1.Y2lkPWVjZjA1ZTQ3cmsxaWdvdXA4Yngya3JtOGIwMW1vMnZvNDBqeHgzNDd6cnJqa3I4ZiZlcD12MV9naWZzX3NlYXJjaCZjdD1n/qXAHMsQs6emkWwSQSn/giphy.gif",
+      emoji: "😒",
+      src: "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExMXhjMDR5eTFpczNjeW9hcXE4d3VmOGE3Zmo4Mm92cWZ6c3ZpampyaCZlcD12MV9naWZzX3NlYXJjaCZjdD1n/cZ6FrnA4NIuVUPgZMz/giphy.gif",
     },
     gif: {
       caption: "betsy · semi-static 1",
