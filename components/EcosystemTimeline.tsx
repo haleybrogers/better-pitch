@@ -75,8 +75,7 @@ const chapters: Chapter[] = [
     kicker: "Round 1 · Oct 2025 · the old way",
     title: "We got in\nthe door.",
     body: "Our channel expertise landed the first meeting. Jessica wanted a deeper dive into competitors — Nima suggested we fly to NYC to present it. Jessica turned it into a full RFP, opened the call to more agencies. Meanwhile we sent an audit. An infinite, siloed Notion doc. The old way.",
-    pullQuote:
-      "We really hooked them with our knowledge. — Donovan, recalling the first call",
+    pullQuote: "We really hooked them with our knowledge. — Donovan",
     accent: "#014737",
     accent2: "#09090b",
     bg: "#fafaf9",
