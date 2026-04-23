@@ -164,7 +164,7 @@ const chapters: Chapter[] = [
       asPhoto: true,
       playbackRate: 0.4,
     },
-    gallery: ["/moments/yet-another-call-end.png"],
+    creativeGallery: ["/moments/yet-another-call-end.png"],
   },
   {
     id: "round-3b",
