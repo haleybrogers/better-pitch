@@ -195,9 +195,9 @@ const chapters: Chapter[] = [
     id: "kickoff",
     kicker: "Kickoff · April 20 2026 · NYC",
     title: "Jessica\nkissed her\nlaptop.",
-    body: "We flew in. The client had sent no agenda, no kickoff questions answered, no prep. So we turned the meeting into a live strategy conversation. Haley walked Jessica through the dashboard she'd built. Het explained Paid Search. Mariate did Meta. Coke quarterbacked. Nima closed. The client pivoted mid-day and handed us $1.5M incremental — $1M of it in May.",
+    body: "We flew in. The client sent no agenda, no kickoff questions, no prep. So we turned the meeting into a live strategy conversation. Haley walked Jessica through the hub she'd built. Het explained Paid Search. Mariate did Meta. Coke quarterbacked. Nima closed. Client pivoted mid-day and handed us $1.5M incremental — $1M of it in May. The huge push to incorporate AI quickly and intentionally — along with individual curiosity and drive — resulted in this hub. It proved our worth. (Scroll down to see it.)",
     pullQuote:
-      "Running tally: Het is the smartest person in the room and Haley is a badass. — Coke, live from the room",
+      "They didn't ask for it. But they needed it. — Haley",
     accent: "#014737",
     accent2: "#09090b",
     bg: "#fafaf9",
