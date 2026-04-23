@@ -1355,7 +1355,7 @@ function DmPanel({
             <ChatBubble
               typingT={typing1}
               messageT={msg1}
-              text="Ok which of you won better"
+              text="Ok which of you won better??"
             />
           </div>
         </div>
