@@ -186,7 +186,7 @@ const chapters: Chapter[] = [
     id: "round-3b",
     kicker: "Round 3b · Feb 2026 · Betsy",
     title: "Then\nthey asked\nfor Betsy.",
-    body: "Cold submission. No meeting. No voiceover. PowerPoint only. Other agencies shit the bed — Jessica was so disappointed they missed the brief and never called to check in. We read, and re-read, what Betsy needed. We have the expertise, but we listened to what they were actually asking, and then we went deeper. What's at the heart of it. Huge shoutout to creative for turning around client-winning work in two days. They came back with zero notes.",
+    body: "Cold submission. No meeting. No voiceover. PowerPoint only. Luckily for us, the other agencies shit the bed — Jessica was so disappointed they missed the brief and never called to check in. We read, and re-read, what Betsy needed. We have the expertise, but we listened to what they were actually asking, and then we went deeper. What's at the heart of it. Huge shoutout to creative for turning around client-winning work in two days. They came back with zero notes.",
     pullQuote:
       "In powerpoint no less, which we all know our preferred outlet [sic]. — Coke, on Betsy",
     accent: "#014737",
