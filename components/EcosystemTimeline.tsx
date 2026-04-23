@@ -76,7 +76,7 @@ const chapters: Chapter[] = [
     id: "round-1",
     kicker: "Round 1 · Oct 2025 · the old way",
     title: "We got in\nthe door.",
-    body: "We really hooked them with our knowledge. Jessica wanted a deeper dive into competitors — Nima suggested we fly to NYC to present it. Jessica turned it into a full RFP, opened the call to more agencies. Meanwhile we sent an audit. An infinite, siloed Notion doc. The old way.",
+    body: "Our channel expertise landed the first meeting. Jessica wanted a deeper dive into competitors — Nima suggested we fly to NYC to present it. Jessica turned it into a full RFP, opened the call to more agencies. Meanwhile we sent an audit. An infinite, siloed Notion doc. The old way.",
     pullQuote:
       "We really hooked them with our knowledge. — Donovan, recalling the first call",
     accent: "#014737",
@@ -110,6 +110,12 @@ const chapters: Chapter[] = [
     accent2: "#09090b",
     bg: "#ffffff",
     Icon: Lightbulb,
+    leadGif: {
+      caption: "we brought cake",
+      tilt: 0,
+      emoji: "🎂",
+      src: "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExbmg3MnBtaWMzZDF3cjcyb3o4a2VrYnlhZjUxeHhodDlnYXFuN3hjcCZlcD12MV9naWZzX3NlYXJjaCZjdD1n/H4G8stNXKcyQ0/giphy.gif",
+    },
     gif: {
       caption: "the actual cake",
       tilt: 0,
@@ -172,6 +178,12 @@ const chapters: Chapter[] = [
     bg: "#ffffff",
     Icon: Cog,
     stat: { value: "0", label: "notes back from the client" },
+    leadGif: {
+      caption: "unimpressed",
+      tilt: 0,
+      emoji: "😒",
+      src: "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExMXhjMDR5eTFpczNjeW9hcXE4d3VmOGE3Zmo4Mm92cWZ6c3ZpampyaCZlcD12MV9naWZzX3NlYXJjaCZjdD1n/cZ6FrnA4NIuVUPgZMz/giphy.gif",
+    },
     gif: {
       caption: "betsy · semi-static 1",
       tilt: 0,
@@ -202,10 +214,10 @@ const chapters: Chapter[] = [
     stat: { value: "#2 → #1", label: "the odds swung every hour" },
     heroSize: "sm",
     leadGif: {
-      caption: "betsy, triumphant",
+      caption: "enemies",
       tilt: 0,
-      emoji: "👑",
-      src: "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExMXhjMDR5eTFpczNjeW9hcXE4d3VmOGE3Zmo4Mm92cWZ6c3ZpampyaCZlcD12MV9naWZzX3NlYXJjaCZjdD1n/cZ6FrnA4NIuVUPgZMz/giphy.gif",
+      emoji: "⚔️",
+      src: "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExbHVmcjNsZWh0cjhlaXloeXZ0MDhyMXg3cG12cGlwc21zcmU5c3MzYyZlcD12MV9naWZzX3NlYXJjaCZjdD1n/ydhTdPES8pJ5BRF9TP/giphy.gif",
     },
     gif: {
       caption: "the book nima left",
@@ -214,9 +226,6 @@ const chapters: Chapter[] = [
       src: "/moments/skin-in-the-game.jpg",
       asPhoto: true,
     },
-    gallery: [
-      "https://media.giphy.com/media/v1.Y2lkPWVjZjA1ZTQ3cmsxaWdvdXA4Yngya3JtOGIwMW1vMnZvNDBqeHgzNDd6cnJqa3I4ZiZlcD12MV9naWZzX3NlYXJjaCZjdD1n/qXAHMsQs6emkWwSQSn/giphy.gif",
-    ],
     learning:
       "Every touch point — even pricing — is a chance to prove you actually understood them.",
   },
@@ -233,6 +242,12 @@ const chapters: Chapter[] = [
     stat: {
       value: "$1.5M",
       label: "incremental budget handed to us by lunch",
+    },
+    leadGif: {
+      caption: "kitty",
+      tilt: 0,
+      emoji: "🐱",
+      src: "https://media.giphy.com/media/v1.Y2lkPWVjZjA1ZTQ3cmsxaWdvdXA4Yngya3JtOGIwMW1vMnZvNDBqeHgzNDd6cnJqa3I4ZiZlcD12MV9naWZzX3NlYXJjaCZjdD1n/qXAHMsQs6emkWwSQSn/giphy.gif",
     },
     gif: {
       caption: "the laptop kiss",
@@ -362,10 +377,59 @@ export function EcosystemTimeline() {
     };
   }, []);
 
+  // "Read position" = the translateX where this chapter sits centered in view.
+  // First chapter reads at translate 0 (left-aligned); last reads at -(trackWidth - vw).
+  // In between, center each panel when possible.
   const scrollDistance = Math.max(0, trackWidth - viewport.w);
-  const wrapperHeight = scrollDistance + viewport.h;
-  const translateX = -clamp(0, scrollDistance, scrollY);
-  const progress = scrollDistance > 0 ? clamp01(scrollY / scrollDistance) : 0;
+  const readPositions = panelBounds.map((p) =>
+    clamp(-scrollDistance, 0, viewport.w / 2 - (p.left + p.width / 2))
+  );
+
+  // Dwell zone per chapter: scroll through this much vertical space without moving
+  // the track horizontally, so big text stays legible. Travel happens BETWEEN dwells.
+  const dwellPerChapter = viewport.h * 0.45;
+
+  const travelDistances = readPositions.slice(1).map((r, i) =>
+    Math.abs(r - readPositions[i])
+  );
+  const totalDwell = readPositions.length * dwellPerChapter;
+  const totalTravel = travelDistances.reduce((a, b) => a + b, 0);
+  // No extra trailing viewport.h — timeline ends as soon as the last chapter's
+  // dwell window is done. That way scrolling down never reveals blank space
+  // below the sticky panel.
+  const wrapperHeight =
+    readPositions.length > 0 ? totalDwell + totalTravel : viewport.h;
+
+  let translateX = readPositions[0] ?? 0;
+  {
+    let cursor = 0;
+    for (let i = 0; i < readPositions.length; i++) {
+      // Dwell at chapter i — translate pinned at readPositions[i].
+      if (scrollY < cursor + dwellPerChapter) {
+        translateX = readPositions[i];
+        break;
+      }
+      cursor += dwellPerChapter;
+      // Travel to chapter i+1 if there is one.
+      if (i < readPositions.length - 1) {
+        const travel = travelDistances[i];
+        if (scrollY < cursor + travel) {
+          const t = travel > 0 ? (scrollY - cursor) / travel : 0;
+          translateX =
+            readPositions[i] + (readPositions[i + 1] - readPositions[i]) * t;
+          break;
+        }
+        cursor += travel;
+      } else {
+        translateX = readPositions[i];
+      }
+    }
+  }
+
+  const progress =
+    wrapperHeight > viewport.h
+      ? clamp01(scrollY / (wrapperHeight - viewport.h))
+      : 0;
 
   // Active chapter = whichever panel's center is closest to viewport center.
   const viewportCenter = -translateX + viewport.w / 2;
