@@ -103,6 +103,7 @@ const chapters: Chapter[] = [
       emoji: "📜",
       src: "/moments/notion-scroll.mov",
       asPhoto: true,
+      playbackRate: 0.35,
     },
     leadGif: {
       caption: "in the door",
@@ -1111,7 +1112,7 @@ function EndcardPanel({
             <img
               src="/logos/pearmill.svg"
               alt="Pearmill"
-              className="h-[clamp(2rem,4.5vw,3.75rem)] w-auto"
+              className="h-[clamp(1.75rem,3.8vw,3.2rem)] w-auto"
               style={{
                 filter: "invert(1) brightness(2)",
                 opacity: clamp01((logosT - 0.5) / 0.5),
