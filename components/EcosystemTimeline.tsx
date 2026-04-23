@@ -1188,7 +1188,7 @@ function EndcardPanel({
               transform: `translate3d(0, ${(1 - subT) * 10}px, 0)`,
             }}
           >
-            A love letter, with learnings
+            Thank you
           </div>
         </div>
 
