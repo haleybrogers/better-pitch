@@ -1090,7 +1090,7 @@ const CREDITS: { name: string; line: string }[] = [
   { name: "Cosmin", line: "the landing-page guy. When a campaign needs a page that converts, it's his." },
   { name: "Lilya", line: "set the visual language. The look + feel every deck built on started with her." },
   { name: "Polina", line: "layout surgeon. Made every page breathe. Nothing went out looking cramped." },
-  { name: "Egor", line: "made the vintage PowerPoint work. In PowerPoint. No less." },
+  { name: "Egor", line: "went back to the stone ages and made PowerPoint happen." },
   { name: "Olena", line: "made the creative move, the cuts land, the work feel alive." },
   { name: "Anar", line: "video edited under the gun. Turnaround times that should not have been possible." },
   { name: "Oleh", line: "planted the best easter eggs in Betsy. If you spotted something and smiled, that was him." },
