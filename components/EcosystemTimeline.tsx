@@ -98,10 +98,10 @@ const chapters: Chapter[] = [
     bg: "#ffffff",
     Icon: Lightbulb,
     gif: {
-      caption: "we brought a cake",
+      caption: "the actual cake",
       tilt: 4,
       emoji: "🎂",
-      src: "https://media.giphy.com/media/3HxGUHpqgDrIVmr5Fg/giphy.gif",
+      src: "/moments/cake.jpg",
     },
   },
   {
