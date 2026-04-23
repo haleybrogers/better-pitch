@@ -37,8 +37,9 @@ type Chapter = {
     avatarInitials: string;
     avatarColor: string;
     text: string;
+    boldPrefix?: string;
     reactions: { emoji: string; count: number }[];
-  };
+  }[];
   accent: string;
   accent2: string;
   bg: string;
@@ -245,17 +246,34 @@ const chapters: Chapter[] = [
     kicker: "Kickoff · April 20 2026 · NYC",
     title: "WE DID IT.\nWE WON.",
     body: "So we flew to NYC for an in-person kickoff. A strategy conversation without an actual kickoff — we sent kickoff questions that never got answered. We found out the week before — if you can even call it a week — that we'd be flying in. Each of us had to pivot our approach to make the client feel like they could trust us to hit goals they themselves deem impossible. Haley walked Jessica through the hub she'd built. Het explained Paid Search. Mariate did Meta. Coke quarterbacked. Nima closed. They walked out of that room thinking: if we don't hit those goals, it's not our team. OUR team — because Jessica trusted us enough to claim us as her own. Client pivoted mid-day and handed us $1.5M incremental — $1M of it in May. Then Jessica kissed her laptop. We were there.",
-    slackQuote: {
-      author: "nima",
-      time: "2:12 PM",
-      avatarInitials: "n",
-      avatarColor: "#c4352f",
-      text: "Also Jessica kissed her laptop when she saw Haley's dashboard",
-      reactions: [
-        { emoji: "👆", count: 4 },
-        { emoji: "💋", count: 5 },
-      ],
-    },
+    slackQuote: [
+      {
+        author: "Coke",
+        time: "2:05 PM",
+        avatarInitials: "C",
+        avatarColor: "#8b6f47",
+        boldPrefix: "Running tally:",
+        text: "Het is the smartest person in the room & Haley is a badass quality callouts, I think",
+        reactions: [
+          { emoji: "🙌", count: 5 },
+          { emoji: "🧠", count: 5 },
+          { emoji: "💯", count: 2 },
+          { emoji: "🍑", count: 5 },
+          { emoji: "❗", count: 2 },
+        ],
+      },
+      {
+        author: "nima",
+        time: "2:12 PM",
+        avatarInitials: "n",
+        avatarColor: "#c4352f",
+        text: "Also Jessica kissed her laptop when she saw Haley's dashboard",
+        reactions: [
+          { emoji: "👆", count: 4 },
+          { emoji: "💋", count: 5 },
+        ],
+      },
+    ],
     accent: "#014737",
     accent2: "#09090b",
     bg: "#fafaf9",
@@ -1387,7 +1405,7 @@ function ContentPanel({
                 &ldquo;{chapter.pullQuote}&rdquo;
               </blockquote>
             )}
-            {chapter.slackQuote && <SlackQuote quote={chapter.slackQuote} />}
+            {chapter.slackQuote && <SlackQuote messages={chapter.slackQuote} />}
             {chapter.stat && (
               <div className="mt-5 self-start inline-flex items-baseline gap-3 px-4 py-2.5 rounded-2xl bg-white shadow-sm border border-zinc-200">
                 <span
@@ -1624,40 +1642,49 @@ function DashboardMockup({
 }
 
 function SlackQuote({
-  quote,
+  messages,
 }: {
-  quote: NonNullable<Chapter["slackQuote"]>;
+  messages: NonNullable<Chapter["slackQuote"]>;
 }) {
   return (
-    <div className="mt-5 flex items-start gap-3 rounded-lg bg-white border border-zinc-200 shadow-sm px-4 py-3 max-w-[32rem]">
-      <div
-        className="flex-shrink-0 w-9 h-9 rounded-md flex items-center justify-center text-white font-semibold text-sm"
-        style={{ backgroundColor: quote.avatarColor }}
-      >
-        {quote.avatarInitials}
-      </div>
-      <div className="flex flex-col gap-1.5 min-w-0 flex-1">
-        <div className="flex items-baseline gap-2">
-          <span className="font-bold text-[15px] text-zinc-900">
-            {quote.author}
-          </span>
-          <span className="text-xs text-zinc-500">{quote.time}</span>
-        </div>
-        <p className="text-[15px] leading-snug text-zinc-900">{quote.text}</p>
-        {quote.reactions.length > 0 && (
-          <div className="flex items-center gap-1.5 mt-1 flex-wrap">
-            {quote.reactions.map((r, i) => (
-              <span
-                key={i}
-                className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-zinc-100 border border-zinc-200 text-xs text-zinc-700"
-              >
-                <span className="text-sm leading-none">{r.emoji}</span>
-                <span className="tabular-nums font-medium">{r.count}</span>
-              </span>
-            ))}
+    <div className="mt-5 flex flex-col gap-4 rounded-lg bg-white border border-zinc-200 shadow-sm px-4 py-4 max-w-[34rem]">
+      {messages.map((m, idx) => (
+        <div key={idx} className="flex items-start gap-3">
+          <div
+            className="flex-shrink-0 w-9 h-9 rounded-md flex items-center justify-center text-white font-semibold text-sm"
+            style={{ backgroundColor: m.avatarColor }}
+          >
+            {m.avatarInitials}
           </div>
-        )}
-      </div>
+          <div className="flex flex-col gap-1.5 min-w-0 flex-1">
+            <div className="flex items-baseline gap-2">
+              <span className="font-bold text-[15px] text-zinc-900">
+                {m.author}
+              </span>
+              <span className="text-xs text-zinc-500">{m.time}</span>
+            </div>
+            <p className="text-[15px] leading-snug text-zinc-900">
+              {m.boldPrefix && (
+                <span className="font-bold">{m.boldPrefix} </span>
+              )}
+              {m.text}
+            </p>
+            {m.reactions.length > 0 && (
+              <div className="flex items-center gap-1.5 mt-1 flex-wrap">
+                {m.reactions.map((r, i) => (
+                  <span
+                    key={i}
+                    className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-zinc-100 border border-zinc-200 text-xs text-zinc-700"
+                  >
+                    <span className="text-sm leading-none">{r.emoji}</span>
+                    <span className="tabular-nums font-medium">{r.count}</span>
+                  </span>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+      ))}
     </div>
   );
 }
