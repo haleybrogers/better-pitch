@@ -569,7 +569,9 @@ export function EcosystemTimeline() {
       ? (readPositions.length - 1) * dwellPerChapter + totalTravel
       : 0;
   const endcardTrigger = scrollY > endcardCenteredAt + viewport.h * 0.35;
-  const endcardReveal = useTriggeredReveal(endcardTrigger, 5000);
+  // Long duration: the title card animates in, then the credits roll plays
+  // out through the remaining ~85% of the reveal timeline.
+  const endcardReveal = useTriggeredReveal(endcardTrigger, 22000);
 
   // Scroll HOLD: don't let the horizontal track leave a chapter until its
   // animation has finished. The user can keep scrolling vertically but the
@@ -1051,6 +1053,38 @@ function OutroPanel({
 /*  Endcard panel — final "Better × Pearmill" splash                 */
 /* ─────────────────────────────────────────────────────────────── */
 
+const CREDITS: { name: string; line: string }[] = [
+  { name: "Nima", line: "the closer. Walked into every room already winning it." },
+  { name: "Donovan", line: "guided the creative. Kept the train on the tracks. Has great hair." },
+  { name: "Coke", line: "quarterback. Running-tally author. Peach-emoji provider." },
+  { name: "Haley", line: "built the dashboard Jessica kissed. Turned a Notion sprawl into a hub." },
+  { name: "Het", line: "smartest person in the room. Paid Search whisperer." },
+  { name: "Mariate", line: "Meta POV, measurement brain, quiet operator of the creative engine." },
+  { name: "Moojan", line: "the best energy in every room. The person you wanted on every call." },
+  { name: "Dino", line: "wooed Jessica. Made her fall in love with him on Pearmill's behalf." },
+  { name: "Addie", line: "cast it, produced it, and made it fucking happen — on the weekend." },
+  { name: "Karim", line: "moral support. Picked up the cake. Had drinks waiting for us the second we walked out of the pitch. Held every other account together while we drowned in this one." },
+  { name: "Val", line: "morale. Hyped us up. Told us we could do it, mentored us, made it happen." },
+  { name: "Masha", line: "made it all happen, no matter what hours her team had to pull." },
+  { name: "Janie", line: "on the account now. Did she help with the pitch? Morally, yes." },
+  { name: "Cosmin", line: "the landing-page guy. When a campaign needs a page that converts, it's his." },
+  { name: "Lilya", line: "set the visual language. The look + feel every deck built on started with her." },
+  { name: "Polina", line: "layout surgeon. Made every page breathe. Nothing went out looking cramped." },
+  { name: "Egor", line: "made the vintage PowerPoint work. In PowerPoint. No less." },
+  { name: "Olena", line: "made the creative move, the cuts land, the work feel alive." },
+  { name: "Anar", line: "video edited under the gun. Turnaround times that should not have been possible." },
+  { name: "Oleh", line: "planted the best easter eggs in Betsy. If you spotted something and smiled, that was him." },
+  { name: "The Homeaglow team", line: "impressed the client without being in the room. Sold a $19 cleaning and made Better want what they had." },
+  { name: "Claude", line: "built this site with Haley at all hours. Also wrote these credits. Including this one. Obviously." },
+];
+
+const SPEECH: string[] = [
+  "…and to the ones back home, keeping every other account glowing while we vanished into the Better trenches — we see you. We love you. We owe you about a thousand coffees.",
+  "Thank you to Jessica — for saying yes. And for the kiss.",
+  "Thank you to every agency that said we couldn't. You lit the fuse.",
+  "Thank you to sleep — I'll be seeing you again very soon.",
+];
+
 function EndcardPanel({
   chapter,
   reveal,
@@ -1060,84 +1094,143 @@ function EndcardPanel({
 }) {
   const stage = (start: number, end: number) =>
     clamp01((reveal - start) / Math.max(0.001, end - start));
-  const kickerT = stage(0.0, 0.18);
-  const logosT = stage(0.18, 0.58);
-  const barT = stage(0.58, 0.72);
-  const subT = stage(0.72, 1.0);
+  const kickerT = stage(0.0, 0.12);
+  const logosT = stage(0.12, 0.40);
+  const barT = stage(0.40, 0.50);
+  const subT = stage(0.50, 0.62);
+  // Credits start rolling after the title card lands. The credits scroll is
+  // driven by scroll progress (so it stays smooth and user-paced).
+  const creditsT = stage(0.62, 1.0);
+  // Lift the title card up as the credits begin so they have room to roll.
+  const lift = creditsT * -200;
+
   return (
     <section
-      className="relative flex-shrink-0 h-full w-screen flex items-center justify-center text-white px-12"
+      className="relative flex-shrink-0 h-full w-screen overflow-hidden text-white"
       style={{ backgroundColor: chapter.bg }}
       aria-label="Better × Pearmill"
     >
-      <div className="relative z-10 flex flex-col items-center gap-8 max-w-full">
-        <div
-          className="text-[11px] uppercase tracking-[0.35em] text-white/40 font-semibold"
-          style={{
-            opacity: kickerT,
-            transform: `translate3d(0, ${(1 - kickerT) * 12}px, 0)`,
-          }}
-        >
-          {chapter.kicker}
-        </div>
-        {/* Grid so the × sits on the true horizontal center of the row,
-            independent of the Better/Pearmill logos having different widths.
-            Each side column is 1fr with the logo aligned toward the center. */}
-        <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-10 md:gap-14 text-white w-full max-w-[54rem]">
-          <div className="flex justify-end">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src="/logos/better.svg"
-              alt="Better"
-              className="h-[clamp(1.5rem,3.2vw,2.5rem)] w-auto"
-              style={{
-                filter: "invert(1) brightness(2)",
-                opacity: clamp01(logosT * 2),
-                transform: `translate3d(${(1 - clamp01(logosT * 2)) * -30}px, 0, 0)`,
-              }}
-            />
-          </div>
-          <span
-            aria-hidden
-            className="flex items-center justify-center text-[clamp(1.5rem,3.5vw,2.75rem)] text-white/40 font-light leading-none h-[clamp(2rem,4.5vw,3.75rem)]"
+      {/* Title card */}
+      <div
+        className="absolute inset-0 flex items-center justify-center px-12"
+        style={{ transform: `translate3d(0, ${lift}px, 0)` }}
+      >
+        <div className="relative z-10 flex flex-col items-center gap-8 max-w-full">
+          <div
+            className="text-[11px] uppercase tracking-[0.35em] text-white/40 font-semibold"
             style={{
-              opacity: clamp01((logosT - 0.4) / 0.3),
-              transform: `scale(${0.6 + clamp01((logosT - 0.4) / 0.3) * 0.4})`,
+              opacity: kickerT,
+              transform: `translate3d(0, ${(1 - kickerT) * 12}px, 0)`,
             }}
           >
-            ×
-          </span>
-          <div className="flex justify-start">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src="/logos/pearmill.svg"
-              alt="Pearmill"
-              className="h-[clamp(1.75rem,3.8vw,3.2rem)] w-auto"
+            {chapter.kicker}
+          </div>
+          <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-10 md:gap-14 text-white w-full max-w-[54rem]">
+            <div className="flex justify-end">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="/logos/better.svg"
+                alt="Better"
+                className="h-[clamp(1.5rem,3.2vw,2.5rem)] w-auto"
+                style={{
+                  filter: "invert(1) brightness(2)",
+                  opacity: clamp01(logosT * 2),
+                  transform: `translate3d(${(1 - clamp01(logosT * 2)) * -30}px, 0, 0)`,
+                }}
+              />
+            </div>
+            <span
+              aria-hidden
+              className="flex items-center justify-center text-[clamp(1.5rem,3.5vw,2.75rem)] text-white/40 font-light leading-none h-[clamp(2rem,4.5vw,3.75rem)]"
               style={{
-                filter: "invert(1) brightness(2)",
-                opacity: clamp01((logosT - 0.5) / 0.5),
-                transform: `translate3d(${(1 - clamp01((logosT - 0.5) / 0.5)) * 30}px, 0, 0)`,
+                opacity: clamp01((logosT - 0.4) / 0.3),
+                transform: `scale(${0.6 + clamp01((logosT - 0.4) / 0.3) * 0.4})`,
               }}
-            />
+            >
+              ×
+            </span>
+            <div className="flex justify-start">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="/logos/pearmill.svg"
+                alt="Pearmill"
+                className="h-[clamp(1.75rem,3.8vw,3.2rem)] w-auto"
+                style={{
+                  filter: "invert(1) brightness(2)",
+                  opacity: clamp01((logosT - 0.5) / 0.5),
+                  transform: `translate3d(${(1 - clamp01((logosT - 0.5) / 0.5)) * 30}px, 0, 0)`,
+                }}
+              />
+            </div>
+          </div>
+          <div
+            className="h-[2px] bg-white/30"
+            style={{
+              width: `${barT * 96}px`,
+              opacity: barT,
+            }}
+          />
+          <div
+            className="text-[11px] uppercase tracking-[0.3em] text-white/50 font-semibold"
+            style={{
+              opacity: subT,
+              transform: `translate3d(0, ${(1 - subT) * 10}px, 0)`,
+            }}
+          >
+            A love letter, with learnings
           </div>
         </div>
+      </div>
+
+      {/* Credits roll */}
+      {creditsT > 0 && (
         <div
-          className="h-[2px] bg-white/30"
+          aria-hidden={creditsT < 0.1}
+          className="absolute inset-x-0 z-20 flex justify-center pointer-events-none"
           style={{
-            width: `${barT * 96}px`,
-            opacity: barT,
-          }}
-        />
-        <div
-          className="text-[11px] uppercase tracking-[0.3em] text-white/50 font-semibold"
-          style={{
-            opacity: subT,
-            transform: `translate3d(0, ${(1 - subT) * 10}px, 0)`,
+            top: "50%",
+            // Start the roll below the fold and scroll up as creditsT grows.
+            // Travels ~2x viewport height over the reveal span.
+            transform: `translate3d(0, calc(50vh - ${creditsT * 240}vh), 0)`,
+            opacity: creditsT < 0.05 ? creditsT / 0.05 : 1,
           }}
         >
-          A love letter, with learnings
+          <div className="w-full max-w-[46rem] px-10 flex flex-col items-center text-center">
+            <div className="text-[11px] uppercase tracking-[0.35em] text-white/40 font-semibold mb-12">
+              Thanks to — we couldn&rsquo;t have done it without you
+            </div>
+            <div className="flex flex-col gap-7 mb-20">
+              {CREDITS.map((c) => (
+                <div key={c.name} className="flex flex-col gap-1.5">
+                  <div className="text-[clamp(1.25rem,2.2vw,1.75rem)] font-semibold tracking-tight text-white">
+                    {c.name}
+                  </div>
+                  <div className="text-white/60 text-[15px] leading-snug max-w-xl mx-auto">
+                    {c.line}
+                  </div>
+                </div>
+              ))}
+            </div>
+            <div className="flex flex-col gap-5 my-16">
+              {SPEECH.map((line, i) => (
+                <p
+                  key={i}
+                  className={
+                    i === 0
+                      ? "italic text-white/70 text-[15px] leading-relaxed max-w-xl mx-auto"
+                      : "text-white/75 text-[15px] leading-relaxed max-w-xl mx-auto"
+                  }
+                >
+                  {line}
+                </p>
+              ))}
+            </div>
+            <div className="text-[11px] uppercase tracking-[0.4em] text-white/50 font-semibold mt-4">
+              — fin. 💚
+            </div>
+          </div>
         </div>
-      </div>
+      )}
     </section>
   );
 }
@@ -1663,42 +1756,34 @@ function SlackQuote({
   messages: NonNullable<Chapter["slackQuote"]>;
 }) {
   return (
-    <div className="mt-5 flex flex-col gap-4 rounded-lg bg-white border border-zinc-200 shadow-sm px-4 py-4 max-w-[34rem]">
+    <div className="mt-5 flex flex-col gap-3 rounded-lg bg-white border border-zinc-200 shadow-sm px-5 py-4 max-w-[32rem]">
       {messages.map((m, idx) => (
-        <div key={idx} className="flex items-start gap-3">
-          <div
-            className="flex-shrink-0 w-9 h-9 rounded-md flex items-center justify-center text-white font-semibold text-sm"
-            style={{ backgroundColor: m.avatarColor }}
-          >
-            {m.avatarInitials}
+        <div key={idx} className="flex flex-col gap-1">
+          <div className="flex items-baseline gap-2">
+            <span className="font-bold text-[14px] text-zinc-900">
+              {m.author}
+            </span>
+            <span className="text-[11px] text-zinc-500">{m.time}</span>
           </div>
-          <div className="flex flex-col gap-1.5 min-w-0 flex-1">
-            <div className="flex items-baseline gap-2">
-              <span className="font-bold text-[15px] text-zinc-900">
-                {m.author}
-              </span>
-              <span className="text-xs text-zinc-500">{m.time}</span>
-            </div>
-            <p className="text-[15px] leading-snug text-zinc-900 whitespace-pre-line">
-              {m.boldPrefix && (
-                <span className="font-bold">{m.boldPrefix} </span>
-              )}
-              {m.text}
-            </p>
-            {m.reactions.length > 0 && (
-              <div className="flex items-center gap-1.5 mt-1 flex-wrap">
-                {m.reactions.map((r, i) => (
-                  <span
-                    key={i}
-                    className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-zinc-100 border border-zinc-200 text-xs text-zinc-700"
-                  >
-                    <span className="text-sm leading-none">{r.emoji}</span>
-                    <span className="tabular-nums font-medium">{r.count}</span>
-                  </span>
-                ))}
-              </div>
+          <p className="text-[14px] leading-snug text-zinc-900 whitespace-pre-line">
+            {m.boldPrefix && (
+              <span className="font-bold">{m.boldPrefix} </span>
             )}
-          </div>
+            {m.text}
+          </p>
+          {m.reactions.length > 0 && (
+            <div className="flex items-center gap-1.5 mt-0.5 flex-wrap">
+              {m.reactions.map((r, i) => (
+                <span
+                  key={i}
+                  className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full bg-zinc-100 border border-zinc-200 text-[11px] text-zinc-700"
+                >
+                  <span className="text-[13px] leading-none">{r.emoji}</span>
+                  <span className="tabular-nums font-medium">{r.count}</span>
+                </span>
+              ))}
+            </div>
+          )}
         </div>
       ))}
     </div>
