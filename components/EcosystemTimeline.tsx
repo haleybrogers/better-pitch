@@ -1242,7 +1242,7 @@ function EndcardPanel({
           stays on screen after everything else has scrolled off. */}
       <div
         className="absolute inset-0 flex items-center justify-center pointer-events-none z-30"
-        style={{ opacity: clamp01((scrollT - 0.9) / 0.1) }}
+        style={{ opacity: clamp01((scrollT - 0.7) / 0.1) }}
       >
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
