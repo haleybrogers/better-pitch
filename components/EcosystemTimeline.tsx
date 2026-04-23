@@ -109,14 +109,14 @@ const chapters: Chapter[] = [
     bg: "#ffffff",
     Icon: Lightbulb,
     gif: {
-      caption: "nyc · 1 wtc",
+      caption: "the actual cake",
       tilt: 0,
-      emoji: "🗽",
-      src: "/moments/nyc-team.jpg",
+      emoji: "🎂",
+      src: "/moments/cake.jpg",
       asPhoto: true,
     },
     gallery: [
-      "/moments/cake.jpg",
+      "/moments/nyc-team.jpg",
       "/moments/nyc-walk-1.mov",
       "/moments/nyc-walk-2.mov",
       "/moments/nyc-walk-3.mov",
