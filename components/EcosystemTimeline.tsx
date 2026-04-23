@@ -58,7 +58,7 @@ const chapters: Chapter[] = [
     id: "cover",
     kicker: "The ride",
     title: "Strap in.",
-    body: "This is the story of one pitch — and how it fucking changed the way we think about everything. Seven months. The odds swung every hour. Here's the ride.",
+    body: "This is the story of one pitch — and how it changed the way we think about everything. Seven months. The odds swung every hour. Here's the ride.",
     accent: "#014737",
     accent2: "#09090b",
     bg: "#ffffff",
@@ -238,12 +238,11 @@ const chapters: Chapter[] = [
       value: "$1.5M",
       label: "incremental budget handed to us by lunch",
     },
-    gif: {
-      caption: "the laptop kiss",
+    leadGif: {
+      caption: "kitty",
       tilt: 0,
-      emoji: "💋",
+      emoji: "🐱",
       src: "https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExOHVybmxtaWxlZmx5cDdjMWpjbHY1djR6NDV0eXVhNHEyOXdvbzd3YSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/W1hd3uXRIbddu/giphy.gif",
-      asPhoto: true,
     },
     gallery: [
       "/moments/kickoff-selfie.jpg",
@@ -762,14 +761,15 @@ function DmPanel({
       style={{ backgroundColor: chapter.bg }}
       aria-label={chapter.title.replace(/\n/g, " ")}
     >
-      {/* Left-edge fade in from the outro green so the transition feels soft */}
+      {/* Left-edge fade in from the outro green so the transition is seamless
+          — opacity 1 + exact match to the onwards bg so there is no visible line */}
       <div
         aria-hidden
         className="absolute inset-y-0 left-0 pointer-events-none"
         style={{
-          width: "40vw",
-          background: "linear-gradient(90deg, #014737, transparent)",
-          opacity: 0.8,
+          width: "55vw",
+          background:
+            "linear-gradient(90deg, #014737 0%, rgba(1,71,55,0) 100%)",
         }}
       />
 
