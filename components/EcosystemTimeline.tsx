@@ -109,13 +109,17 @@ const chapters: Chapter[] = [
     bg: "#ffffff",
     Icon: Lightbulb,
     gif: {
-      caption: "the actual cake",
+      caption: "getting there",
       tilt: 0,
-      emoji: "🎂",
-      src: "/moments/cake.jpg",
+      emoji: "🗽",
+      src: "/moments/nyc-day-1.mov",
       asPhoto: true,
     },
     gallery: [
+      "/moments/nyc-day-2.mov",
+      "/moments/nyc-day-3.mov",
+      "/moments/nyc-before-cake.mov",
+      "/moments/cake.jpg",
       "/moments/nyc-team.jpg",
       "/moments/nyc-walk-1.mov",
       "/moments/nyc-walk-2.mov",
@@ -219,6 +223,9 @@ const chapters: Chapter[] = [
       src: "https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExOHVybmxtaWxlZmx5cDdjMWpjbHY1djR6NDV0eXVhNHEyOXdvbzd3YSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/W1hd3uXRIbddu/giphy.gif",
       asPhoto: true,
     },
+    gallery: [
+      "/moments/kickoff-selfie.jpg",
+    ],
   },
   {
     id: "onwards",
