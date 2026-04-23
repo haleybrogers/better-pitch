@@ -278,10 +278,6 @@ const chapters: Chapter[] = [
     accent2: "#09090b",
     bg: "#fafaf9",
     Icon: Sparkles,
-    stat: {
-      value: "$1.5M",
-      label: "incremental budget handed to us by lunch",
-    },
     leadGif: {
       caption: "Jessica kissing her laptop",
       tilt: 0,
