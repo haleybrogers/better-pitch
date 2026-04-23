@@ -97,7 +97,6 @@ const chapters: Chapter[] = [
       src: "/moments/notion-scroll.mov",
       asPhoto: true,
     },
-    learning: "Donovan should have told me in Slack.",
   },
   {
     id: "round-2",
@@ -111,17 +110,16 @@ const chapters: Chapter[] = [
     bg: "#ffffff",
     Icon: Lightbulb,
     gif: {
-      caption: "getting there",
+      caption: "the actual cake",
       tilt: 0,
-      emoji: "🗽",
-      src: "/moments/nyc-day-1.mov",
+      emoji: "🎂",
+      src: "/moments/cake.jpg",
       asPhoto: true,
     },
     gallery: [
-      "/moments/nyc-day-2.mov",
+      "/moments/nyc-day-1.mov",
       "/moments/nyc-day-3.mov",
       "/moments/nyc-before-cake.mov",
-      "/moments/cake.jpg",
       "/moments/nyc-team.jpg",
       "/moments/nyc-walk-1.mov",
       "/moments/nyc-walk-2.mov",
@@ -141,7 +139,7 @@ const chapters: Chapter[] = [
   {
     id: "round-3a",
     kicker: "Round 3a · Dec 2025 – Jan 2026",
-    title: "Comp\nanalysis +\nGoogle AI\ncopy.",
+    title: "Yet another\nfucking call.",
     body: "Jessica wasn't satisfied after NYC, so we went deeper. A full competitive read — and Cosmin's AI dream for how creative should target copy. Het reframed Google as a quality/rank-score problem, not a budget one. We AI'd the Google copy pipeline end-to-end, landing keyword-to-LP message match at scale.",
     pullQuote:
       "Chat told me it wasn't necessary to use all 15 headlines. Chat knows nothing. — Het, standing up for Better's ad strength",
@@ -153,10 +151,9 @@ const chapters: Chapter[] = [
       caption: "google copy, ai'd live",
       tilt: 0,
       emoji: "🔎",
-      src: "/moments/google-ai-copy.mov",
+      src: "/moments/yet-another-call.mp4",
       asPhoto: true,
     },
-    learning: "Every channel gets an AI'd POV. Nothing stays manual.",
   },
   {
     id: "round-3b",
@@ -686,20 +683,7 @@ function ChapterPanel({
           )}
         </div>
 
-        {/* 2 · Key Learning block (big, visually distinct) */}
-        {chapter.learning && (
-          <div
-            className="flex-shrink-0 w-[30rem] flex items-center"
-            style={{
-              opacity: oExtras,
-              transform: `translate3d(${parallaxMedia * 0.3}px, ${(1 - oExtras) * 30}px, 0)`,
-            }}
-          >
-            <LearningCard text={chapter.learning} accent={chapter.accent} accent2={chapter.accent2} />
-          </div>
-        )}
-
-        {/* 3 · Hero media */}
+        {/* 2 · Hero media */}
         {chapter.gif && (
           <div
             className="flex-shrink-0 flex items-center"
@@ -712,14 +696,27 @@ function ChapterPanel({
           </div>
         )}
 
-        {/* 4 · "the day" gallery */}
+        {/* 3 · "the day" gallery */}
         {chapter.gallery && chapter.gallery.length > 0 && (
           <ChapterGallery items={chapter.gallery} openness={oExtras} offsetX={0} label="the day" />
         )}
 
-        {/* 5 · "the work" gallery */}
+        {/* 4 · "the work" gallery */}
         {chapter.creativeGallery && chapter.creativeGallery.length > 0 && (
           <ChapterGallery items={chapter.creativeGallery} openness={oExtras} offsetX={0} label="the work" />
+        )}
+
+        {/* 5 · Key Learning — lands at the end of the chapter */}
+        {chapter.learning && (
+          <div
+            className="flex-shrink-0 w-[30rem] flex items-center"
+            style={{
+              opacity: oExtras,
+              transform: `translate3d(${parallaxMedia * 0.3}px, ${(1 - oExtras) * 30}px, 0)`,
+            }}
+          >
+            <LearningCard text={chapter.learning} accent={chapter.accent} accent2={chapter.accent2} />
+          </div>
         )}
       </div>
     </section>
@@ -1035,11 +1032,10 @@ function ChapterGallery({
               >
                 {isVideo ? (
                   <video
-                    src={src}
-                    autoPlay
-                    loop
+                    src={`${src}#t=0.1`}
                     muted
                     playsInline
+                    preload="metadata"
                     className="absolute inset-0 w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-500"
                   />
                 ) : (
@@ -1183,9 +1179,9 @@ function ProgressRail({ progress, activeIndex }: { progress: number; activeIndex
 /*  Odds counter — "percent we thought we'd win" swinging with scroll */
 /* ─────────────────────────────────────────────────────────────── */
 
-// One value per chapter — matches cover copy: 90 → 75 → 50 → 90 → 95 → 30 → 95
-// Final chapter lands at 100 (we won).
-const ODDS = [90, 75, 50, 90, 95, 30, 95, 100];
+// One value per chapter — emotional arc: strap in (0) → hooked (40) → VIBING (85) →
+// lost hope (30) → VIBING (90) → crashed (15) → WON (100) → won (100).
+const ODDS = [0, 40, 85, 30, 90, 15, 100, 100];
 
 function OddsCounter({ progress }: { progress: number }) {
   const n = ODDS.length;
