@@ -240,6 +240,12 @@ const chapters: Chapter[] = [
       value: "$1.5M",
       label: "incremental budget handed to us by lunch",
     },
+    leadGif: {
+      caption: "cat kiss",
+      tilt: 0,
+      emoji: "💋",
+      src: "https://media.giphy.com/media/v1.Y2lkPWVjZjA1ZTQ3cmsxaWdvdXA4Yngya3JtOGIwMW1vMnZvNDBqeHgzNDd6cnJqa3I4ZiZlcD12MV9naWZzX3NlYXJjaCZjdD1n/qXAHMsQs6emkWwSQSn/giphy.gif",
+    },
     gif: {
       caption: "the laptop kiss",
       tilt: 0,
@@ -405,11 +411,11 @@ export function EcosystemTimeline() {
   );
   const totalDwell = readPositions.length * dwellPerChapter;
   const totalTravel = travelDistances.reduce((a, b) => a + b, 0);
-  // No extra trailing viewport.h — timeline ends as soon as the last chapter's
-  // dwell window is done. That way scrolling down never reveals blank space
-  // below the sticky panel.
+  // Add one viewport.h of trailing buffer so the last chapter's dwell
+  // position is actually reachable before the sticky container releases.
+  // Wrapper bg is black so the tail blends into the DM panel.
   const wrapperHeight =
-    readPositions.length > 0 ? totalDwell + totalTravel : viewport.h;
+    readPositions.length > 0 ? totalDwell + totalTravel + viewport.h : viewport.h;
 
   let translateX = readPositions[0] ?? 0;
   {
@@ -463,7 +469,7 @@ export function EcosystemTimeline() {
   return (
     <div
       ref={wrapperRef}
-      style={{ height: wrapperHeight || "100vh" }}
+      style={{ height: wrapperHeight || "100vh", backgroundColor: "#09090b" }}
       className="relative"
       aria-label="Horizontal timeline: From Silos to Ecosystem"
     >
@@ -771,30 +777,24 @@ function DmPanel({
         }}
       />
 
-      <div className="relative z-10 flex items-center gap-14 pl-16 pr-24 py-12">
+      <div className="relative z-10 flex items-center gap-20 pl-20 pr-24 py-12">
+        {/* Beat 1 — setup */}
         <div
-          className="flex-shrink-0 w-[32rem]"
+          className="flex-shrink-0 w-[30rem]"
           style={{ opacity: o, transform: `translate3d(0, ${(1 - o) * 30}px, 0)` }}
         >
           <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-[11px] font-semibold uppercase tracking-[0.2em] bg-white/5 text-white/70 border border-white/10 mb-5">
             {chapter.kicker}
           </div>
           <h2 className="font-semibold leading-[0.95] tracking-tight whitespace-pre-line text-[clamp(2.5rem,5vw,4.5rem)]">
-            {chapter.title}
+            Then the competitor{"\n"}DM&rsquo;d us.
           </h2>
           <p className="mt-5 text-white/65 text-lg max-w-md">
-            {chapter.body}
+            Just to be sure.
           </p>
-          <div className="mt-10">
-            <div className="text-[clamp(3rem,7vw,6rem)] font-semibold tracking-tight leading-[0.95]">
-              Us.
-            </div>
-            <div className="mt-3 text-white/50 text-xs uppercase tracking-[0.3em]">
-              Thanks for asking.
-            </div>
-          </div>
         </div>
 
+        {/* Beat 2 — the actual DM quote */}
         {chapter.gif?.src && (
           <div
             className="flex-shrink-0 relative max-w-[40rem] rounded-2xl overflow-hidden border border-white/10 shadow-2xl bg-[#1c1c1e]"
@@ -808,6 +808,19 @@ function DmPanel({
             />
           </div>
         )}
+
+        {/* Beat 3 — the mic-drop answer */}
+        <div
+          className="flex-shrink-0 flex flex-col items-start"
+          style={{ opacity: o, transform: `translate3d(0, ${(1 - o) * 30}px, 0)` }}
+        >
+          <div className="text-[clamp(5rem,12vw,12rem)] font-semibold tracking-tight leading-[0.92]">
+            Us.
+          </div>
+          <div className="mt-4 text-white/60 text-sm uppercase tracking-[0.3em]">
+            Thanks for asking.
+          </div>
+        </div>
       </div>
     </section>
   );
