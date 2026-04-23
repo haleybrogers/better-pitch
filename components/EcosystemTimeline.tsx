@@ -100,7 +100,7 @@ const chapters: Chapter[] = [
     id: "round-2",
     kicker: "Round 2 · Nov 18 2025 · NYC",
     title: "We brought\ncake.",
-    body: "We unified the message. Creative, media, and measurement threaded as one. But Sly and Josh had written the RFP themselves — scrappy, first time — and we read it wrong. We overshot the moon with creative. Then Jessica never even opened it; it lived in Notion. Even Sly dismissed it at first because of the collapsed toggles. When he came back to it late one night, he told us our RFP response cooked every other agency. Jessica kept asking him which agency did X best, which did Y best. His answer was Pearmill, every time.",
+    body: "We flew to New York to pitch in person. Beautiful slide deck. Unified message — creative, media, and measurement threaded as one. And we brought cake. But Sly and Josh had written the RFP themselves — scrappy, first time — and we'd read it wrong. We overshot the moon with creative. Then Jessica never even opened our response; it lived in Notion. Even Sly dismissed it at first because of the collapsed toggles. When he came back to it late one night, he told us our RFP response cooked every other agency. Jessica kept asking him which agency did X best, which did Y best. His answer was Pearmill, every time.",
     pullQuote:
       "Your RFP response cooked every other agency. — Sly, very late one night",
     accent: "#014737",
