@@ -157,7 +157,7 @@ const chapters: Chapter[] = [
   },
   {
     id: "round-3a",
-    kicker: "Round 3a · Dec 2025 – Jan 2026",
+    kicker: "Round 3 · Dec 2025 – Jan 2026",
     title: "Yet another\ncall.",
     body: "Coming out of NYC, Jessica was worried our creative wasn't backed enough by industry knowledge and competitive analysis. She was ready to move on — Josh saved it: \"wait, these guys have the creative chops to make really inventive work.\" So Jessica asked us (again) to go deeper on competitors. Another agency had taken their best-performing ads and iterated on them — the client loved that. She also wanted more evidence of Google copy and creative. Het reframed Google as a quality/rank-score problem, not a budget one. We AI'd the Google copy pipeline end-to-end, landing keyword-to-LP message match at scale.",
     pullQuote:
@@ -184,7 +184,7 @@ const chapters: Chapter[] = [
   },
   {
     id: "round-3b",
-    kicker: "Round 3b · Feb 2026 · Betsy",
+    kicker: "Round 4 · Feb 2026 · Betsy",
     title: "Then\nthey asked\nfor Betsy.",
     body: "Cold submission. No meeting. No voiceover. PowerPoint only. Luckily for us, the other agencies shit the bed — Jessica was so disappointed they missed the brief and never called to check in. We read, and re-read, what Betsy needed. We have the expertise, but we listened to what they were actually asking, and then we went deeper. What's at the heart of it. Huge shoutout to creative for turning around client-winning work in two days. They came back with zero notes.",
     pullQuote:
