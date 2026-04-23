@@ -50,7 +50,8 @@ type Chapter = {
   gif?: GifSpec;
   deliverables?: Deliverable[];
   stat?: { value: string; label: string };
-  gallery?: string[]; // inline thumbnails below the main gif
+  gallery?: string[]; // cute moments — selfies, team photos, real artifacts
+  creativeGallery?: string[]; // the creative work we shipped for this round
 };
 
 const notionPages = Array.from(
@@ -99,8 +100,8 @@ const chapters: Chapter[] = [
   {
     id: "round-2",
     kicker: "Round 2 · Nov 18 2025 · NYC",
-    title: "We unified\nthe message.",
-    body: "Creative, media, and measurement — tied together as a single thread. But the client mis-represented the brief. And we overshot the moon with creative. Then Jessica didn't read the RFP, because it was in Notion.",
+    title: "We brought\na cake.",
+    body: "We unified the message — creative, media, and measurement tied together as a single thread. But the client mis-represented the brief. And we overshot the moon with creative. Then Jessica didn't read the RFP, because it was in Notion.",
     pullQuote:
       "Your RFP response cooked every other agency. — Sly, very late one night",
     accent: "#014737",
@@ -116,6 +117,11 @@ const chapters: Chapter[] = [
     },
     gallery: [
       "/moments/cake.jpg",
+      "/moments/nyc-walk-1.mov",
+      "/moments/nyc-walk-2.mov",
+      "/moments/nyc-walk-3.mov",
+    ],
+    creativeGallery: [
       "/moments/statics/cake-creative.png",
       "/moments/statics/melanoma.png",
       "/moments/statics/cortisol-shirt.png",
@@ -163,15 +169,15 @@ const chapters: Chapter[] = [
       src: "/moments/betsy-1.gif",
       asPhoto: true,
     },
-    gallery: ["/moments/betsy-2.gif", "/moments/betsy-3.gif"],
+    creativeGallery: ["/moments/betsy-2.gif", "/moments/betsy-3.gif"],
   },
   {
     id: "fight",
     kicker: "Fight to the death · Feb–Mar 2026",
     title: "Sly already\nhad the\nrejection\ndrafted.",
-    body: "Jump450 swooped in with 3 free months and a 4.5% Y1 undercut. Sly called Nima: we'd fallen to #2. While we waited, everyone kept guessing the odds: 90% chance → 75% → 50% → 90% → 95!! → 30% → 95. Nima countered with a sliding-scale partnership tied to spend, not a discount. Then he slid a copy of Skin in the Game onto Sly's desk. No note. Sly didn't even notice until 10pm that night, alone in the office — \"WTF, Nima left that?\" He read the whole thing. That moved the needle. March 20: 90-day trial secured.",
+    body: "Jump450 swooped in with 3 free months and a 4.5% Y1 undercut. Sly called Nima: we'd fallen to #2. While we waited, everyone kept guessing the odds: 90% → 75% → 50% → 90% → 95!! → 30% → 95. Then Nima and Val took a different approach to pricing — one that used performance as the reward, showing we stand behind our work. And then Nima slid a copy of Skin in the Game onto Sly's desk. No note. It was late one night. Sly was burnt out, frustrated, just done. Then he saw it. Opened it. Knew right away what it was and what it meant. That moved the needle. March 20: 90-day trial secured.",
     pullQuote:
-      "Your RFP response cooked every other agency. — Sly, very late one night",
+      "He saw it. Opened it. Knew right away what it was and what it meant.",
     accent: "#014737",
     accent2: "#09090b",
     bg: "#ffffff",
@@ -617,7 +623,10 @@ function ChapterPanel({
               />
             )}
             {chapter.gallery && chapter.gallery.length > 0 && (
-              <ChapterGallery items={chapter.gallery} openness={oExtras} offsetX={parallaxDeliv} />
+              <ChapterGallery items={chapter.gallery} openness={oExtras} offsetX={parallaxDeliv} label="the day" />
+            )}
+            {chapter.creativeGallery && chapter.creativeGallery.length > 0 && (
+              <ChapterGallery items={chapter.creativeGallery} openness={oExtras} offsetX={parallaxDeliv * -1} label="the work" />
             )}
           </div>
         )}
@@ -816,34 +825,152 @@ function ChapterGallery({
   items,
   openness,
   offsetX,
+  label,
 }: {
   items: string[];
   openness: number;
   offsetX: number;
+  label?: string;
 }) {
+  const [openIndex, setOpenIndex] = useState<number | null>(null);
+
+  const close = useCallback(() => setOpenIndex(null), []);
+  const prev = useCallback(
+    () => setOpenIndex((i) => (i == null ? null : Math.max(0, i - 1))),
+    []
+  );
+  const next = useCallback(
+    () =>
+      setOpenIndex((i) =>
+        i == null ? null : Math.min(items.length - 1, i + 1)
+      ),
+    [items.length]
+  );
+
+  useEffect(() => {
+    if (openIndex == null) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") close();
+      if (e.key === "ArrowRight") next();
+      if (e.key === "ArrowLeft") prev();
+    };
+    document.body.style.overflow = "hidden";
+    window.addEventListener("keydown", onKey);
+    return () => {
+      document.body.style.overflow = "";
+      window.removeEventListener("keydown", onKey);
+    };
+  }, [openIndex, close, next, prev]);
+
   return (
-    <div
-      className="w-80 flex gap-2 overflow-x-auto pb-2"
-      style={{
-        opacity: openness,
-        transform: `translate3d(${offsetX}px, ${(1 - openness) * 20}px, 0)`,
-      }}
-    >
-      {items.map((src) => (
-        <div
-          key={src}
-          className="relative flex-shrink-0 w-20 h-28 rounded-lg overflow-hidden bg-white border border-zinc-200 shadow-sm"
-        >
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src={src}
-            alt=""
-            loading="lazy"
-            className="absolute inset-0 w-full h-full object-cover"
-          />
+    <>
+      <div
+        className="w-[28rem] max-w-full"
+        style={{
+          opacity: openness,
+          transform: `translate3d(${offsetX * 0.5}px, ${(1 - openness) * 20}px, 0)`,
+        }}
+      >
+        {label && (
+          <div className="text-[10px] uppercase tracking-[0.25em] text-zinc-500 font-semibold mb-2">
+            {label}
+          </div>
+        )}
+        <div className="flex gap-2 overflow-x-auto pb-2 -mx-2 px-2">
+          {items.map((src, i) => {
+            const isVideo = /\.(mp4|mov|webm)$/i.test(src);
+            return (
+              <button
+                key={src}
+                onClick={() => setOpenIndex(i)}
+                className="group relative flex-shrink-0 w-40 h-52 rounded-xl overflow-hidden bg-white border border-zinc-200 shadow-sm hover:shadow-lg transition-shadow"
+                aria-label={`Open ${src.split("/").pop()}`}
+              >
+                {isVideo ? (
+                  <video
+                    src={src}
+                    autoPlay
+                    loop
+                    muted
+                    playsInline
+                    className="absolute inset-0 w-full h-full object-cover group-hover:scale-[1.02] transition-transform"
+                  />
+                ) : (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={src}
+                    alt=""
+                    loading="lazy"
+                    className="absolute inset-0 w-full h-full object-cover group-hover:scale-[1.02] transition-transform"
+                  />
+                )}
+              </button>
+            );
+          })}
         </div>
-      ))}
-    </div>
+      </div>
+
+      {openIndex != null && (
+        <div
+          className="fixed inset-0 z-50 bg-black/90 backdrop-blur-sm flex items-center justify-center p-4 md:p-8"
+          onClick={close}
+        >
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              close();
+            }}
+            className="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center text-xl"
+            aria-label="Close"
+          >
+            ×
+          </button>
+          {openIndex > 0 && (
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                prev();
+              }}
+              className="absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center text-xl"
+              aria-label="Previous"
+            >
+              ‹
+            </button>
+          )}
+          {openIndex < items.length - 1 && (
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                next();
+              }}
+              className="absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center text-xl"
+              aria-label="Next"
+            >
+              ›
+            </button>
+          )}
+          {/\.(mp4|mov|webm)$/i.test(items[openIndex]) ? (
+            <video
+              src={items[openIndex]}
+              autoPlay
+              loop
+              controls
+              playsInline
+              onClick={(e) => e.stopPropagation()}
+              className="max-w-full max-h-[85vh] rounded-md shadow-2xl"
+            />
+          ) : (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={items[openIndex]}
+              alt=""
+              onClick={(e) => e.stopPropagation()}
+              className="max-w-full max-h-[85vh] rounded-md shadow-2xl"
+            />
+          )}
+        </div>
+      )}
+    </>
   );
 }
 
