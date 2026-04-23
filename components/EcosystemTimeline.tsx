@@ -528,12 +528,13 @@ export function EcosystemTimeline() {
   );
   const totalDwell = readPositions.length * dwellPerChapter;
   const totalTravel = travelDistances.reduce((a, b) => a + b, 0);
-  // Trailing buffer = 2× viewport.h so the last chapter (DM) stays pinned
-  // long enough to actually read all three beats. Wrapper bg is black so
-  // the tail blends into the DM panel.
+  // Trailing buffer: enough room for the endcard's title intro AND a scroll-
+  // driven credits roll. Without this, the page would run out of scrollY
+  // before the credits finished and the user would feel stuck.
+  const endcardScrollSpan = viewport.h * 5;
   const wrapperHeight =
     readPositions.length > 0
-      ? totalDwell + totalTravel + viewport.h * 3
+      ? totalDwell + totalTravel + endcardScrollSpan + viewport.h * 0.5
       : viewport.h;
 
   // Scroll-TRIGGERED animations — once the scroll position crosses a panel's
@@ -568,11 +569,18 @@ export function EcosystemTimeline() {
     readPositions.length > 0
       ? (readPositions.length - 1) * dwellPerChapter + totalTravel
       : 0;
-  const endcardTrigger = scrollY > endcardCenteredAt + viewport.h * 0.35;
-  // Fast title intro (~1.5s), short beat, then a slow credits roll so every
-  // line is comfortably readable. Column is compact now so the total can be
-  // shorter without feeling rushed.
-  const endcardReveal = useTriggeredReveal(endcardTrigger, 70000);
+  // Title intro still plays on a short auto timer once the endcard centers.
+  const endcardTrigger = scrollY > endcardCenteredAt + viewport.h * 0.2;
+  const endcardIntroReveal = useTriggeredReveal(endcardTrigger, 1600);
+
+  // Credits roll is scroll-DRIVEN — the user controls the pace by scrolling
+  // through the trailing buffer. Fixes the "credits get stuck, can't scroll
+  // through them" problem the old time-based version had.
+  const endcardScrollStart = endcardCenteredAt + viewport.h * 0.5;
+  const endcardScrollT =
+    viewport.h > 0 && endcardScrollSpan > 0
+      ? clamp01((scrollY - endcardScrollStart) / endcardScrollSpan)
+      : 0;
 
   // Scroll HOLD: hold only the very first (title) chapter until its typewriter
   // completes. The DM section's animation plays on its own timer once triggered
@@ -691,7 +699,8 @@ export function EcosystemTimeline() {
                 local={local}
                 heroReveal={heroReveal}
                 dmReveal={dmReveal}
-                endcardReveal={endcardReveal}
+                endcardIntro={endcardIntroReveal}
+                endcardScroll={endcardScrollT}
               />
             );
           })}
@@ -762,14 +771,16 @@ function ChapterPanel({
   local,
   heroReveal,
   dmReveal,
-  endcardReveal,
+  endcardIntro,
+  endcardScroll,
 }: {
   chapter: Chapter;
   index: number;
   local: number;
   heroReveal: number;
   dmReveal: number;
-  endcardReveal: number;
+  endcardIntro: number;
+  endcardScroll: number;
 }) {
   const isHero = chapter.id === "title" || chapter.id === "cover";
   const isOutro = chapter.id === "onwards";
@@ -810,7 +821,13 @@ function ChapterPanel({
     );
   }
   if (isEndcard) {
-    return <EndcardPanel chapter={chapter} reveal={endcardReveal} />;
+    return (
+      <EndcardPanel
+        chapter={chapter}
+        intro={endcardIntro}
+        scroll={endcardScroll}
+      />
+    );
   }
   return (
     <ContentPanel
@@ -1087,23 +1104,23 @@ const SPEECH: string[] = [
 
 function EndcardPanel({
   chapter,
-  reveal,
+  intro,
+  scroll,
 }: {
   chapter: Chapter;
-  reveal: number;
+  intro: number;
+  scroll: number;
 }) {
-  const stage = (start: number, end: number) =>
-    clamp01((reveal - start) / Math.max(0.001, end - start));
-  // VERY FAST intro — Better × Pearmill pops in, then the bar + subtitle
-  // cascade in right underneath as one continuous movement. Short beat
-  // before the whole column starts scrolling up together.
-  const kickerT = stage(0.0, 0.002);
-  const logosT = stage(0.001, 0.013);
-  const barT = stage(0.012, 0.018);
-  const subT = stage(0.014, 0.024);
-  const scrollT = stage(0.035, 1.0);
-  // Travel so nothing is left on the screen by the end of the roll. Tuned
-  // for the compact two-column credits layout.
+  // Intro stages drive the Better × Pearmill card reveal — all time-based.
+  const introStage = (start: number, end: number) =>
+    clamp01((intro - start) / Math.max(0.001, end - start));
+  const kickerT = introStage(0.0, 0.1);
+  const logosT = introStage(0.05, 0.55);
+  const barT = introStage(0.5, 0.75);
+  const subT = introStage(0.6, 0.95);
+
+  // Scroll drives the column translation + the credits fade-in.
+  const scrollT = scroll;
   const TRAVEL_VH = 260;
   const offsetVh = scrollT * TRAVEL_VH;
 
@@ -1204,7 +1221,7 @@ function EndcardPanel({
             in under the subtitle before the whole column glides up. */}
         <div
           className="w-full max-w-[60rem] px-10 flex flex-col items-center"
-          style={{ opacity: clamp01((reveal - 0.028) / 0.008) }}
+          style={{ opacity: clamp01((intro - 0.95) / 0.05 + scrollT * 3) }}
         >
           <div className="grid grid-cols-[max-content_1fr] gap-x-8 gap-y-3 mb-14 w-full max-w-[54rem]">
             {CREDITS.map((c) => (
