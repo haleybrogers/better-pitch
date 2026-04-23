@@ -145,6 +145,12 @@ const chapters: Chapter[] = [
     accent2: "#09090b",
     bg: "#fafaf9",
     Icon: Cog,
+    leadGif: {
+      caption: "yet another call",
+      tilt: 0,
+      emoji: "📞",
+      src: "https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExczdjamdvYXViYmt1eWF3aDI4bW5wZGl0djVyZjJ4Yjl2d292cDdiaCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/Vbgh6TfC30eqOtEkuD/giphy.gif",
+    },
     gif: {
       caption: "google copy, ai'd live",
       tilt: 0,
