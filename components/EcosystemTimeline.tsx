@@ -210,10 +210,10 @@ const chapters: Chapter[] = [
     Icon: Network,
     heroSize: "sm",
     leadGif: {
-      caption: "cat",
+      caption: "robot fight",
       tilt: 0,
-      emoji: "🐱",
-      src: "https://media.giphy.com/media/v1.Y2lkPWVjZjA1ZTQ3cmsxaWdvdXA4Yngya3JtOGIwMW1vMnZvNDBqeHgzNDd6cnJqa3I4ZiZlcD12MV9naWZzX3NlYXJjaCZjdD1n/qXAHMsQs6emkWwSQSn/giphy.gif",
+      emoji: "🤖",
+      src: "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExbHVmcjNsZWh0cjhlaXloeXZ0MDhyMXg3cG12cGlwc21zcmU5c3MzYyZlcD12MV9naWZzX3NlYXJjaCZjdD1n/ydhTdPES8pJ5BRF9TP/giphy.gif",
     },
     gif: {
       caption: "the book nima left",
@@ -238,12 +238,6 @@ const chapters: Chapter[] = [
     stat: {
       value: "$1.5M",
       label: "incremental budget handed to us by lunch",
-    },
-    leadGif: {
-      caption: "cat kiss",
-      tilt: 0,
-      emoji: "💋",
-      src: "https://media.giphy.com/media/v1.Y2lkPWVjZjA1ZTQ3cmsxaWdvdXA4Yngya3JtOGIwMW1vMnZvNDBqeHgzNDd6cnJqa3I4ZiZlcD12MV9naWZzX3NlYXJjaCZjdD1n/qXAHMsQs6emkWwSQSn/giphy.gif",
     },
     gif: {
       caption: "the laptop kiss",
