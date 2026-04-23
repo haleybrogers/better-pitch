@@ -1080,7 +1080,6 @@ const CREDITS: { name: string; line: string }[] = [
   { name: "Nima", line: "the closer. Walked into every room already winning it." },
   { name: "Donovan", line: "guided the creative. Kept the train on the tracks. Has great hair." },
   { name: "Coke", line: "quarterback. Running-tally author. Peach-emoji provider." },
-  { name: "Haley", line: "built the dashboard Jessica kissed. Turned a Notion sprawl into a hub." },
   { name: "Het", line: "smartest person in the room. Paid Search whisperer." },
   { name: "Mariate", line: "Meta POV, measurement brain, quiet operator of the creative engine." },
   { name: "Moojan", line: "the best energy in every room. The person you wanted on every call." },
