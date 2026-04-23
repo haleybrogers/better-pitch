@@ -556,10 +556,10 @@ export function EcosystemTimeline() {
     }
     dmDwellStart = cursor;
     dmDwellEnd = dmDwellStart + dwellPerChapter;
-    const entryTravel = dmIndex > 0 ? travelDistances[dmIndex - 1] ?? 0 : 0;
-    // Trigger a bit before the panel fully centers, so the animation is
-    // already rolling by the time the user's eyes land on it.
-    dmTriggerScrollY = dmDwellStart - entryTravel * 0.5;
+    // Trigger exactly when the panel finishes its entry and centers, so the
+    // typing starts on a still panel (not one mid-slide). Keeps the text
+    // part feeling clean instead of fighting the horizontal motion.
+    dmTriggerScrollY = dmDwellStart;
   }
   const dmTrigger = scrollY > dmTriggerScrollY;
   const dmReveal = useTriggeredReveal(dmTrigger, 5800);
