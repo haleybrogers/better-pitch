@@ -1077,7 +1077,7 @@ function OutroPanel({
 const CREDITS: { name: string; line: string }[] = [
   { name: "Nima", line: "the closer. Walked into every room already winning it." },
   { name: "Donovan", line: "guided the creative. Kept the train on the tracks. Has great hair." },
-  { name: "Coke", line: "quarterback. Running-tally author. Peach-emoji provider." },
+  { name: "Coke", line: "quarterbacked every room. Called the plays, read the defense, kept the team in sync." },
   { name: "Het", line: "smartest person in the room. Paid Search whisperer." },
   { name: "Mariate", line: "Meta POV, measurement brain, quiet operator of the creative engine." },
   { name: "Moojan", line: "powered the RFP research. Always the voice asking 'have we considered...?'" },
@@ -1136,13 +1136,16 @@ function EndcardPanel({
           follow, and the whole thing translates upward as scrollT grows so
           the Better × Pearmill card rides up with the roll. */}
       <div
-        className="absolute inset-x-0 flex flex-col items-center pointer-events-none"
+        className="absolute flex flex-col items-center pointer-events-none"
         style={{
-          // Fixed anchor at 40vh — scroll happens via transform for a GPU-
-          // accelerated path. Animating `top` causes layout every frame,
-          // which is the source of the jank the user was seeing.
+          // Anchor at the VIEWPORT's horizontal center rather than the section's,
+          // because w-screen (100vw) includes the vertical scrollbar width while
+          // window.innerWidth doesn't — that mismatch was pushing the credits
+          // slightly off-center on systems with classic scrollbars.
           top: "40vh",
-          transform: `translate3d(0, ${-offsetVh}vh, 0)`,
+          left: "50vw",
+          width: "min(60rem, 92vw)",
+          transform: `translate3d(-50%, ${-offsetVh}vh, 0)`,
           willChange: "transform",
         }}
       >
