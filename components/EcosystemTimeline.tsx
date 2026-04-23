@@ -92,7 +92,7 @@ const chapters: Chapter[] = [
     kicker: "Round 1 · Oct 2025 · the old way",
     title: "We got in\nthe door.",
     body: "Our channel expertise landed the first meeting. Jessica wanted a deeper dive into competitors — Nima suggested we fly to NYC to present it. Jessica turned it into a full RFP, opened the call to more agencies. Meanwhile we sent an audit: an infinite, siloed Notion doc. The old way. Sly was underwhelmed at first — didn't realize how deep the doc actually went. Then he kept clicking. HUH?! It just kept getting better and better and better. Little did we know — Jessica hated Notion and never even opened it.",
-    pullQuote: "We really hooked them with our knowledge. — Donovan",
+    pullQuote: "Didn't realize how deep this thing went. — Sly, underwhelmed at first",
     accent: "#014737",
     accent2: "#09090b",
     bg: "#fafaf9",
@@ -569,9 +569,10 @@ export function EcosystemTimeline() {
       ? (readPositions.length - 1) * dwellPerChapter + totalTravel
       : 0;
   const endcardTrigger = scrollY > endcardCenteredAt + viewport.h * 0.35;
-  // Long duration: the title card animates in quickly, then the whole column
-  // (title + credits + speech) scrolls up together for the remaining time.
-  const endcardReveal = useTriggeredReveal(endcardTrigger, 42000);
+  // Long duration: the title card lands fast (~3s), then there's a beat, then
+  // the whole column glides upward slowly for the rest of the reveal so the
+  // credits are comfortably readable.
+  const endcardReveal = useTriggeredReveal(endcardTrigger, 72000);
 
   // Scroll HOLD: don't let the horizontal track leave a chapter until its
   // animation has finished. The user can keep scrolling vertically but the
@@ -1094,17 +1095,15 @@ function EndcardPanel({
 }) {
   const stage = (start: number, end: number) =>
     clamp01((reveal - start) / Math.max(0.001, end - start));
-  // Fast intro — logos + subtitle land quickly at the top of the timeline.
-  const kickerT = stage(0.0, 0.04);
-  const logosT = stage(0.03, 0.18);
-  const barT = stage(0.18, 0.22);
-  const subT = stage(0.20, 0.26);
-  // Scroll phase — the ENTIRE column (title card + credits + speech) glides
-  // upward together, like movie credits. Slower, paced, lots of time to read.
-  const scrollT = stage(0.28, 1.0);
-  // Total upward travel of the column, in vh. Big enough that the "— fin. 💚"
-  // at the very bottom of the column clears the top of the viewport entirely.
-  const TRAVEL_VH = 480;
+  // FAST intro — Better × Pearmill lands inside ~2.5s of the 72s reveal.
+  const kickerT = stage(0.0, 0.008);
+  const logosT = stage(0.004, 0.03);
+  const barT = stage(0.03, 0.036);
+  const subT = stage(0.033, 0.042);
+  // Brief beat where the card sits fully formed before the roll begins.
+  const scrollT = stage(0.065, 1.0);
+  // Big travel so nothing is left on the screen by the end of the roll.
+  const TRAVEL_VH = 620;
   const offsetVh = scrollT * TRAVEL_VH;
 
   return (
@@ -1193,8 +1192,9 @@ function EndcardPanel({
           </div>
         </div>
 
-        {/* Spacer so the credits don't appear right on top of the title card */}
-        <div className="h-[22vh]" />
+        {/* Spacer wide enough that the title card fully clears the viewport
+            before the credits enter from below — they never share the screen. */}
+        <div className="h-[120vh]" />
 
         {/* Credits roll */}
         <div className="w-full max-w-[46rem] px-10 flex flex-col items-center text-center">
