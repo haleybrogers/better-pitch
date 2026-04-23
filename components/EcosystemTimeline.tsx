@@ -1126,7 +1126,6 @@ function DashboardMockup({
                 src={videoSrc}
                 poster={posterSrc}
                 autoPlay
-                loop
                 muted
                 playsInline
                 className="absolute inset-0 w-full h-full object-cover"
