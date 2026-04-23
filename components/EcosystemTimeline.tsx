@@ -35,6 +35,7 @@ type Chapter = {
   bg: string;
   Icon: typeof Sparkles;
   gif?: GifSpec;
+  leadGif?: GifSpec; // small media rendered between the chapter marker and text
   heroSize?: "sm" | "md" | "lg";
   stat?: { value: string; label: string };
   gallery?: string[];
@@ -89,9 +90,12 @@ const chapters: Chapter[] = [
       src: "/moments/notion-scroll.mov",
       asPhoto: true,
     },
-    gallery: [
-      "https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExajdwNWM2bnA1a2U3dmxuejByY2QzZTdqaG1qOTUxcXhvbHVhOG5zYiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/3o7aCPVTaKjiYIPvsk/giphy.gif",
-    ],
+    leadGif: {
+      caption: "in the door",
+      tilt: 0,
+      emoji: "🚪",
+      src: "https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExajdwNWM2bnA1a2U3dmxuejByY2QzZTdqaG1qOTUxcXhvbHVhOG5zYiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/3o7aCPVTaKjiYIPvsk/giphy.gif",
+    },
     learning:
       "We probably should have baked the competitive deep dive into the first audit — it's what the client was really asking for.",
   },
@@ -115,7 +119,6 @@ const chapters: Chapter[] = [
     },
     gallery: [
       "/moments/nyc-day-1.mov",
-      "/moments/nyc-before-cake.mov",
       "/moments/nyc-team.jpg",
       "/moments/nyc-walk-1.mov",
     ],
@@ -200,6 +203,9 @@ const chapters: Chapter[] = [
       src: "/moments/skin-in-the-game.jpg",
       asPhoto: true,
     },
+    gallery: [
+      "https://media.giphy.com/media/v1.Y2lkPWVjZjA1ZTQ3cmsxaWdvdXA4Yngya3JtOGIwMW1vMnZvNDBqeHgzNDd6cnJqa3I4ZiZlcD12MV9naWZzX3NlYXJjaCZjdD1n/qXAHMsQs6emkWwSQSn/giphy.gif",
+    ],
     learning:
       "Every touch point — even pricing — is a chance to prove you actually understood them.",
   },
@@ -697,6 +703,19 @@ function ContentPanel({
         {/* 1 · Timeline-node section marker (left rail vibe) */}
         <ChapterMarker chapter={chapter} openness={oContent} />
 
+        {/* 1.5 · Small lead media between marker and text (optional) */}
+        {chapter.leadGif?.src && (
+          <div
+            className="flex-shrink-0"
+            style={{
+              opacity: oExtras,
+              transform: `translate3d(0, ${(1 - oExtras) * 20}px, 0)`,
+            }}
+          >
+            <LeadMedia src={chapter.leadGif.src} caption={chapter.leadGif.caption} />
+          </div>
+        )}
+
         {/* 2 · Text + hero */}
         <div className="flex items-center gap-8">
           <div
@@ -871,6 +890,18 @@ function ChapterMarker({
 /*  HeroMedia — photo/video, natural aspect, no chrome               */
 /*  Hero videos autoplay; gallery videos play on hover               */
 /* ─────────────────────────────────────────────────────────────── */
+
+function LeadMedia({ src, caption }: { src: string; caption?: string }) {
+  const isVideo = /\.(mp4|mov|webm)$/i.test(src);
+  const cls =
+    "w-44 h-44 md:w-52 md:h-52 rounded-2xl object-cover shadow-lg ring-1 ring-black/5";
+  return isVideo ? (
+    <video src={src} autoPlay loop muted playsInline className={cls} />
+  ) : (
+    // eslint-disable-next-line @next/next/no-img-element
+    <img src={src} alt={caption ?? ""} loading="lazy" className={cls} />
+  );
+}
 
 function HeroMedia({
   src,
