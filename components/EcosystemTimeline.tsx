@@ -1075,19 +1075,19 @@ function OutroPanel({
 /* ─────────────────────────────────────────────────────────────── */
 
 const CREDITS: { name: string; line: string }[] = [
-  { name: "Nima", line: "the closer + data engineer. Used Claude to surface the real motivation behind the panic and how to solve for it." },
+  { name: "Nima", line: "the closer + data engineer. Used his Claude to surface the real motivation behind the panic and how to solve for it." },
   { name: "Donovan", line: "guided the creative. Kept the train on the tracks. Has great hair." },
   { name: "Coke", line: "quarterbacked every room. Called the plays, read the defense, kept the team in sync." },
   { name: "Het", line: "smartest person in the room. Paid Search whisperer." },
   { name: "Mariate", line: "Meta POV + measurement brain. Stayed online past midnight for the kickoff call. SO late." },
   { name: "Moojan", line: "powered the RFP research. Always the voice asking 'have we considered...?'" },
-  { name: "Dino", line: "wooed Jessica. Made her fall in love with him on Pearmill's behalf." },
+  { name: "Dino", line: "wooed Jessica. Made her fall in love with him on Pearmill's behalf. On the kickoff call at an ungodly hour." },
   { name: "Addie", line: "cast it, produced it, and made it fucking happen — on the weekend." },
   { name: "Karim", line: "jumped in to save the RFP the night before the pitch." },
   { name: "Val", line: "unified our message. Found the thread running through all of it. Confidence in the room." },
   { name: "Masha", line: "led the competitive analysis — in on it from the very first audit." },
   { name: "Janie", line: "taking in 200 days of context in 2 weeks to pick up the account." },
-  { name: "Cosmin", line: "the landing-page guy. When a campaign needs a page that converts, it's his." },
+  { name: "Cosmin", line: "the landing-page guy. When a campaign needs a page that converts, it's his. Clocked in way past midnight for the kickoff call." },
   { name: "Lilya", line: "set the visual language. The look + feel every deck built on started with her." },
   { name: "Polina", line: "layout surgeon. Made every page breathe. Nothing went out looking cramped." },
   { name: "Egor", line: "went back to the stone ages and made PowerPoint happen." },
