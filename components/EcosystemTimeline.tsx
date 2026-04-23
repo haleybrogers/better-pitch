@@ -569,10 +569,9 @@ export function EcosystemTimeline() {
       ? (readPositions.length - 1) * dwellPerChapter + totalTravel
       : 0;
   const endcardTrigger = scrollY > endcardCenteredAt + viewport.h * 0.35;
-  // Long duration: the title card lands fast (~3s), then there's a beat, then
-  // the whole column glides upward slowly for the rest of the reveal so the
-  // credits are comfortably readable.
-  const endcardReveal = useTriggeredReveal(endcardTrigger, 72000);
+  // Fast title intro (~1.5s), short beat, then a very slow credits roll so
+  // every line is comfortably readable. Total 100s.
+  const endcardReveal = useTriggeredReveal(endcardTrigger, 100000);
 
   // Scroll HOLD: don't let the horizontal track leave a chapter until its
   // animation has finished. The user can keep scrolling vertically but the
@@ -1095,13 +1094,14 @@ function EndcardPanel({
 }) {
   const stage = (start: number, end: number) =>
     clamp01((reveal - start) / Math.max(0.001, end - start));
-  // FAST intro — Better × Pearmill lands inside ~2.5s of the 72s reveal.
-  const kickerT = stage(0.0, 0.008);
-  const logosT = stage(0.004, 0.03);
-  const barT = stage(0.03, 0.036);
-  const subT = stage(0.033, 0.042);
-  // Brief beat where the card sits fully formed before the roll begins.
-  const scrollT = stage(0.065, 1.0);
+  // VERY FAST intro — Better × Pearmill pops in inside ~1.5s of the 100s
+  // reveal. Logos animate in parallel, not sequentially.
+  const kickerT = stage(0.0, 0.003);
+  const logosT = stage(0.002, 0.015);
+  const barT = stage(0.015, 0.02);
+  const subT = stage(0.018, 0.025);
+  // Short beat where the card sits fully formed before the roll begins.
+  const scrollT = stage(0.055, 1.0);
   // Big travel so nothing is left on the screen by the end of the roll.
   const TRAVEL_VH = 620;
   const offsetVh = scrollT * TRAVEL_VH;
@@ -1145,8 +1145,8 @@ function EndcardPanel({
                 className="h-[clamp(1.5rem,3.2vw,2.5rem)] w-auto"
                 style={{
                   filter: "invert(1) brightness(2)",
-                  opacity: clamp01(logosT * 2),
-                  transform: `translate3d(${(1 - clamp01(logosT * 2)) * -30}px, 0, 0)`,
+                  opacity: logosT,
+                  transform: `translate3d(${(1 - logosT) * -24}px, 0, 0)`,
                 }}
               />
             </div>
@@ -1154,8 +1154,8 @@ function EndcardPanel({
               aria-hidden
               className="flex items-center justify-center text-[clamp(1.5rem,3.5vw,2.75rem)] text-white/40 font-light leading-none h-[clamp(2rem,4.5vw,3.75rem)]"
               style={{
-                opacity: clamp01((logosT - 0.4) / 0.3),
-                transform: `scale(${0.6 + clamp01((logosT - 0.4) / 0.3) * 0.4})`,
+                opacity: logosT,
+                transform: `scale(${0.7 + logosT * 0.3})`,
               }}
             >
               ×
@@ -1168,8 +1168,8 @@ function EndcardPanel({
                 className="h-[clamp(1.75rem,3.8vw,3.2rem)] w-auto"
                 style={{
                   filter: "invert(1) brightness(2)",
-                  opacity: clamp01((logosT - 0.5) / 0.5),
-                  transform: `translate3d(${(1 - clamp01((logosT - 0.5) / 0.5)) * 30}px, 0, 0)`,
+                  opacity: logosT,
+                  transform: `translate3d(${(1 - logosT) * 24}px, 0, 0)`,
                 }}
               />
             </div>
@@ -1196,8 +1196,12 @@ function EndcardPanel({
             before the credits enter from below — they never share the screen. */}
         <div className="h-[120vh]" />
 
-        {/* Credits roll */}
-        <div className="w-full max-w-[46rem] px-10 flex flex-col items-center text-center">
+        {/* Credits roll — hidden entirely until the scroll phase begins so
+            the title card is on screen by itself first. */}
+        <div
+          className="w-full max-w-[46rem] px-10 flex flex-col items-center text-center"
+          style={{ opacity: scrollT > 0 ? 1 : 0 }}
+        >
           <div className="text-[11px] uppercase tracking-[0.35em] text-white/40 font-semibold mb-12">
             Thanks to — we couldn&rsquo;t have done it without you
           </div>
