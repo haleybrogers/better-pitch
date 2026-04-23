@@ -1188,7 +1188,7 @@ function EndcardPanel({
               transform: `translate3d(0, ${(1 - subT) * 10}px, 0)`,
             }}
           >
-            Thank you
+            A team effort. Roll credits.
           </div>
         </div>
 
@@ -1196,15 +1196,12 @@ function EndcardPanel({
             before the credits enter from below — they never share the screen. */}
         <div className="h-[120vh]" />
 
-        {/* Credits roll — hidden entirely until the scroll phase begins so
-            the title card is on screen by itself first. */}
+        {/* Credits roll — fades in as the scroll phase begins so the title
+            card has its moment alone first, then the names fade + glide up. */}
         <div
           className="w-full max-w-[46rem] px-10 flex flex-col items-center text-center"
-          style={{ opacity: scrollT > 0 ? 1 : 0 }}
+          style={{ opacity: clamp01(scrollT * 8) }}
         >
-          <div className="text-[11px] uppercase tracking-[0.35em] text-white/40 font-semibold mb-12">
-            Thanks to — we couldn&rsquo;t have done it without you
-          </div>
           <div className="flex flex-col gap-6 mb-16">
             {CREDITS.map((c) => (
               <div key={c.name} className="flex flex-col gap-1">
