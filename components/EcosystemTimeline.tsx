@@ -257,7 +257,10 @@ const chapters: Chapter[] = [
       src: "https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExOHVybmxtaWxlZmx5cDdjMWpjbHY1djR6NDV0eXVhNHEyOXdvbzd3YSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/W1hd3uXRIbddu/giphy.gif",
       asPhoto: true,
     },
-    gallery: ["/moments/kickoff-selfie.jpg"],
+    gallery: [
+      "/moments/kickoff-selfie.jpg",
+      "/moments/kickoff-dinner.jpg",
+    ],
     learning:
       "Adapting in real time is the job. Curiosity and a hard push to use AI — quickly, intentionally, together — is what built this hub. That's what proved our worth.",
   },
