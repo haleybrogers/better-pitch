@@ -74,7 +74,7 @@ const chapters: Chapter[] = [
     id: "round-1",
     kicker: "Round 1 · Oct 2025 · the old way",
     title: "We got in\nthe door.",
-    body: "Our channel expertise landed the first meeting. Jessica wanted a deeper dive into competitors — Nima suggested we fly to NYC to present it. Jessica turned it into a full RFP, opened the call to more agencies. Meanwhile we sent an audit: an infinite, siloed Notion doc. The old way. Sly was underwhelmed at first — didn't realize how deep the doc actually went. Then he kept clicking. HUH?! It just kept getting better and better and better.",
+    body: "Our channel expertise landed the first meeting. Jessica wanted a deeper dive into competitors — Nima suggested we fly to NYC to present it. Jessica turned it into a full RFP, opened the call to more agencies. Meanwhile we sent an audit: an infinite, siloed Notion doc. The old way. Sly was underwhelmed at first — didn't realize how deep the doc actually went. Then he kept clicking. HUH?! It just kept getting better and better and better. Little did we know — Jessica hated Notion and never even opened it.",
     pullQuote: "We really hooked them with our knowledge. — Donovan",
     accent: "#014737",
     accent2: "#09090b",
@@ -100,7 +100,7 @@ const chapters: Chapter[] = [
     id: "round-2",
     kicker: "Round 2 · Nov 18 2025 · NYC",
     title: "We brought\ncake.",
-    body: "We flew to New York to pitch in person. Beautiful slide deck. Unified message — creative, media, and measurement threaded as one. And we brought cake. But Sly and Josh had written the RFP themselves — scrappy, first time — and we'd read it wrong. We overshot the moon with creative. Then Jessica never even opened our response; it lived in Notion. Even Sly dismissed it at first because of the collapsed toggles. When he came back to it late one night, he told us our RFP response cooked every other agency. Jessica kept asking him which agency did X best, which did Y best. His answer was Pearmill, every time.",
+    body: "We flew to New York to pitch in person. Beautiful slide deck. Unified message — creative, media, and measurement threaded as one. And we brought cake. But Sly and Josh had written the RFP themselves — scrappy, first time — and we'd read it wrong. We overshot the moon with creative. Even Sly dismissed our RFP response at first because of the collapsed toggles. When he came back to it late one night, he told us our RFP response cooked every other agency. Jessica kept asking him which agency did X best, which did Y best. His answer was Pearmill, every time.",
     pullQuote:
       "Your RFP response cooked every other agency. — Sly, very late one night",
     accent: "#014737",
