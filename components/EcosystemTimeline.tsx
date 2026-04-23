@@ -179,10 +179,10 @@ const chapters: Chapter[] = [
     Icon: Cog,
     stat: { value: "0", label: "notes back from the client" },
     leadGif: {
-      caption: "unimpressed",
+      caption: "cat",
       tilt: 0,
-      emoji: "😒",
-      src: "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExMXhjMDR5eTFpczNjeW9hcXE4d3VmOGE3Zmo4Mm92cWZ6c3ZpampyaCZlcD12MV9naWZzX3NlYXJjaCZjdD1n/cZ6FrnA4NIuVUPgZMz/giphy.gif",
+      emoji: "🐱",
+      src: "https://media.giphy.com/media/v1.Y2lkPWVjZjA1ZTQ3cmsxaWdvdXA4Yngya3JtOGIwMW1vMnZvNDBqeHgzNDd6cnJqa3I4ZiZlcD12MV9naWZzX3NlYXJjaCZjdD1n/qXAHMsQs6emkWwSQSn/giphy.gif",
     },
     gif: {
       caption: "betsy · semi-static 1",
@@ -242,12 +242,6 @@ const chapters: Chapter[] = [
     stat: {
       value: "$1.5M",
       label: "incremental budget handed to us by lunch",
-    },
-    leadGif: {
-      caption: "kitty",
-      tilt: 0,
-      emoji: "🐱",
-      src: "https://media.giphy.com/media/v1.Y2lkPWVjZjA1ZTQ3cmsxaWdvdXA4Yngya3JtOGIwMW1vMnZvNDBqeHgzNDd6cnJqa3I4ZiZlcD12MV9naWZzX3NlYXJjaCZjdD1n/qXAHMsQs6emkWwSQSn/giphy.gif",
     },
     gif: {
       caption: "the laptop kiss",
@@ -469,9 +463,6 @@ export function EcosystemTimeline() {
     return <ReducedStack />;
   }
 
-  // Black-fade kicks in as we approach the very end.
-  const blackFade = clamp01((progress - 0.94) / 0.06);
-
   return (
     <div
       ref={wrapperRef}
@@ -523,16 +514,6 @@ export function EcosystemTimeline() {
             );
           })}
         </div>
-
-        {/* Fade-to-black overlay for the outro */}
-        <div
-          aria-hidden
-          className="absolute inset-0 pointer-events-none transition-opacity duration-200"
-          style={{
-            background: "#000",
-            opacity: blackFade,
-          }}
-        />
 
         <ProgressRail
           progress={progress}
@@ -724,16 +705,6 @@ function OutroPanel({
       style={{ backgroundColor: chapter.bg }}
       aria-label={chapter.title.replace(/\n/g, " ")}
     >
-      {/* Inner right-edge fade to black */}
-      <div
-        aria-hidden
-        className="absolute inset-y-0 right-0 pointer-events-none"
-        style={{
-          width: "45vw",
-          background: "linear-gradient(90deg, transparent 0%, #000 90%)",
-        }}
-      />
-
       <div className="relative z-10 flex flex-col items-center max-w-4xl text-center">
         <div
           className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-[11px] font-semibold uppercase tracking-[0.2em] mb-6 bg-white/10 border border-white/20 text-white/80"
