@@ -1063,7 +1063,7 @@ const CREDITS: { name: string; line: string }[] = [
   { name: "Moojan", line: "the best energy in every room. The person you wanted on every call." },
   { name: "Dino", line: "wooed Jessica. Made her fall in love with him on Pearmill's behalf." },
   { name: "Addie", line: "cast it, produced it, and made it fucking happen — on the weekend." },
-  { name: "Karim", line: "moral support. Picked up the cake. Had drinks waiting for us the second we walked out of the pitch. Held every other account together while we drowned in this one." },
+  { name: "Karim", line: "picked up the cake. Had drinks waiting for us after the pitch." },
   { name: "Val", line: "morale. Hyped us up. Told us we could do it, mentored us, made it happen." },
   { name: "Masha", line: "made it all happen, no matter what hours her team had to pull." },
   { name: "Janie", line: "on the account now. Did she help with the pitch? Morally, yes." },
